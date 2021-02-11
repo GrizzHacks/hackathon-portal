@@ -1,3 +1,3 @@
 declare interface User {
-    stuff: string
+  stuff: string;
 }
