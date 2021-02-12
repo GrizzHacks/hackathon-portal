@@ -23,5 +23,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "import"],
   rules: {
     quotes: ["error", "double"],
+    "no-unused-vars": "off",
   },
 };
