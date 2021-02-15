@@ -1,6 +1,7 @@
 import express = require("express");
 import type { Express } from "express";
 import * as functions from "firebase-functions";
+import { logRequestStartFactory, logRequestStopFactory } from "./systems/ilms";
 import cors = require("cors");
 
 /**
@@ -19,8 +20,14 @@ export const initModule = (
   // Automatically allow cross-origin requests
   app.use(cors({ origin: true }));
 
+  // Log request endpoint when request starts
+  app.use(logRequestStartFactory(endpoint));
+
   // Initialize Routes and Module-Specific Middleware
   module(app);
+
+  // Log request final status and duration
+  app.use(logRequestStopFactory(endpoint));
 
   return functions.https.onRequest(app);
 };
