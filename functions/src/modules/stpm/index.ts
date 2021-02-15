@@ -1,22 +1,13 @@
-import express = require("express");
-import cors = require("cors");
+import type { Express } from "express";
 import companies from "./companies";
 import tiers from "./tiers";
 import { firebaseApp } from "../../config/firebaseConfig";
 
-const app = express();
-
-// Automatically allow cross-origin requests
-app.use(cors({ origin: true }));
-
-// Add middleware to authenticate requests
-// app.use(myMiddleware);
-
-app.get("/", (req, res) => res.send(test()));
-companies(app);
-tiers(app);
-
-export default app;
+export default (app: Express) => {
+  app.get("/", (req, res) => res.send(test()));
+  companies(app, "/companies");
+  tiers(app, "/tiers");
+};
 
 const test = () =>
   firebaseApp
