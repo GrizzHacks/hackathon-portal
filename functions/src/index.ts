@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { initModule } from "./initModule";
 import stpmModule from "./modules/stpm";
 
 // Start writing Firebase Functions
@@ -9,4 +10,4 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
-export const stpm = functions.https.onRequest(stpmModule);
+export const stpm = initModule(stpmModule, "/stpm");
