@@ -13,8 +13,8 @@ app.use(cors({ origin: true }));
 // app.use(myMiddleware);
 
 app.get("/", (req, res) => res.send(test()));
-companies(app);
-tiers(app);
+  companies(app, "/companies");
+  tiers(app, "/tiers");
 
 export default app;
 
