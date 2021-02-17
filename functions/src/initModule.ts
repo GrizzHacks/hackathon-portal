@@ -2,7 +2,7 @@ import express = require("express");
 import type { Express } from "express";
 import * as functions from "firebase-functions";
 import { logRequestStartFactory, logRequestStopFactory } from "./systems/ilms";
-import uas from "./systems/uas";
+import { uasTokenParser } from "./systems/uas";
 import cors = require("cors");
 
 /**
@@ -25,7 +25,7 @@ export const initModule = (
   app.use(logRequestStartFactory(endpoint));
 
   // Determine the current user's permission level
-  app.use(uas);
+  app.use(uasTokenParser);
 
   // Initialize Routes and Module-Specific Middleware
   module(app);
