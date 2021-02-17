@@ -1,17 +1,5 @@
-import type { NextFunction, Request, Response } from "express";
-import * as functions from "firebase-functions";
+import permissionSwitch from "./permissionSwitch";
+import tokenParser from "./tokenParser";
 
-export default (req: Request, res: Response, next: NextFunction) => {
-  // Store the permission level of the current user
-  const currentPermissions: UserPermission = {
-    role: "ORGANZIER",
-    accepted: true,
-  };
-  res.locals.permissions = currentPermissions;
-  functions.logger.info(
-    `Current user is a${
-      currentPermissions.accepted ? "n accepted" : " pending"
-    } ${currentPermissions.role.toString().toLowerCase()}`
-  );
-  next();
-};
+export const uasTokenParser = tokenParser;
+export const uasPermissionSwitch = permissionSwitch;
