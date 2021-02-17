@@ -64,7 +64,7 @@ const isCallbackConfig = (
 };
 
 const extractCallback = (
-  userAccpeted: boolean,
+  userAccpeted?: boolean,
   callbackConfig?:
     | ExpressFunction
     | UASPermissionSwitchCallbackConfig<ExpressFunction>
@@ -73,8 +73,11 @@ const extractCallback = (
     return userAccpeted
       ? (callbackConfig as UASPermissionSwitchCallbackConfig<ExpressFunction>)
           .accepted
+      : userAccpeted === undefined
+      ? (callbackConfig as UASPermissionSwitchCallbackConfig<ExpressFunction>)
+          .pending
       : (callbackConfig as UASPermissionSwitchCallbackConfig<ExpressFunction>)
-          .pending;
+          .rejected;
   } else if (callbackConfig) {
     return callbackConfig as ExpressFunction;
   }

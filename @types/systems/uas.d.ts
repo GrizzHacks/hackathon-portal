@@ -1,6 +1,6 @@
 declare interface UserPermission {
   role: PermissionLevel;
-  accepted: boolean;
+  accepted?: boolean;
   company?: string;
 }
 
@@ -24,4 +24,5 @@ declare interface UASPermissionSwitchConfig<T> {
 declare interface UASPermissionSwitchCallbackConfig<T> {
   accepted?: T;
   pending?: T;
+  rejected?: T;
 }
