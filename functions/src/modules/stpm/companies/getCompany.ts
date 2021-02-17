@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
+import type { ExpressFunction } from "../../../@types";
 
-const getCompany = (req: Request, res: Response, next: NextFunction) => {
+const getCompany: ExpressFunction = (req, res, next) => {
   res.status(200).send();
   next();
 };

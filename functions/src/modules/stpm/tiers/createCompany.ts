@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
+import type { ExpressFunction } from "../../../@types";
 
-const createTier = (req: Request, res: Response, next: NextFunction) => {
+const createTier: ExpressFunction = (req, res, next) => {
   res.status(200).send();
   next();
 };
