@@ -22,5 +22,5 @@ if (window.location.href.includes("localhost")) {
 const firebaseRegion = "us-central1";
 
 export const apiUrl = window.location.href.includes("localhost")
-  ? `https://localhost:5001/${process.env.REACT_APP_FIREBASE_PROJECTID}/${firebaseRegion}/`
+  ? `http://localhost:5001/${process.env.REACT_APP_FIREBASE_PROJECTID}/${firebaseRegion}/`
   : `https://${firebaseRegion}-${process.env.REACT_APP_FIREBASE_PROJECTID}.cloudfunctions.net`;
