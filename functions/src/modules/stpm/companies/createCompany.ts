@@ -14,11 +14,15 @@ const createCompany: ExpressFunction = (req, res, next) => {
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+
+  const body = JSON.parse(req.body)
+
   firebaseApp
     .firestore()
     .collection("sponsorCompany")
-    .doc(req.params.companyId)
-    .set(req.body)
+    .doc(body.companyId)
+    .set(body)
     .then(() => {
       res.status(201).send();
       next();
