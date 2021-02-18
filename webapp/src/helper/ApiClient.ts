@@ -3,15 +3,17 @@ import { apiUrl, firebaseApp } from "../config/firebaseConfig";
 
 const options: Options = {
   prefixUrl: apiUrl,
+  throwHttpErrors: false,
+  timeout: 70000, // Slightly longer than the firebase emulator timeout of 60000
 };
 
 const apiKyClient = ky.create(options);
 
-const getUserToken = () => {
-  const currentUser = firebaseApp.auth().currentUser;
+const getUserToken = (firebaseAppLocal: firebase.default.app.App) => {
+  const currentUser = firebaseAppLocal.auth().currentUser;
   return currentUser
     ? currentUser
-        .getIdToken()
+        .getIdToken(true)
         .then((token) => {
           return token;
         })
@@ -22,8 +24,11 @@ const getUserToken = () => {
     : Promise.resolve("");
 };
 
-const createAuthHeaderOptions = (options?: Options) => {
-  return getUserToken()?.then((token) => {
+const createAuthHeaderOptions = (
+  firebaseAppLocal: firebase.default.app.App,
+  options?: Options
+) => {
+  return getUserToken(firebaseAppLocal)?.then((token) => {
     if (!options) {
       options = {};
     }
@@ -34,7 +39,13 @@ const createAuthHeaderOptions = (options?: Options) => {
   });
 };
 
-class apiClient {
+class ApiClient {
+  firebaseAppLocal;
+
+  constructor(firebaseAppLocal?: firebase.default.app.App) {
+    this.firebaseAppLocal = firebaseAppLocal ? firebaseAppLocal : firebaseApp;
+  }
+
   /**
 	Fetch the given `url` using the option `{method: 'get'}`.
 
@@ -45,9 +56,11 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.get(url, options);
+      }
+    );
   };
 
   /**
@@ -60,9 +73,11 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.post(url, options);
+      }
+    );
   };
 
   /**
@@ -75,9 +90,11 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.put(url, options);
+      }
+    );
   };
 
   /**
@@ -90,9 +107,11 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.delete(url, options);
+      }
+    );
   };
 
   /**
@@ -105,9 +124,11 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.patch(url, options);
+      }
+    );
   };
 
   /**
@@ -120,10 +141,12 @@ class apiClient {
     url,
     options
   ) => {
-    return createAuthHeaderOptions(options).then((options) => {
-      return apiKyClient.get(url, options);
-    });
+    return createAuthHeaderOptions(this.firebaseAppLocal, options).then(
+      (options) => {
+        return apiKyClient.head(url, options);
+      }
+    );
   };
 }
 
-export default apiClient;
+export default ApiClient;

@@ -1,3 +1,3 @@
-import apiClientClass from "./apiClientClass";
+import ApiClient from "./ApiClient";
 
-export const apiClient = new apiClientClass();
+export const apiClient = new ApiClient();
