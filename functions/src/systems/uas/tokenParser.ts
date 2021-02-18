@@ -63,11 +63,11 @@ const setPermissionFactory: ExpressFunction<
     } ${res.locals.permissions.role.toLowerCase()}`
   );
   // Set auth to organizer for testing
-  const currentPermissions: UserPermission = {
-    role: "ORGANZIER",
-    accepted: true,
-  };
-  res.locals.permissions = currentPermissions;
+  // const currentPermissions: UserPermission = {
+  //   role: "ORGANIZER",
+  //   accepted: true,
+  // };
+  // res.locals.permissions = currentPermissions;
   next();
 };
 
