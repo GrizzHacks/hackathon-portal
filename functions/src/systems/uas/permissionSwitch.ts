@@ -11,8 +11,10 @@ const permissionSwitchFactory: (
     next
   );
   switch (userPermission.role) {
-    case "ORGANZIER":
-      extractCallback(userPermission.accepted, moduleConfiguration.organizer);
+    case "ORGANIZER":
+      runCallbackOrSendErrorMessge(
+        extractCallback(userPermission.accepted, moduleConfiguration.organizer)
+      );
       break;
     case "SPONSOR":
       runCallbackOrSendErrorMessge(
@@ -59,6 +61,8 @@ const isCallbackConfig = (
     (config as UASPermissionSwitchCallbackConfig<ExpressFunction>).accepted !==
       undefined ||
     (config as UASPermissionSwitchCallbackConfig<ExpressFunction>).pending !==
+      undefined ||
+    (config as UASPermissionSwitchCallbackConfig<ExpressFunction>).rejected !==
       undefined
   );
 };

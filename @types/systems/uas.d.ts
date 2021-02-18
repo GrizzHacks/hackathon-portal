@@ -5,7 +5,7 @@ declare interface UserPermission {
 }
 
 declare type PermissionLevel =
-  | "ORGANZIER"
+  | "ORGANIZER"
   | "SPONSOR"
   | "MENTOR"
   | "VOLUNTEER"

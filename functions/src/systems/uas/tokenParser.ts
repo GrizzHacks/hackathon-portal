@@ -59,7 +59,7 @@ const setPermissionFactory: ExpressFunction<
         ? "n accepted"
         : res.locals.permissions.accepted === undefined
         ? " pending"
-        : "rejected"
+        : " rejected"
     } ${res.locals.permissions.role.toLowerCase()}`
   );
   // Set auth to organizer for testing
