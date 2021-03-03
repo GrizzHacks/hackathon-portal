@@ -80,7 +80,10 @@ const validateObject = (
   for (const attribute in object) {
     const fullAttribute = generateFullAttributeName(attributeRoot, attribute);
     if (checkRules[attribute] !== undefined) {
-      expectedButMissing.splice(expectedButMissing.indexOf(fullAttribute), 1); // Remove from missing list
+      // If the attribute is required, remove from missing list now that it was found
+      if (expectedButMissing.indexOf(fullAttribute) >= 0) {
+        expectedButMissing.splice(expectedButMissing.indexOf(fullAttribute), 1);
+      }
       // Validate the attribute
       validateAttribute(
         fullAttribute,
@@ -104,22 +107,15 @@ const validateArray = (
   typeMismatch: string[],
   unexpectedAttribute: string[]
 ) => {
-  if (Array.isArray(array)) {
-    for (let i = 0; i < array.length; i++) {
-      // Validate each item in the array
-      validateAttribute(
-        `${attributeRoot}[${i}]`,
-        array[i],
-        checkRules,
-        expectedButMissing,
-        typeMismatch,
-        unexpectedAttribute
-      );
-    }
-  } else {
-    // Not an array!
-    typeMismatch.push(
-      `Expected ${attributeRoot} to be an array; was ${typeof attributeRoot}`
+  for (let i = 0; i < array.length; i++) {
+    // Validate each item in the array
+    validateAttribute(
+      `${attributeRoot}[${i}]`,
+      array[i],
+      checkRules,
+      expectedButMissing,
+      typeMismatch,
+      unexpectedAttribute
     );
   }
 };
@@ -137,7 +133,7 @@ const validateAttribute = (
       ? "null"
       : Array.isArray(attributeValue)
       ? "array"
-      : typeof attributeRoot;
+      : typeof attributeValue;
 
   const arrayHandlers = getAdvancedTypeHandlers(
     checkRules,
@@ -169,7 +165,7 @@ const validateAttribute = (
     }
   } else if (attributeType === "object" && objectHandlers.length > 0) {
     // Handle attribute as object
-    if (arrayHandlers.length === 1) {
+    if (objectHandlers.length === 1) {
       // No branching required; directly pass up any errors
       validateObject(
         attributeRoot,
@@ -196,7 +192,7 @@ const validateAttribute = (
     // Mismatched Data Type
     const allowedTypes = getTypesForErrorMessage(checkRules);
     typeMismatch.push(
-      `Expected ${attributeRoot} to be one of the following types: ${allowedTypes}, but was ${typeof attributeRoot}`
+      `Expected ${attributeRoot} to be one of the following types: ${allowedTypes}, but was ${attributeType}`
     );
   }
 };
@@ -231,15 +227,26 @@ const getTypesForErrorMessage = (checkRules: ValidatorAllowedTypes) => {
   return `[${allowedTypes.join(", ")}]`;
 };
 
+// Note: only uses shallow checking!
 const pushIfArrayDoesNotAlreadyInclude = <T>(array: T[], item: T) => {
   if (!array.includes(item)) {
     array.push(item);
   }
 };
 
-export const generateFullAttributeName = (
+const generateFullAttributeName = (
   attributeRoot: string,
   attribute: string
 ) => {
   return attributeRoot ? `${attributeRoot}.${attribute}` : attribute;
+};
+
+export const internalFunctionsForTesting = {
+  validateObject,
+  validateArray,
+  validateAttribute,
+  getAdvancedTypeHandlers,
+  getTypesForErrorMessage,
+  pushIfArrayDoesNotAlreadyInclude,
+  generateFullAttributeName,
 };

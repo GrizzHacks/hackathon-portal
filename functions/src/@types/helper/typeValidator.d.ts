@@ -1,4 +1,5 @@
 declare interface ValidatorAdvancedTypeRules {
+  rules: any;
   type: "array" | "object";
 }
 
