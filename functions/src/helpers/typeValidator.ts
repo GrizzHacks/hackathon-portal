@@ -237,7 +237,7 @@ const pushIfArrayDoesNotAlreadyInclude = <T>(array: T[], item: T) => {
   }
 };
 
-const generateFullAttributeName = (
+export const generateFullAttributeName = (
   attributeRoot: string,
   attribute: string
 ) => {
