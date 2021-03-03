@@ -12,3 +12,5 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 });
 
 export const stpm = initModule(stpmModule, "/stpm");
+
+export const codeCoverageDummyTestFunction = () => true;
