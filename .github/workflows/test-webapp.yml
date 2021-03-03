@@ -36,3 +36,10 @@ jobs:
       # Test the web app
       - name: Test the web app
         run: cd webapp; npm run coverage
+
+      # Upload Code Coverage Report
+      - name: Upload Code Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          directory: ./webapp/coverage
+          flags: unittests, webapp

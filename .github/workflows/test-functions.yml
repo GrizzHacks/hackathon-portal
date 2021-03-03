@@ -36,3 +36,10 @@ jobs:
       # Test the functions
       - name: Test the functions
         run: cd functions; npm run coverage
+
+      # Upload Code Coverage Report
+      - name: Upload Code Coverage Report
+        uses: codecov/codecov-action@v1
+        with:
+          directory: ./functions/coverage
+          flags: unittests, functions
