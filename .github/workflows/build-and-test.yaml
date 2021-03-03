@@ -21,11 +21,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Setup Node
       - name: Setup Node.js 14
-      - uses: actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
           node-version: "14"
 
@@ -39,11 +39,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Install node modules
       - name: Install node modules
-      - run: cd functions; npm install
+        run: cd functions; npm install
 
   install-webapp-node-modules:
     needs: setup
@@ -55,11 +55,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Install node modules
       - name: Install node modules
-      - run: cd webapp; npm install
+        run: cd webapp; npm install
 
   build-functions:
     needs: install-functions-node-modules
@@ -71,11 +71,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Build the functions directory
       - name: Build the functions directory
-      - run: cd functions; npm run build
+        run: cd functions; npm run build
 
   build-webapp:
     needs: install-webapp-node-modules
@@ -87,11 +87,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Build the webapp directory
       - name: Build the webapp directory
-      - run: cd functions; npm run build
+        run: cd functions; npm run build
 
   test-functions:
     needs: build-functions
@@ -103,11 +103,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Test functions
       - name: Test functions
-      - run: cd functions; npm run coverage
+        run: cd functions; npm run coverage
 
   test-webapp:
     needs: build-webapp
@@ -119,8 +119,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout the repository
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Test the web app
       - name: Test the web app
-      - run: cd functions; npm run coverage
+        run: cd functions; npm run coverage
