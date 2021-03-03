@@ -33,6 +33,17 @@ jobs:
       - name: Install node modules
         run: cd webapp; npm install
 
+      # Configure Firebase environment variables
+      - name: Configure Firebase environment variables
+        run: |
+          echo REACT_APP_FIREBASE_APIKEY=${{ secrets.FIREBASE_APIKEY }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_AUTHDOMAIN=${{ secrets.FIREBASE_AUTHDOMAIN }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_PROJECTID=${{ secrets.FIREBASE_PROJECTID }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_STORAGEBUCKET=${{ secrets.FIREBASE_STORAGEBUCKET }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_MESSAGINGSENDERID=${{ secrets.FIREBASE_MESSAGINGSENDERID }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_APPID=${{ secrets.FIREBASE_APPID }} >> ./webapp/.env
+          echo REACT_APP_FIREBASE_MEASUREMENTID=${{ secrets.FIREBASE_MEASUREMENTID }} >> ./webapp/.env
+
       # Test the web app
       - name: Test the web app
         run: cd webapp; npm run coverage
