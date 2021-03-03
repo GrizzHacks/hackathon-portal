@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import ApiExplorer from "./devTools/ApiExplorer";
+import Home from "./components/Home";
 
 function App() {
   if (window.location.href.includes("localhost")) {
