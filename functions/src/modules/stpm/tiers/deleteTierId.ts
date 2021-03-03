@@ -1,9 +1,7 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory } from "../../../helpers";
-import { uasPermissionSwitch } from "../../../systems/uas";
 
-const deleteTierId = (req: Request, res: Response, next: NextFunction) => {
+const deleteTierId: ExpressFunction = (req, res, next) => {
 
     const userPermission = res.locals.permissions as UserPermission;
     

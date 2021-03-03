@@ -1,9 +1,7 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory } from "../../../helpers";
-import { uasPermissionSwitch } from "../../../systems/uas";
 
-const deletePrizeId = (req: Request, res: Response, next: NextFunction) => {
+const deleteCatagoryAndPrizeId: ExpressFunction = (req, res, next ) => {
 
     const userPermission = res.locals.permissions as UserPermission;
     
@@ -27,4 +25,4 @@ const deletePrizeId = (req: Request, res: Response, next: NextFunction) => {
         next();
     }
 };
-export default deletePrizeId;
+export default deleteCatagoryAndPrizeId;

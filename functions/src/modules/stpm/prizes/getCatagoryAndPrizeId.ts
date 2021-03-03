@@ -9,15 +9,15 @@ const getPrizeId: ExpressFunction = (req, res, next) => {
     })(req, res, next);
   };
 
-  const execute: ExpressFunction = (req, res, next) => {
+const execute: ExpressFunction = (req, res, next) => {
       const errorHandler = expressErrorHandlerFactory(req, res, next);
       firebaseApp
       .firestore()
       .collection("Prizes")
-      .doc(req.params.prizeCatagoryId)
+      .doc(req.params.prizeId)
       .get()
       .then((document) => {
-          console.log(req.params.prizeCatagoryId);
+          console.log(req.params.prizeId);
           console.log(document.data());
           res.status(200).send(document.data());
           next();
@@ -36,6 +36,6 @@ const getPrizeId: ExpressFunction = (req, res, next) => {
           "Sorry, you do not have access to perform that operation."
         );
       }
-  }; */
+  };  wasnt sure how to implement this */
 
   export default getPrizeId;

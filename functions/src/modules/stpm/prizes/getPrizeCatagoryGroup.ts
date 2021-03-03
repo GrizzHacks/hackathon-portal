@@ -7,17 +7,17 @@ const getSuperCatagory: ExpressFunction = (req, res, next) => {
     uasPermissionSwitch({
         organizer: {accepted: execute},
     })(req, res, next);
-};
+  };
 
 const execute: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     firebaseApp
       .firestore()
       .collection("superCategories")
-      .doc(req.params.categoryId)
+      .doc(req.params.id)
       .get()
       .then((document) => {
-        console.log(req.params.categoryId);
+        console.log(req.params.id);
         console.log(document.data());
         res.status(200).send(document.data());
         next();
