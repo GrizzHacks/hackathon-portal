@@ -13,14 +13,17 @@ const execute: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     firebaseApp
       .firestore()
-      .collection("superCategories")
+      .collection("PrizeCatagoryGroup")
       .doc(req.params.id)
       .get()
       .then((document) => {
-        console.log(req.params.id);
-        console.log(document.data());
-        res.status(200).send(document.data());
+        const data = document.data() as STPMPrizeCatagoryGroup | undefined;
+        if(data){
+        res.status(200).send(data);
         next();
+        } else {
+            errorHandler('PrizeCatagoryGroup/${req.params.id} has no data');
+        }
       })
       .catch(errorHandler);
   };

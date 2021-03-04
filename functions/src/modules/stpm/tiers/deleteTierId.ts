@@ -12,8 +12,6 @@ const deleteTierId: ExpressFunction = (req, res, next) => {
         .doc(req.params.TierId)
         .delete()
         .then((document) =>{
-        res.status(200).send();
-        next()
     }
     ).catch((err) => {
         console.log(err);
@@ -25,4 +23,7 @@ const deleteTierId: ExpressFunction = (req, res, next) => {
         next();
     }
 };
+
+
+
 export default deleteTierId;

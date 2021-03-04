@@ -12,6 +12,10 @@ const postPrizeCatagoryGroup: ExpressFunction = (req, res, next) => {
   })(req, res, next);
 };
 
+const validate: ExpressFunction = (req,res,next) => {
+  
+}
+
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   const body = JSON.parse(req.body)
