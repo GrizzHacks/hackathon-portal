@@ -1,10 +1,12 @@
+import { Container } from "@material-ui/core";
 import React, { Fragment } from "react";
 import logo from "./logo.svg";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
+import ErrorPage from "./components/pages/ErrorPage";
+import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
-import Home from "./components/Home";
 
 declare interface AppProps {
   theme: "light" | "dark";
@@ -20,15 +22,24 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
         currentUserProfile={null}
         pageTitle=""
       />
-      <Router>
-        <div className="App">
+      <Container>
+        <Router>
           <Switch>
             <Route path="/" exact component={Home} />
-            <Route path="/api" component={ApiExplorer} />
-            <Route render={() => <div>404 Not Found</div>} />
+            <Route path="/api-explorer" component={ApiExplorer} />
+            <Route
+              render={() => (
+                <ErrorPage
+                  errorCode={404}
+                  errorMessage="Unable to find the page you are looking for."
+                  errorDescription="Unless, of course, you are looking for an error page. In which case,
+                  great job! You found it!"
+                />
+              )}
+            />
           </Switch>
-        </div>
-      </Router>
+        </Router>
+      </Container>
       <BugReportFab />
     </Fragment>
   );
