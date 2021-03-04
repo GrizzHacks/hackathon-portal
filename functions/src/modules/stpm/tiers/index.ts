@@ -1,9 +1,9 @@
 import type { Express } from "express";
-import createTier from "./createCompany";
-import deleteTier from "./deleteCompany";
-import getTier from "./getCompany";
-import listTiers from "./listCompanies";
-import updateTier from "./updateCompany";
+import createTier from "./createTier";
+import deleteTier from "./deleteTier";
+import getTier from "./getTier";
+import listTiers from "./listTiers";
+import updateTier from "./updateTier";
 
 export default (app: Express, endpoint: string) => {
   app.get(`${endpoint}/`, listTiers);
