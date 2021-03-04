@@ -45,6 +45,7 @@ const execute: ExpressFunction = (req, res, next) => {
   body.sponsorTierOrder = body.sponsorTierOrder
     ? body.sponsorTierOrder
     : Date.now();
+  body.otherBenefits = body.otherBenefits ? body.otherBenefits : {};
 
   firebaseApp
     .firestore()

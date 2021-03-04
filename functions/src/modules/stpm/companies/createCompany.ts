@@ -1,6 +1,9 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory, requestBodyTypeValidator } from "../../../helpers";
+import {
+  expressErrorHandlerFactory,
+  requestBodyTypeValidator,
+} from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const createCompany: ExpressFunction = (req, res, next) => {
@@ -30,6 +33,9 @@ const execute: ExpressFunction = (req, res, next) => {
   const body = res.locals.parsedBody as STPMCompanyCreateRequest;
 
   // Preprocessing for values that allow default values
+  body.overriddenBenefits = body.overriddenBenefits
+    ? body.overriddenBenefits
+    : {};
 
   firebaseApp
     .firestore()
