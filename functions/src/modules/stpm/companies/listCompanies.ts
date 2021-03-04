@@ -15,7 +15,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("sponsorCompanies")
-    .orderBy("sponsorName", "asc")
+    .orderBy("companyName", "asc")
     .get()
     .then((documents) => {
       const sponsorCompanies: STPMCompany[] = [];
