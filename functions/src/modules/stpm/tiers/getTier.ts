@@ -6,7 +6,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 const getTier: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
-    sponsor: { accepted: execute },
+    sponsor: { accepted: execute }, // TODO: Only do this if the tier matches that of the sponsor company; requires #21
   })(req, res, next);
 };
 
