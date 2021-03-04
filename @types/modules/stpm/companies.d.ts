@@ -7,7 +7,7 @@ declare interface STPMCompaniesUpdateRequest {
 
 declare interface STPMCompaniesCreateRequest
   extends STPMCompaniesUpdateRequest {
-  companyId: id;
+  companyId: string;
   companyName: string;
   companyLogoUrl?: string;
   companyAcronym?: string;
@@ -16,7 +16,7 @@ declare interface STPMCompaniesCreateRequest
 }
 
 declare interface STPMCompanies extends STPMCompaniesCreateRequest {
-  companyId: id;
+  companyId: string;
   companyName: string;
   companyLogoUrl: string;
   companyAcronym: string;
