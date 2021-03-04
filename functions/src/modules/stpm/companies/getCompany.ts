@@ -3,8 +3,6 @@ import { firebaseApp } from "../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
-
-
 const getCompany: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
@@ -16,7 +14,7 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
-    .collection("sponsorCompany")
+    .collection("sponsorCompanies")
     .doc(req.params.companyId)
     .get()
     .then((document) => {
@@ -31,7 +29,6 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
@@ -45,6 +42,5 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
     );
   }
 };
-
 
 export default getCompany;
