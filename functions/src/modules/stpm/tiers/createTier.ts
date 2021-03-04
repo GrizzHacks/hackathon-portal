@@ -23,16 +23,13 @@ const validate: ExpressFunction = (req, res, next) => {
       sponsorshipExpo: { rules: ["boolean"], required: true },
       techTalk: { rules: ["boolean"], required: true },
       officeHours: { rules: ["boolean"], required: true },
-      prize: { rules: ["boolean"], required: true },
-      prizeBudget: { rules: ["number"] },
+      prizeBudget: { rules: ["number"], required: true },
       attendeeData: { rules: ["string"], required: true }, // TODO: Support Enum Advanced Types
       numberOfMentors: { rules: ["number"], required: true },
       numberOfRecruiters: { rules: ["number"], required: true },
       distributionOfSwag: { rules: ["boolean"], required: true },
-      openingSessionTalk: { rules: ["boolean"], required: true },
-      openingSessionTalkLength: { rules: ["number"] },
-      closingSessionTalk: { rules: ["boolean"], required: true },
-      closingSessionTalkLength: { rules: ["number"] },
+      openingSessionTalkLength: { rules: ["number"], required: true },
+      closingSessionTalkLength: { rules: ["number"], required: true },
       // otherBenefits: { [key: string]: string }; // TODO: Support Dictionary Advanced Types
     },
   };
@@ -48,13 +45,6 @@ const execute: ExpressFunction = (req, res, next) => {
   body.sponsorTierOrder = body.sponsorTierOrder
     ? body.sponsorTierOrder
     : Date.now();
-  body.prizeBudget = body.prizeBudget ? body.prizeBudget : 0;
-  body.openingSessionTalkLength = body.openingSessionTalkLength
-    ? body.openingSessionTalkLength
-    : 0;
-  body.closingSessionTalkLength = body.closingSessionTalkLength
-    ? body.closingSessionTalkLength
-    : 0;
 
   firebaseApp
     .firestore()
