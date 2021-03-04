@@ -1,6 +1,7 @@
 declare interface STPMCompanyUpdateRequest {
   companyName?: string;
   companyLogoUrl?: string;
+  companyWebsite?: string;
   companyAcronym?: string;
   sponsorTierId?: string;
   overriddenBenefits?: { [key: string]: string };

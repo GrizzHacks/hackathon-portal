@@ -18,8 +18,9 @@ const validate: ExpressFunction = (req, res, next) => {
     rules: {
       companyId: { rules: ["string"], required: true },
       companyName: { rules: ["string"], required: true },
-      companyLogoUrl: { rules: ["string"], required: true },
-      companyAcronym: { rules: ["string"], required: true },
+      companyLogoUrl: { rules: ["string"]},
+      companyWebsite: { rules: ["string"]},
+      companyAcronym: { rules: ["string"]},
       sponsorTierId: { rules: ["string"], required: true },
       //overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
     },

@@ -19,6 +19,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     rules: {
       companyName: { rules: ["string"] },
       companyLogoUrl: { rules: ["string"] },
+      companyWebsite: { rules: ["string"] },
       companyAcronym: { rules: ["string"] },
       sponsorTierId: { rules: ["string"] },
       // overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
@@ -33,6 +34,7 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
     rules: {
       companyName: { rules: ["string"] },
       companyLogoUrl: { rules: ["string"] },
+      companyWebsite: { rules: ["string"] },
       companyAcronym: { rules: ["string"] },
     },
   };
