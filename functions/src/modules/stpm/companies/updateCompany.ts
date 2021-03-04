@@ -22,11 +22,26 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       companyAcronym: { rules: ["string"] },
       sponsorTierId: { rules: ["string"] },
 
-      //overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
+      // overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
+
+
+const validateSponsor: ExpressFunction = (req, res, next) => {
+  const validationRules: ValidatorObjectRules = {
+    type: "object",
+    rules: {
+      companyName: { rules: ["string"] },
+      companyLogoUrl: { rules: ["string"] },
+      companyAcronym: { rules: ["string"] },
+
+    },
+  };
+  requestBodyTypeValidator(req, res, next)(validationRules, execute);
+};
+
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
@@ -47,7 +62,7 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
   if (sponsorCompany === req.params.companyId) {
-    execute(req, res, next);
+    validateSponsor(req, res, next);
   } else {
     errorHandler(
       `A sponsor from ${sponsorCompany} tried viewing benefits for ${req.params.companyId}.`,
