@@ -5,6 +5,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
 import LoadingScreen from "./components/misc/LoadingScreen";
+import NotificationBar, {
+  NotificationMessage,
+} from "./components/misc/Notifications";
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
@@ -16,6 +19,12 @@ declare interface AppProps {
 
 const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
   const [loadingMessage, setLoadingMessage] = React.useState("");
+  const [notification, setNotification] = React.useState<NotificationMessage>({
+    type: "info",
+    message: "",
+    open: false,
+  });
+
   return (
     <Fragment>
       <NavBar
@@ -43,6 +52,10 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
         </Router>
       </Container>
       <LoadingScreen loadingMessage={loadingMessage} />
+      <NotificationBar
+        notification={notification}
+        setNotification={setNotification}
+      />
       <BugReportFab />
     </Fragment>
   );
