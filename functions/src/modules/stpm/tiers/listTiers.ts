@@ -11,7 +11,7 @@ const listTiers: ExpressFunction = (req, res, next) => {
   })(req, res, next);
 };
 
-const execute: ExpressFunction = (req, res, next) =>{
+const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
@@ -19,13 +19,15 @@ const execute: ExpressFunction = (req, res, next) =>{
     .orderBy("sponsorTierOrder", "asc")
     .get()
     .then((documents) => {
-      console.log(documents.docs);
-      res.status(200).send({sponsorTiers: documents.docs});
+      const sponsorTiers: STPMTier[] = [];
+      for (const doc of documents.docs) {
+        sponsorTiers.push(doc.data() as STPMTier);
+      }
+      res.status(200).send({ sponsorTiers } as STPMTierList);
       next();
     })
 
-
-    .catch(errorHandler)
+    .catch(errorHandler);
 };
 
 export default listTiers;

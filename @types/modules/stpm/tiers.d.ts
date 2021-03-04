@@ -18,7 +18,7 @@ declare interface STPMTierUpdateRequest {
   otherBenefits?: { [key: string]: string };
 }
 
-declare interface STPMTierCreateRequest {
+declare interface STPMTierCreateRequest extends STPMTierUpdateRequest {
   sponsorTierId: string;
   sponsorTierName: string;
   sponsorTierOrder?: number;
@@ -39,7 +39,7 @@ declare interface STPMTierCreateRequest {
   otherBenefits?: { [key: string]: string };
 }
 
-declare interface STPMTier {
+declare interface STPMTier extends STPMTierCreateRequest {
   sponsorTierId: string;
   sponsorTierName: string;
   sponsorTierOrder: number;
@@ -58,4 +58,8 @@ declare interface STPMTier {
   closingSessionTalk: boolean;
   closingSessionTalkLength: number;
   otherBenefits: { [key: string]: string };
+}
+
+declare interface STPMTierList {
+  sponsorTiers: STPMTier[];
 }

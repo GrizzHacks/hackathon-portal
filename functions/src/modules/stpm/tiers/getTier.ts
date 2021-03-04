@@ -20,10 +20,13 @@ const execute: ExpressFunction = (req, res, next) => {
     .doc(req.params.tierId)
     .get()
     .then((document) => {
-      console.log(req.params.tierId);
-      console.log(document.data());
-      res.status(200).send(document.data());
-      next();
+      const data = document.data() as STPMTier | undefined;
+      if (data) {
+        res.status(200).send(data);
+        next();
+      } else {
+        errorHandler(`sponsorTiers/${req.params.tierId} has no data.`);
+      }
     })
     .catch(errorHandler);
 };
