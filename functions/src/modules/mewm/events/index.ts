@@ -3,8 +3,8 @@ import createEvent from "./createEvent";
 import deleteEvent from "./deleteEvent";
 import getEvent from "./getEvent";
 import listEvents from "./listEvents";
-import updateEvent from "./updateEvent";
 import resources from "./resources";
+import updateEvent from "./updateEvent";
 
 export default (app: Express, endpoint: string) => {
   app.get(`${endpoint}/`, listEvents);
