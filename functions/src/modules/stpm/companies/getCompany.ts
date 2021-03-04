@@ -18,7 +18,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .doc(req.params.companyId)
     .get()
     .then((document) => {
-      const data = document.data() as STPMCompanies | undefined;
+      const data = document.data() as STPMCompany | undefined;
       if (data) {
         res.status(200).send(JSON.stringify(data));
         next();

@@ -1,29 +1,21 @@
-declare interface STPMCompaniesUpdateRequest {
+declare interface STPMCompanyUpdateRequest {
   companyName?: string;
   companyLogoUrl?: string;
   companyAcronym?: string;
+  sponsorTierId?: string;
   overriddenBenefits?: { [key: string]: string };
 }
 
-declare interface STPMCompaniesCreateRequest
-  extends STPMCompaniesUpdateRequest {
+declare interface STPMCompanyCreateRequest extends STPMCompanyUpdateRequest {
   companyId: string;
   companyName: string;
-  companyLogoUrl?: string;
-  companyAcronym?: string;
   sponsorTierId: string;
-  overriddenBenefits?: { [key: string]: string };
 }
 
-declare interface STPMCompanies extends STPMCompaniesCreateRequest {
-  companyId: string;
-  companyName: string;
-  companyLogoUrl: string;
-  companyAcronym: string;
-  sponsorTierId: string;
+declare interface STPMCompany extends STPMCompanyCreateRequest {
   overriddenBenefits: { [key: string]: string };
 }
 
-declare interface STPMCompaniesList {
-  sponsorCompanies: STPMCompanies[];
+declare interface STPMCompanyList {
+  sponsorCompanies: STPMCompany[];
 }

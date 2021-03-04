@@ -46,7 +46,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .firestore()
     .collection("sponsorCompanies")
     .doc(req.params.companyId)
-    .update(res.locals.body as STPMCompaniesUpdateRequest)
+    .update(res.locals.body as STPMCompanyUpdateRequest)
     .then(() => {
       res.status(200).send();
       next();

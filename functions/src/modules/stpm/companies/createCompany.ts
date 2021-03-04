@@ -27,8 +27,9 @@ const validate: ExpressFunction = (req, res, next) => {
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
+  const body = res.locals.parsedBody as STPMCompanyCreateRequest;
 
-  const body = res.locals.parsedBody as STPMCompaniesCreateRequest;
+  // Preprocessing for values that allow default values
 
   firebaseApp
     .firestore()
