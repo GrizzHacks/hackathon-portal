@@ -2,6 +2,7 @@ import * as functions from "firebase-functions";
 import { logger } from "./helpers";
 import { initModule } from "./initModule";
 import stpmModule from "./modules/stpm";
+import pmModule from "./modules/pm";
 import mewmModule from "./modules/mewm";
 
 // Start writing Firebase Functions
@@ -14,6 +15,8 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 export const stpm = initModule(stpmModule, "/stpm");
 
-export const mewm = initModule(mewmModule, "/mewm");
+export const mewm = initModule(mewmModule, "/pm");
+
+export const pm = initModule(pmModule, "/mewm");
 
 export const codeCoverageDummyTestFunction = () => true;
