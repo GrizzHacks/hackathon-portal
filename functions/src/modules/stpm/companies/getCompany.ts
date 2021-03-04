@@ -22,7 +22,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .then((document) => {
       const data = document.data() as STPMCompanies | undefined;
       if (data) {
-        res.status(200).send(data);
+        res.status(200).send(JSON.stringify(data));
         next();
       } else {
         errorHandler(`sponsorCompanies/${req.params.companyId} has no data.`);
