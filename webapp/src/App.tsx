@@ -1,12 +1,15 @@
 import React from "react";
 import logo from "./logo.svg";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ApiExplorer from "./devTools/ApiExplorer";
-
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-
 import Home from "./components/Home";
 
-const App = () => {
+declare interface AppProps {
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+}
+
+const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
   return (
     <Router>
       <div className="App">
