@@ -4,6 +4,7 @@ import logo from "./logo.svg";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
+import LoadingScreen from "./components/misc/LoadingScreen";
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
@@ -14,6 +15,7 @@ declare interface AppProps {
 }
 
 const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
+  const [loadingMessage, setLoadingMessage] = React.useState("");
   return (
     <Fragment>
       <NavBar
@@ -40,6 +42,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           </Switch>
         </Router>
       </Container>
+      <LoadingScreen loadingMessage={loadingMessage} />
       <BugReportFab />
     </Fragment>
   );
