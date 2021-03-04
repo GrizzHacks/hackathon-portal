@@ -4,6 +4,7 @@ import deleteEvent from "./deleteEvent";
 import getEvent from "./getEvent";
 import listEvents from "./listEvent";
 import updateEvent from "./updateEvent";
+import resources from "./resources";
 
 export default (app: Express, endpoint: string) => {
   app.get(`${endpoint}/`, listEvents);
@@ -11,4 +12,5 @@ export default (app: Express, endpoint: string) => {
   app.post(`${endpoint}/`, createEvent);
   app.patch(`${endpoint}/:eventId`, updateEvent);
   app.delete(`${endpoint}/:eventId`, deleteEvent);
+  resources(app, `${endpoint}/resources`);
 };
