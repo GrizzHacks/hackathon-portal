@@ -20,10 +20,13 @@ const execute: ExpressFunction = (req, res, next) => {
     .doc(req.params.companyId)
     .get()
     .then((document) => {
-      console.log(req.params.companyId);
-      console.log(document.data());
-      res.status(200).send(document.data());
-      next();
+      const data = document.data() as STPMCompanies | undefined;
+      if (data) {
+        res.status(200).send(data);
+        next();
+      } else {
+        errorHandler(`sponsorCompanies/${req.params.companyId} has no data.`);
+      }
     })
     .catch(errorHandler);
 };
