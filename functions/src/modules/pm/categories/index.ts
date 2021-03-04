@@ -3,8 +3,8 @@ import createCategory from "./createCategory";
 import deleteCategory from "./deleteCategory";
 import getCategory from "./getCategory";
 import listCategories from "./listCategories";
+import prizes from "./prizes";
 import updateCategory from "./updateCategory";
-import resources from "./prizes";
 
 export default (app: Express, endpoint: string) => {
   app.get(`${endpoint}/`, listCategories);
@@ -12,5 +12,5 @@ export default (app: Express, endpoint: string) => {
   app.post(`${endpoint}/`, createCategory);
   app.patch(`${endpoint}/:categoryId`, updateCategory);
   app.delete(`${endpoint}/:categoryId`, deleteCategory);
-  resources(app, `${endpoint}/:categoryId/resources`);
+  prizes(app, `${endpoint}/:categoryId/prizes`);
 };
