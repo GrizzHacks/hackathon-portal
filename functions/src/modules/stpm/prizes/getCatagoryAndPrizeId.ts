@@ -1,13 +1,29 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory } from "../../../helpers";
+import { expressErrorHandlerFactory,requestBodyTypeValidator } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const getPrizeId: ExpressFunction = (req, res, next) => {
     uasPermissionSwitch({
-      organizer: { accepted: execute },
+      organizer: { accepted: validate },
     })(req, res, next);
   };
+
+  const validate: ExpressFunction = (req,res,next) => {
+    const validationRules: ValidatorObjectRules = {
+      type: "object",
+      rules: {
+        prizeCategoryId: {rules: ["string"]},
+        prizeCategoryName: {rules: ["string"]},
+        prizeCategoryDescription:{rules: ["string"]},
+        eligibility: {rules: ["string"]},
+        //prize?:{rules: ["Prize"]}; //TODO create new datatype prizes
+        companyId: {rules: ["string"]},
+        approvalStatus: {rules: ["string"]},
+      }
+    }
+    requestBodyTypeValidator(req,res,next)((validationRules), execute);
+  }
 
 const execute: ExpressFunction = (req, res, next) => {
       const errorHandler = expressErrorHandlerFactory(req, res, next);
@@ -17,10 +33,15 @@ const execute: ExpressFunction = (req, res, next) => {
       .doc(req.params.prizeId)
       .get()
       .then((document) => {
-          console.log(req.params.prizeId);
-          console.log(document.data());
-          res.status(200).send(document.data());
-          next();
+        const data = document.data() as STPMPrizeCatagories | undefined;
+        if(data){
+        res.status(200).send(data);
+        next();
+        } else{
+          errorHandler('PrizeCatagories${req.params.id} has no data');
+
+        }
+          
       }).catch(errorHandler);
   };
 

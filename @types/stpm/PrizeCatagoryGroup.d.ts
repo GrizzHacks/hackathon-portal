@@ -6,9 +6,14 @@ declare interface STPMPrizeCatagoryGroup {
 }
 
 declare interface STPMPrizeCatGroupUpdateRequest {
-    prizeCategoryId: string;
     prizeCatagoryName?: string;
     prizeCategoryDescription?: string;
     prizeCategoryOrder?: Array<string>;
+}
+
+declare interface STPMPrizeCatGroupCreateRequest {
+    prizeCatagoryName: string;
+    prizeCategoryDescription: string;
+    prizeCategoryOrder: Array<string>;
 }
 
