@@ -50,5 +50,8 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(ky))"
     ]
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.1.7"
   }
 }
