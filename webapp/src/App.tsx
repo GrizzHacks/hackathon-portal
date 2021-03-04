@@ -1,6 +1,5 @@
 import { Container } from "@material-ui/core";
 import React, { Fragment } from "react";
-import logo from "./logo.svg";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
