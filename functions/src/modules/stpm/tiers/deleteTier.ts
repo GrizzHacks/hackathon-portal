@@ -3,7 +3,7 @@ import { firebaseApp } from "../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
-const deleteCompany: ExpressFunction = (req, res, next) => {
+const deleteTier: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
   })(req, res, next);
@@ -14,8 +14,8 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("sponsorCompanies")
-    .doc(req.params.companyId)
+    .collection("sponsorTiers")
+    .doc(req.params.tierId)
     .delete()
     .then(() => {
       res.status(200).send();
@@ -24,4 +24,4 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-export default deleteCompany;
+export default deleteTier;

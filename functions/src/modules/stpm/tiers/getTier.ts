@@ -3,9 +3,10 @@ import { firebaseApp } from "../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
-const listCompanies: ExpressFunction = (req, res, next) => {
+const getTier: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
+    sponsor: { accepted: execute }, // TODO: Only do this if the tier matches that of the sponsor company; requires #21
   })(req, res, next);
 };
 
@@ -14,21 +15,19 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("sponsorCompanies")
-    .orderBy("companyName", "asc")
+    .collection("sponsorTiers")
+    .doc(req.params.tierId)
     .get()
-    .then((documents) => {
-      const sponsorCompanies: STPMCompany[] = [];
-      for (const doc of documents.docs) {
-        sponsorCompanies.push(doc.data() as STPMCompany);
+    .then((document) => {
+      const data = document.data() as STPMTier | undefined;
+      if (data) {
+        res.status(200).send(JSON.stringify(data));
+        next();
+      } else {
+        errorHandler(`sponsorTiers/${req.params.tierId} has no data.`);
       }
-      res
-        .status(200)
-        .send(JSON.stringify({ sponsorCompanies } as STPMCompanyList));
-      next();
     })
-
     .catch(errorHandler);
 };
 
-export default listCompanies;
+export default getTier;
