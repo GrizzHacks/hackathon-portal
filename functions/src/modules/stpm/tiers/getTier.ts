@@ -14,6 +14,7 @@ const getTier: ExpressFunction = (req, res, next) => {
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   firebaseApp
     .firestore()
     .collection("sponsorTiers")

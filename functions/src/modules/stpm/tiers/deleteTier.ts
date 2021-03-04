@@ -8,12 +8,12 @@ const deleteTier: ExpressFunction = (req, res, next) => {
   next();
   uasPermissionSwitch({
     organizer: { accepted: execute },
-    sponsor: { accepted: execute },
   })(req, res, next);
 };
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   firebaseApp
     .firestore()
     .collection("sponsorTiers")
