@@ -7,8 +7,6 @@ import {
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const updateTier: ExpressFunction = (req, res, next) => {
-  res.status(200).send();
-  next();
   uasPermissionSwitch({
     organizer: { accepted: validate },
   })(req, res, next);

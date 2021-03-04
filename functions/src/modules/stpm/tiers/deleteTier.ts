@@ -4,8 +4,6 @@ import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const deleteTier: ExpressFunction = (req, res, next) => {
-  res.status(200).send();
-  next();
   uasPermissionSwitch({
     organizer: { accepted: execute },
   })(req, res, next);
