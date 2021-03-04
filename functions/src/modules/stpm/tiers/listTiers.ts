@@ -22,7 +22,7 @@ const execute: ExpressFunction = (req, res, next) => {
       for (const doc of documents.docs) {
         sponsorTiers.push(doc.data() as STPMTier);
       }
-      res.status(200).send({ sponsorTiers } as STPMTierList);
+      res.status(200).send(JSON.stringify({ sponsorTiers } as STPMTierList));
       next();
     })
 

@@ -21,7 +21,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .then((document) => {
       const data = document.data() as STPMTier | undefined;
       if (data) {
-        res.status(200).send(data);
+        res.status(200).send(JSON.stringify(data));
         next();
       } else {
         errorHandler(`sponsorTiers/${req.params.tierId} has no data.`);

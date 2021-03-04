@@ -18,7 +18,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .doc(req.params.tierId)
     .delete()
     .then(() => {
-      res.status(201).send();
+      res.status(200).send();
       next();
     })
     .catch(errorHandler);

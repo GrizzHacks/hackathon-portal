@@ -45,7 +45,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .firestore()
     .collection("sponsorTiers")
     .doc(req.params.tierId)
-    .update(res.locals.body as STPMTierUpdateRequest)
+    .update(res.locals.parsedBody as STPMTierUpdateRequest)
     .then(() => {
       res.status(200).send();
       next();
