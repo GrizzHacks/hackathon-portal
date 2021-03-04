@@ -27,7 +27,8 @@ export const parseJsonBodyAndValidateTypeFactory: ExpressFunction<
       typeMismatch.length === 0 &&
       unexpectedAttribute.length === 0
     ) {
-      res.locals.parsedBody;
+      res.locals.parsedBody = jsonObject;
+      callback(req, res, next);
     } else {
       const allErrorMessages = [];
       if (expectedButMissing.length > 0) {
