@@ -3,6 +3,7 @@ import { logger } from "./helpers";
 import { initModule } from "./initModule";
 import stpmModule from "./modules/stpm";
 import pmModule from "./modules/pm";
+import mewmModule from "./modules/mewm";
 
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
@@ -14,6 +15,8 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 export const stpm = initModule(stpmModule, "/stpm");
 
-export const pm = initModule(pmModule, "/pm");
+export const mewm = initModule(mewmModule, "/pm");
+
+export const pm = initModule(pmModule, "/mewm");
 
 export const codeCoverageDummyTestFunction = () => true;
