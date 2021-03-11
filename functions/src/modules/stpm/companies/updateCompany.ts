@@ -18,9 +18,9 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     type: "object",
     rules: {
       companyName: { rules: ["string"] },
-      companyLogoUrl: { rules: ["string"] },
-      companyWebsite: { rules: ["string"] },
-      companyAcronym: { rules: ["string"] },
+      companyLogoUrl: { rules: ["string", "emptystring"] },
+      companyWebsite: { rules: ["string", "emptystring"] },
+      companyAcronym: { rules: ["string", "emptystring"] },
       sponsorTierId: { rules: ["string"] },
       // overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
     },
