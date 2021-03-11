@@ -134,6 +134,8 @@ const validateAttribute = (
       ? "null"
       : Array.isArray(attributeValue)
       ? "array"
+      : attributeValue === ""
+      ? "emptystring"
       : typeof attributeValue;
 
   const arrayHandlers = getAdvancedTypeHandlers(

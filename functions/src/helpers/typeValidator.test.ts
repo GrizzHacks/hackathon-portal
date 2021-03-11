@@ -409,6 +409,47 @@ test("validateAttribute fails to match on no object handlers", () => {
   expect(typeMismatch[0].includes("was object")).toBe(true);
 });
 
+test("validateAttribute matches empty string when allowed", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    "",
+    ["string", "emptystring"],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+});
+
+test("validateAttribute fails on empty string when now allowed", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    "",
+    ["string"],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+  expect(typeMismatch.length).toBe(1);
+  expect(typeMismatch[0].includes("testAttribute")).toBe(true);
+  expect(typeMismatch[0].includes("[string]")).toBe(true);
+  expect(typeMismatch[0].includes("was emptystring")).toBe(true);
+});
+
 // -----------------------------------------------------------------------------
 // getAdvancedTypeHandlers
 // -----------------------------------------------------------------------------

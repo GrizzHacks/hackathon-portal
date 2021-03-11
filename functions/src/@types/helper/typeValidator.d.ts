@@ -24,5 +24,6 @@ declare type primitive =
   | "symbol"
   | "null"
   | "undefined"
+  | "emptystring"
   | "boolean"
   | "function";
