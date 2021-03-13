@@ -18,13 +18,15 @@ export const validationRules: ValidatorObjectRules = {
   rules: {
     sponsorTierName: { rules: ["string"] },
     sponsorTierOrder: { rules: ["number"] },
-    logoSize: { rules: ["string"] }, // TODO: Support Enum Advanced Types
+    logoSize: {
+      rules: [{ type: "enum", rules: ["xs", "sm", "m", "lg", "xl"] }],
+    },
     sponsorshipExpo: { rules: ["boolean"] },
     techTalk: { rules: ["boolean"] },
     officeHours: { rules: ["boolean"] },
     prize: { rules: ["boolean"] },
     prizeBudget: { rules: ["number"] },
-    attendeeData: { rules: ["string"] }, // TODO: Support Enum Advanced Types
+    attendeeData: { rules: [{ type: "enum", rules: ["none", "pre", "post"] }] },
     numberOfMentors: { rules: ["number"] },
     numberOfRecruiters: { rules: ["number"] },
     distributionOfSwag: { rules: ["boolean"] },
