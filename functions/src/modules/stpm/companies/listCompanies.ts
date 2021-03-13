@@ -1,42 +1,33 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory,  requestBodyTypeValidator} from "../../../helpers";
+import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const listCompanies: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-      organizer: {accepted: validate},
+    organizer: { accepted: execute },
   })(req, res, next);
 };
 
-const validate: ExpressFunction = (req,res,next) => {
-  const validationRules: ValidatorObjectRules = {
-    type: "object",
-    rules: {
-      prizeCatagoryName: {rules: ["string"]},
-      prizeCategoryDescription: {rules: ["string"]},
-      //prizeCategoryOrder: {rules: ["Array<string>"]}, // TODO support advance types
-    }
-  }
-  requestBodyTypeValidator(req,res,next)((validationRules), execute);
-}
-
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   firebaseApp
     .firestore()
-    .collection("PrizeCatagoryGroup")
-    .doc(req.params.id)
+    .collection("sponsorCompanies")
+    .orderBy("companyName", "asc")
     .get()
-    .then((document) => {
-      const data = document.data() as STPMSponsorCompany | undefined;
-      if(data){
-      res.status(200).send(data);
-      next();
-      } else {
-          errorHandler('Sponsor Company/${req.params.id} has no data');
+    .then((documents) => {
+      const sponsorCompanies: STPMCompany[] = [];
+      for (const doc of documents.docs) {
+        sponsorCompanies.push(doc.data() as STPMCompany);
       }
+      res
+        .status(200)
+        .send(JSON.stringify({ sponsorCompanies } as STPMCompanyList));
+      next();
     })
+
     .catch(errorHandler);
 };
 
