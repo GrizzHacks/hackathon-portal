@@ -19,18 +19,26 @@ const validate: ExpressFunction = (req, res, next) => {
       sponsorTierId: { rules: ["string"], required: true },
       sponsorTierName: { rules: ["string"], required: true },
       sponsorTierOrder: { rules: ["number"] },
-      logoSize: { rules: ["string"], required: true }, // TODO: Support Enum Advanced Types
+      logoSize: {
+        rules: [{ type: "enum", rules: ["xs", "sm", "m", "lg", "xl"] }],
+        required: true,
+      },
       sponsorshipExpo: { rules: ["boolean"], required: true },
       techTalk: { rules: ["boolean"], required: true },
       officeHours: { rules: ["boolean"], required: true },
       prizeBudget: { rules: ["number"], required: true },
-      attendeeData: { rules: ["string"], required: true }, // TODO: Support Enum Advanced Types
+      attendeeData: {
+        rules: [{ type: "enum", rules: ["none", "pre", "post"] }],
+        required: true,
+      },
       numberOfMentors: { rules: ["number"], required: true },
       numberOfRecruiters: { rules: ["number"], required: true },
       distributionOfSwag: { rules: ["boolean"], required: true },
       openingSessionTalkLength: { rules: ["number"], required: true },
       closingSessionTalkLength: { rules: ["number"], required: true },
-      // otherBenefits: { [key: string]: string }; // TODO: Support Dictionary Advanced Types
+      otherBenefits: {
+        rules: [{ type: "dictionary", rules: ["string", "number"] }],
+      },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
