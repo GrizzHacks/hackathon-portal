@@ -46,6 +46,11 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
+  const body = res.locals.parsedBody as PMCategoryUpdateRequest;
+  if(body.approvalStatus === undefined){
+    body.approvalStatus = "awaitingApproval"
+  }
+
   firebaseApp
     .firestore()
     .collection("prizeCategories")

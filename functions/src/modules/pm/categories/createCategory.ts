@@ -68,6 +68,10 @@ const execute: ExpressFunction = (req, res, next) => {
 
   const body = res.locals.parsedBody as PMCategoryCreateRequest;
 
+  if(body.approvalStatus === undefined){
+    body.approvalStatus = "awaitingApproval"
+  }
+
   firebaseApp
     .firestore()
     .collection("prizeCategories")
