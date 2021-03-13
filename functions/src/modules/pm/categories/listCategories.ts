@@ -5,7 +5,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const listCategories: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: execute },
+    public: execute
   })(req, res, next);
 };
 

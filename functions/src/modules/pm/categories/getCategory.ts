@@ -5,8 +5,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const getCategory: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: execute },
-    sponsor: { accepted: executeIfCategoryMatches },
+    public: execute
   })(req, res, next);
 };
 
@@ -27,20 +26,6 @@ const execute: ExpressFunction = (req, res, next) => {
       }
     })
     .catch(errorHandler);
-};
-
-const executeIfCategoryMatches: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-  const prizeCategory = (res.locals.permissions as UserPermission).company;
-  if (prizeCategory === req.params.prizeCategoryId) {
-    execute(req, res, next);
-  } else {
-    errorHandler(
-      `A sponsor from ${prizeCategory} tried viewing benefits for ${req.params.prizeCategoryId}.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
-  }
 };
 
 export default getCategory;

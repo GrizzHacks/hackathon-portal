@@ -18,10 +18,13 @@ const validate: ExpressFunction = (req, res, next) => {
     rules: {
       prizeCategoryId: { rules: ["string"], required: true },
       prizeCategoryName: { rules: ["string"], required: true },
-      prizeCategoryDescription: { rules: ["string"]},
-      approvalStatus: { rules: ["string"]},
+      prizeCategoryDescription: { rules: ["string"], required: true},
+      approvalStatus: { rules: [{
+        type: "enum",
+        rules: ["string"],
+      }]},
       eligibility: { rules: ["string"]},
-      companyId: { rules: ["string"], required: true },
+      companyId: { rules: ["string"]},
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
