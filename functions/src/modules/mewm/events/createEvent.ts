@@ -23,8 +23,8 @@ const validate: ExpressFunction = (req, res, next) => {
       virtual: { rules: ["boolean"], required: true },
       location: { rules: ["string"]},
       joinLink: { rules: ["string"]},
-      joinLinkToPresenters: { rules: ["string"]},
-      joinLinkToAttendees: { rules: ["string"]},
+      joinLinkToPresenters: { rules: ["number"]},
+      joinLinkToAttendees: { rules: ["number"]},
       companyId: { rules: ["string"] },
       managers: { rules: [{
         type: "array",
@@ -42,11 +42,11 @@ const validate: ExpressFunction = (req, res, next) => {
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
-  const body = res.locals.parsedBody as METMMiniEventCreateRequest;
+  const body = res.locals.parsedBody as MEWMEventCreateRequest;
 
   firebaseApp
     .firestore()
-    .collection("miniEvents")
+    .collection("events")
     .doc(body.eventId)
     .set(body)
     .then(() => {

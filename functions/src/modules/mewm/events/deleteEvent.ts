@@ -15,7 +15,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("miniEvents")
+    .collection("events")
     .doc(req.params.eventId)
     .delete()
     .then(() => {

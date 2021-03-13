@@ -5,11 +5,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const listEvents: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: execute },
-    sponsor: { accepted: execute },
-    mentor: { accepted: execute },
-    volunteer: { accepted: execute },
-    hacker: { accepted: execute },
+    public: execute
   })(req, res, next);
 };
 
@@ -18,17 +14,17 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("miniEvents")
+    .collection("events")
     .orderBy("eventName", "asc")
     .get()
     .then((documents) => {
-      const miniEvents: METMMiniEvent[] = [];
+      const miniEvents: MEWMEvent[] = [];
       for (const doc of documents.docs) {
-        miniEvents.push(doc.data() as METMMiniEvent);
+        miniEvents.push(doc.data() as MEWMEvent);
       }
       res
         .status(200)
-        .send(JSON.stringify({ miniEvents } as METMMiniEventList));
+        .send(JSON.stringify({ miniEvents } as MEWMEventList));
       next();
     })
 

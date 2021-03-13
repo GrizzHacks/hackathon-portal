@@ -1,4 +1,4 @@
-declare interface METMMiniEventUpdateRequest {
+declare interface MEWMEventUpdateRequest {
     eventName?: string;
     eventDescription?: string;
     location?: string;
@@ -11,23 +11,23 @@ declare interface METMMiniEventUpdateRequest {
     speakers?: string[];
 }
 
-declare interface METMMiniEventCreateRequest extends METMMiniEventUpdateRequest{
+declare interface MEWMEventCreateRequest extends MEWMEventUpdateRequest{
     eventId: string;
     eventName: string;
     eventDescription: string;
     virtual: boolean;
 }
 
-declare interface METMMiniEvent extends METMMiniEventCreateRequest{
-    location?: string;
-    joinLink?: string;
-    joinLinkToPresenters?: number;
-    joinLinkToAttendees?: number;
+declare interface MEWMEvent extends MEWMEventCreateRequest{
+    location: string;
+    joinLink: string;
+    joinLinkToPresenters: number;
+    joinLinkToAttendees: number;
     companyId?: string;
-    managers?: string[];
-    speakers?: string[];
+    managers: string[];
+    speakers: string[];
 }
 
-declare interface METMMiniEventList {
-    miniEvents: METMMiniEvent[];
+declare interface MEWMEventList {
+    miniEvents: MEWMEvent[];
 }

@@ -43,10 +43,9 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
     const validationRules: ValidatorObjectRules = {
       type: "object",
       rules: {
-        eventId: { rules: ["string"], required: true },
-        eventName: { rules: ["string"], required: true },
-        eventDescription: { rules: ["string"], required: true },
-        virtual: { rules: ["boolean"], required: true },
+        eventName: { rules: ["string"] },
+        eventDescription: { rules: ["string"] },
+        virtual: { rules: ["boolean"] },
         location: { rules: ["string"]},
         joinLink: { rules: ["string"]},
         joinLinkToPresenters: { rules: ["string"]},
@@ -70,9 +69,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("miniEvents")
+    .collection("events")
     .doc(req.params.eventId)
-    .update(res.locals.parsedBody as METMMiniEventUpdateRequest)
+    .update(res.locals.parsedBody as MEWMEventUpdateRequest)
     .then(() => {
       res.status(200).send();
       next();
