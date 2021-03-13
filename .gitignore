@@ -64,7 +64,4 @@ node_modules/
 
 # dotenv environment variables file
 .env
-/.vs/VSWorkspaceState.json
-/.vs/slnx.sqlite
-/.vs/hackathon-portal/v16/.suo
 /.vs
