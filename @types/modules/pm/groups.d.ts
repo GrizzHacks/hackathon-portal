@@ -1,7 +1,6 @@
 declare interface PMGroupUpdateRequest {
-    prizeCategoryId: string;
-    prizeCatagoryName?: string;
-    prizeCategoryDescription?: string;
+    prizeGroupName?: string;
+    prizeGroupDescription?: string;
     prizeCategoryOrder?: Array<string>;
   }
 
