@@ -5,7 +5,8 @@ declare interface PMGroupUpdateRequest {
   }
 
   declare interface PMGroupCreateRequest extends PMGroupUpdateRequest {
-    prizeCatagoryName: string;
+    prizeGroupId: string;
+    prizeGroupName: string;
     prizeCategoryDescription: string;
     prizeCategoryOrder: Array<string>;
   }
