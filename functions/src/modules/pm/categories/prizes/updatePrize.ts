@@ -1,6 +1,9 @@
 import type { ExpressFunction } from "../../../../@types";
 import { firebaseApp } from "../../../../config/firebaseConfig";
-import { expressErrorHandlerFactory } from "../../../../helpers";
+import {
+    expressErrorHandlerFactory,
+    requestBodyTypeValidator,
+  } from "../../../../helpers";
 import { uasPermissionSwitch } from '../../../../systems/uas';
 
 
@@ -9,10 +12,23 @@ const updatePrize: ExpressFunction = (req, res, next) => {
   res.status(200).send();
   next();
   uasPermissionSwitch({
-    organizer: { accepted: execute },
+    organizer: { accepted: validate},
     // sponsor: { accepted: executeIfSponsorMatches },
   })(req, res, next);
 };
+const validate: ExpressFunction = (req, res, next) => {
+    const validationRules: ValidatorObjectRules = {
+      type: "object",
+      rules: {
+        prizeName: { rules: ["string"], required: true },
+        PrizeUrl: { rules: ["string"]},
+        prizeCategory: { rules: ["string"]},
+        prizeListingName: { rules: ["string"], required: true },
+        //overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
+      },
+    };
+    requestBodyTypeValidator(req, res, next)(validationRules, execute);
+  };
 
 const execute: ExpressFunction = (req, res, next) => {
 
