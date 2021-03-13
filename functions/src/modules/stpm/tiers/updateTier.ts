@@ -12,29 +12,35 @@ const updateTier: ExpressFunction = (req, res, next) => {
   })(req, res, next);
 };
 
-const validate: ExpressFunction = (req, res, next) => {
-  const validationRules: ValidatorObjectRules = {
-    type: "object",
-    rules: {
-      sponsorTierName: { rules: ["string"] },
-      sponsorTierOrder: { rules: ["number"] },
-      logoSize: { rules: ["string"] }, // TODO: Support Enum Advanced Types
-      sponsorshipExpo: { rules: ["boolean"] },
-      techTalk: { rules: ["boolean"] },
-      officeHours: { rules: ["boolean"] },
-      prize: { rules: ["boolean"] },
-      prizeBudget: { rules: ["number"] },
-      attendeeData: { rules: ["string"] }, // TODO: Support Enum Advanced Types
-      numberOfMentors: { rules: ["number"] },
-      numberOfRecruiters: { rules: ["number"] },
-      distributionOfSwag: { rules: ["boolean"] },
-      openingSessionTalk: { rules: ["boolean"] },
-      openingSessionTalkLength: { rules: ["number"] },
-      closingSessionTalk: { rules: ["boolean"] },
-      closingSessionTalkLength: { rules: ["number"] },
-      // otherBenefits: { [key: string]: string }; // TODO: Support Dictionary Advanced Types
+// Broken out into its own exportable config to be used on the Company endpoints
+export const validationRules: ValidatorObjectRules = {
+  type: "object",
+  rules: {
+    sponsorTierName: { rules: ["string"] },
+    sponsorTierOrder: { rules: ["number"] },
+    logoSize: {
+      rules: [{ type: "enum", rules: ["xs", "sm", "m", "lg", "xl"] }],
     },
-  };
+    sponsorshipExpo: { rules: ["boolean"] },
+    techTalk: { rules: ["boolean"] },
+    officeHours: { rules: ["boolean"] },
+    prize: { rules: ["boolean"] },
+    prizeBudget: { rules: ["number"] },
+    attendeeData: { rules: [{ type: "enum", rules: ["none", "pre", "post"] }] },
+    numberOfMentors: { rules: ["number"] },
+    numberOfRecruiters: { rules: ["number"] },
+    distributionOfSwag: { rules: ["boolean"] },
+    openingSessionTalk: { rules: ["boolean"] },
+    openingSessionTalkLength: { rules: ["number"] },
+    closingSessionTalk: { rules: ["boolean"] },
+    closingSessionTalkLength: { rules: ["number"] },
+    otherBenefits: {
+      rules: [{ type: "dictionary", rules: ["string", "number"] }],
+    },
+  },
+};
+
+const validate: ExpressFunction = (req, res, next) => {
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
 
