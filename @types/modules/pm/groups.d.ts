@@ -14,6 +14,6 @@ declare interface PMGroupUpdateRequest {
     prizeCategoryOrder: string[];
   }
 
-//   declare interface PMGroupList {
-//     prizeCategories: STPMCompany[];
-//   }
+declare interface PMGroupList {
+    groups: PMGroup[];
+}
