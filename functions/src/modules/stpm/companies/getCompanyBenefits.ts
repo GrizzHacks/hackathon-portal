@@ -14,7 +14,7 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
-    .collection("sponsorCompany")
+    .collection("sponsorCompanies")
     .doc(req.params.companyId)
     .get()
     .then((document) => {

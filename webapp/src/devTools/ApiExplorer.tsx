@@ -1,15 +1,14 @@
 import {
   Button,
-  Container,
   Divider,
   Grid,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { Input as kyInput, Options as kyOptions } from "ky";
-import React from "react";
-import { ApiExplorerFirebaseApp } from "./apiExplorerFirebaseConfig";
+import React, { Fragment } from "react";
 import ApiClient from "../helper/ApiClient";
+import { ApiExplorerFirebaseApp } from "./apiExplorerFirebaseConfig";
 
 const ApiExplorer: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState<string>("");
@@ -95,7 +94,7 @@ const ApiExplorer: React.FunctionComponent = () => {
   };
 
   return (
-    <Container>
+    <Fragment>
       <Typography variant="h3">Hackathon Portal API Explorer</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -227,7 +226,7 @@ const ApiExplorer: React.FunctionComponent = () => {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </Fragment>
   );
 };
 
