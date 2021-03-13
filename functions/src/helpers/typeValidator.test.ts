@@ -27,6 +27,11 @@ const checkDictionaryRule: ValidatorDictionaryRules = {
   rules: ["string", "number"],
 };
 
+const checkEnumRule: ValidatorEnumRules = {
+  type: "enum",
+  rules: ["small", "medium", "large"],
+};
+
 const primitiveCheckRules: ValidatorAllowedTypes = [
   "undefined",
   "null",
@@ -551,6 +556,66 @@ test("validateAttribute fails on empty string when now allowed", () => {
   expect(typeMismatch[0].includes("testAttribute")).toBe(true);
   expect(typeMismatch[0].includes("[string]")).toBe(true);
   expect(typeMismatch[0].includes("was emptystring")).toBe(true);
+});
+
+test("validateAttribute succeeds on enum match", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    "small",
+    [checkEnumRule],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+});
+
+test("validateAttribute fails on enum mismatch", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    "test",
+    [checkEnumRule],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+  expect(typeMismatch.length).toBe(1);
+  expect(typeMismatch[0].includes("testAttribute")).toBe(true);
+  expect(typeMismatch[0].includes("[enum<small, medium, large>]")).toBe(true);
+  expect(typeMismatch[0].includes("was string")).toBe(true);
+});
+
+test("validateAttribute succeeds on enum mismatch but primative match", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    "test",
+    [checkEnumRule, "string"],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
 });
 
 // -----------------------------------------------------------------------------

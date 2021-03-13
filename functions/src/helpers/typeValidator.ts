@@ -145,6 +145,10 @@ const validateAttribute = (
   const objectHandlers = getAdvancedTypeHandlers(checkRules, "object").concat(
     getAdvancedTypeHandlers(checkRules, "dictionary")
   ) as (ValidatorObjectRules | ValidatorDictionaryRules)[];
+  const enumHandlers = getAdvancedTypeHandlers(
+    checkRules,
+    "enum"
+  ) as ValidatorEnumRules[];
 
   if (attributeType === "array" && arrayHandlers.length > 0) {
     // Handle attribute as array
@@ -198,7 +202,10 @@ const validateAttribute = (
   } else if (
     attributeType !== "array" &&
     attributeType !== "object" &&
-    checkRules.includes(attributeType)
+    (enumHandlers.reduce((previousValue, currentValue) => {
+      return previousValue || currentValue.rules.includes(attributeValue);
+    }, false) ||
+      checkRules.includes(attributeType))
   ) {
     // Handle attribute as primiative
   } else {
@@ -212,7 +219,7 @@ const validateAttribute = (
 
 const getAdvancedTypeHandlers = (
   checkRules: ValidatorAllowedTypes,
-  handlerType: "array" | "object" | "dictionary"
+  handlerType: "array" | "object" | "dictionary" | "enum"
 ) => {
   const handlers = [];
   for (const allowedType of checkRules) {
@@ -232,6 +239,11 @@ const getTypesForErrorMessage = (checkRules: ValidatorAllowedTypes) => {
     } else {
       if (allowedType.type === "array") {
         pushIfArrayDoesNotAlreadyInclude<string>(allowedTypes, "array");
+      } else if (allowedType.type === "enum") {
+        pushIfArrayDoesNotAlreadyInclude<string>(
+          allowedTypes,
+          `enum<${allowedType.rules.join(", ")}>`
+        );
       } else {
         pushIfArrayDoesNotAlreadyInclude<string>(allowedTypes, "object");
       }
