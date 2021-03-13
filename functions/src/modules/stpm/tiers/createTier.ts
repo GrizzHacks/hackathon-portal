@@ -30,7 +30,9 @@ const validate: ExpressFunction = (req, res, next) => {
       distributionOfSwag: { rules: ["boolean"], required: true },
       openingSessionTalkLength: { rules: ["number"], required: true },
       closingSessionTalkLength: { rules: ["number"], required: true },
-      // otherBenefits: { [key: string]: string }; // TODO: Support Dictionary Advanced Types
+      otherBenefits: {
+        rules: [{ type: "dictionary", rules: ["string", "number"] }],
+      },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);

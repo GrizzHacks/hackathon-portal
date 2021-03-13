@@ -4,7 +4,7 @@ declare interface STPMCompanyUpdateRequest {
   companyWebsite?: string;
   companyAcronym?: string;
   sponsorTierId?: string;
-  overriddenBenefits?: { [key: string]: string };
+  overriddenBenefits?: STPMTierUpdateRequest;
 }
 
 declare interface STPMCompanyCreateRequest extends STPMCompanyUpdateRequest {
@@ -14,7 +14,7 @@ declare interface STPMCompanyCreateRequest extends STPMCompanyUpdateRequest {
 }
 
 declare interface STPMCompany extends STPMCompanyCreateRequest {
-  overriddenBenefits: { [key: string]: string };
+  overriddenBenefits: STPMTierUpdateRequest;
 }
 
 declare interface STPMCompanyList {

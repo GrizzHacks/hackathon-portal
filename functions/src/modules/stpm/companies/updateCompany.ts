@@ -5,6 +5,7 @@ import {
   requestBodyTypeValidator,
 } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
+import { validationRules as stpmTierUpdateValidationRules } from "../tiers/updateTier";
 
 const updateCompany: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
@@ -22,7 +23,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       companyWebsite: { rules: ["string", "emptystring"] },
       companyAcronym: { rules: ["string", "emptystring"] },
       sponsorTierId: { rules: ["string"] },
-      // overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
+      overriddenBenefits: { rules: [stpmTierUpdateValidationRules] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -33,9 +34,9 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
     type: "object",
     rules: {
       companyName: { rules: ["string"] },
-      companyLogoUrl: { rules: ["string"] },
-      companyWebsite: { rules: ["string"] },
-      companyAcronym: { rules: ["string"] },
+      companyLogoUrl: { rules: ["string", "emptystring"] },
+      companyWebsite: { rules: ["string", "emptystring"] },
+      companyAcronym: { rules: ["string", "emptystring"] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
