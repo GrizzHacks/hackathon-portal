@@ -7,7 +7,7 @@ declare interface PMCategoryUpdateRequest {
   }
   
   declare interface PMCategoryCreateRequest extends PMCategoryUpdateRequest {
-    prizeCategoryId: string;
+    categoryId: string;
     prizeCategoryName: string;
     prizeCategoryDescription: string;
     approvalStatus: "approved" | "rejected" | "inProgress" | "awaitingApproval" | "public";

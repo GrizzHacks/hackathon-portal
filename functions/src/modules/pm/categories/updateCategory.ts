@@ -49,7 +49,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("prizeCategories")
-    .doc(req.params.prizeCategoryId)
+    .doc(req.params.categoryId)
     .update(res.locals.parsedBody as PMCategoryUpdateRequest)
     .then(() => {
       res.status(200).send();
@@ -61,11 +61,11 @@ const execute: ExpressFunction = (req, res, next) => {
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     const sponsorCompany = (res.locals.permissions as UserPermission).company;
-    if (sponsorCompany === req.params.prizeCategoryId) {
+    if (sponsorCompany === req.params.categoryId) {
       validateSponsor(req, res, next);
     } else {
       errorHandler(
-        `A sponsor from ${sponsorCompany} tried viewing information for ${req.params.prizeCategoryId}.`,
+        `A sponsor from ${sponsorCompany} tried viewing information for ${req.params.categoryId}.`,
         403,
         "Sorry, you do not have access to perform that operation."
       );

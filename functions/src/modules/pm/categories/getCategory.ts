@@ -14,7 +14,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("prizeCategories")
-    .doc(req.params.prizeCategoryId)
+    .doc(req.params.categoryId)
     .get()
     .then((document) => {
       const data = document.data() as PMCategory | undefined;
@@ -22,7 +22,7 @@ const execute: ExpressFunction = (req, res, next) => {
         res.status(200).send(JSON.stringify(data));
         next();
       } else {
-        errorHandler(`prizeCategories/${req.params.prizeCategoryId} has no data.`);
+        errorHandler(`prizeCategories/${req.params.categoryId} has no data.`);
       }
     })
     .catch(errorHandler);
