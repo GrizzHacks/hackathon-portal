@@ -1,6 +1,6 @@
 declare interface ValidatorAdvancedTypeRules {
   rules: any;
-  type: "array" | "object";
+  type: "array" | "object" | "dictionary";
 }
 
 declare interface ValidatorObjectRules extends ValidatorAdvancedTypeRules {
@@ -13,6 +13,11 @@ declare interface ValidatorObjectRules extends ValidatorAdvancedTypeRules {
 declare interface ValidatorArrayRules extends ValidatorAdvancedTypeRules {
   rules: ValidatorAllowedTypes;
   type: "array";
+}
+
+declare interface ValidatorDictionaryRules extends ValidatorAdvancedTypeRules {
+  rules: ValidatorAllowedTypes;
+  type: "dictionary";
 }
 
 declare type ValidatorAllowedTypes = (primitive | ValidatorAdvancedTypeRules)[];

@@ -100,19 +100,19 @@ const validateObject = (
   }
 };
 
-const validateArray = (
+const validateArrayOrDictionary = (
   attributeRoot: string,
-  array: any,
+  collection: any,
   checkRules: ValidatorAllowedTypes,
   expectedButMissing: string[],
   typeMismatch: string[],
   unexpectedAttribute: string[]
 ) => {
-  for (let i = 0; i < array.length; i++) {
+  for (const key in collection) {
     // Validate each item in the array
     validateAttribute(
-      `${attributeRoot}[${i}]`,
-      array[i],
+      `${attributeRoot}[${key}]`,
+      collection[key],
       checkRules,
       expectedButMissing,
       typeMismatch,
@@ -142,16 +142,15 @@ const validateAttribute = (
     checkRules,
     "array"
   ) as ValidatorArrayRules[];
-  const objectHandlers = getAdvancedTypeHandlers(
-    checkRules,
-    "object"
-  ) as ValidatorObjectRules[];
+  const objectHandlers = getAdvancedTypeHandlers(checkRules, "object").concat(
+    getAdvancedTypeHandlers(checkRules, "dictionary")
+  ) as (ValidatorObjectRules | ValidatorDictionaryRules)[];
 
   if (attributeType === "array" && arrayHandlers.length > 0) {
     // Handle attribute as array
     if (arrayHandlers.length === 1) {
       // No branching required; directly pass up any errors
-      validateArray(
+      validateArrayOrDictionary(
         attributeRoot,
         attributeValue,
         arrayHandlers[0].rules,
@@ -170,14 +169,25 @@ const validateAttribute = (
     // Handle attribute as object
     if (objectHandlers.length === 1) {
       // No branching required; directly pass up any errors
-      validateObject(
-        attributeRoot,
-        attributeValue,
-        objectHandlers[0],
-        expectedButMissing,
-        typeMismatch,
-        unexpectedAttribute
-      );
+      if (objectHandlers[0].type === "object") {
+        validateObject(
+          attributeRoot,
+          attributeValue,
+          objectHandlers[0],
+          expectedButMissing,
+          typeMismatch,
+          unexpectedAttribute
+        );
+      } else {
+        validateArrayOrDictionary(
+          attributeRoot,
+          attributeValue,
+          objectHandlers[0].rules,
+          expectedButMissing,
+          typeMismatch,
+          unexpectedAttribute
+        );
+      }
     } else {
       // Branching required; multiple object types are possible
       // TODO: Implement type branching for objects
@@ -202,7 +212,7 @@ const validateAttribute = (
 
 const getAdvancedTypeHandlers = (
   checkRules: ValidatorAllowedTypes,
-  handlerType: "array" | "object"
+  handlerType: "array" | "object" | "dictionary"
 ) => {
   const handlers = [];
   for (const allowedType of checkRules) {
@@ -246,7 +256,7 @@ const generateFullAttributeName = (
 
 export const internalFunctionsForTesting = {
   validateObject,
-  validateArray,
+  validateArrayOrDictionary,
   validateAttribute,
   getAdvancedTypeHandlers,
   getTypesForErrorMessage,

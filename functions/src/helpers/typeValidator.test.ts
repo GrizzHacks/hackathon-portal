@@ -8,10 +8,12 @@ const checkArrayRule1: ValidatorArrayRules = {
   type: "array",
   rules: ["string", "number"],
 };
+
 const checkArrayRule2: ValidatorArrayRules = {
   type: "array",
   rules: ["boolean"],
 };
+
 const checkObjectRule: ValidatorObjectRules = {
   type: "object",
   rules: {
@@ -19,6 +21,12 @@ const checkObjectRule: ValidatorObjectRules = {
     test2: { rules: ["number"], required: true },
   },
 };
+
+const checkDictionaryRule: ValidatorDictionaryRules = {
+  type: "dictionary",
+  rules: ["string", "number"],
+};
+
 const primitiveCheckRules: ValidatorAllowedTypes = [
   "undefined",
   "null",
@@ -26,6 +34,7 @@ const primitiveCheckRules: ValidatorAllowedTypes = [
   "number",
   "boolean",
 ];
+
 const checkRules = primitiveCheckRules.concat(
   checkArrayRule1,
   checkArrayRule2,
@@ -115,15 +124,15 @@ test("validateObject fails on extra attribute", () => {
 });
 
 // -----------------------------------------------------------------------------
-// validateArray
+// validateArrayOrDictionary
 // -----------------------------------------------------------------------------
 
-test("validateArray matches empty array", () => {
+test("validateArrayOrDictionary matches empty array", () => {
   const expectedButMissing: string[] = [];
   const typeMismatch: string[] = [];
   const unexpectedAttribute: string[] = [];
 
-  testFunctions.validateArray(
+  testFunctions.validateArrayOrDictionary(
     "testAttribute",
     [],
     checkArrayRule1.rules,
@@ -137,12 +146,12 @@ test("validateArray matches empty array", () => {
   expect(unexpectedAttribute).toStrictEqual([]);
 });
 
-test("validateArray matches if all match", () => {
+test("validateArrayOrDictionary matches if all array entries match", () => {
   const expectedButMissing: string[] = [];
   const typeMismatch: string[] = [];
   const unexpectedAttribute: string[] = [];
 
-  testFunctions.validateArray(
+  testFunctions.validateArrayOrDictionary(
     "testAttribute",
     ["test", 0, "anotherTest", 1],
     checkArrayRule1.rules,
@@ -156,12 +165,12 @@ test("validateArray matches if all match", () => {
   expect(unexpectedAttribute).toStrictEqual([]);
 });
 
-test("validateArray fails to match on partial mismatch", () => {
+test("validateArrayOrDictionary fails to match on array partial mismatch", () => {
   const expectedButMissing: string[] = [];
   const typeMismatch: string[] = [];
   const unexpectedAttribute: string[] = [];
 
-  testFunctions.validateArray(
+  testFunctions.validateArrayOrDictionary(
     "testAttribute",
     ["test", 0, false, "anotherTest", 1, undefined],
     checkArrayRule1.rules,
@@ -177,6 +186,81 @@ test("validateArray fails to match on partial mismatch", () => {
   expect(typeMismatch[0].includes("[string, number]")).toBe(true);
   expect(typeMismatch[0].includes("was boolean")).toBe(true);
   expect(typeMismatch[1].includes("testAttribute[5]")).toBe(true);
+  expect(typeMismatch[1].includes("[string, number]")).toBe(true);
+  expect(typeMismatch[1].includes("was undefined")).toBe(true);
+});
+
+test("validateArrayOrDictionary matches empty dictionary", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateArrayOrDictionary(
+    "testAttribute",
+    {},
+    checkDictionaryRule.rules,
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+});
+
+test("validateArrayOrDictionary matches if all dictionary values match", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateArrayOrDictionary(
+    "testAttribute",
+    {
+      attribute1: "test",
+      attribute2: 0,
+      attribute3: "anotherTest",
+      attribute4: 1,
+    },
+    checkArrayRule1.rules,
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+});
+
+test("validateArrayOrDictionary fails to match on dictionary partial mismatch", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateArrayOrDictionary(
+    "testAttribute",
+    {
+      attribute1: "test",
+      attribute2: 0,
+      attribute3: false,
+      attribute4: "anotherTest",
+      attribute5: 1,
+      attribute6: undefined,
+    },
+    checkArrayRule1.rules,
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+  expect(typeMismatch.length).toBe(2);
+  expect(typeMismatch[0].includes("testAttribute[attribute3]")).toBe(true);
+  expect(typeMismatch[0].includes("[string, number]")).toBe(true);
+  expect(typeMismatch[0].includes("was boolean")).toBe(true);
+  expect(typeMismatch[1].includes("testAttribute[attribute6]")).toBe(true);
   expect(typeMismatch[1].includes("[string, number]")).toBe(true);
   expect(typeMismatch[1].includes("was undefined")).toBe(true);
 });
@@ -289,7 +373,7 @@ test("validateAttribute fails to match on no primitive rule", () => {
   expect(typeMismatch[0].includes("was number")).toBe(true);
 });
 
-test("validateAttribute passes to validateArray on single array handler", () => {
+test("validateAttribute passes to validateArrayOrDictionary on single array handler", () => {
   const expectedButMissing: string[] = [];
   const typeMismatch: string[] = [];
   const unexpectedAttribute: string[] = [];
@@ -358,6 +442,25 @@ test("validateAttribute passes to validateObject on single object handler", () =
     "testAttribute",
     { test: "Hello World", test2: 0 },
     [checkObjectRule],
+    expectedButMissing,
+    typeMismatch,
+    unexpectedAttribute
+  );
+
+  expect(expectedButMissing).toStrictEqual([]);
+  expect(typeMismatch).toStrictEqual([]);
+  expect(unexpectedAttribute).toStrictEqual([]);
+});
+
+test("validateAttribute passes to validateArrayOrDictionary on single dictionary handler", () => {
+  const expectedButMissing: string[] = [];
+  const typeMismatch: string[] = [];
+  const unexpectedAttribute: string[] = [];
+
+  testFunctions.validateAttribute(
+    "testAttribute",
+    { test: "Hello World", test2: 0 },
+    [checkDictionaryRule],
     expectedButMissing,
     typeMismatch,
     unexpectedAttribute
