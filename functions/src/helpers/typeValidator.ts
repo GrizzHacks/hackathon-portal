@@ -100,19 +100,19 @@ const validateObject = (
   }
 };
 
-const validateArray = (
+const validateArrayOrDictionary = (
   attributeRoot: string,
-  array: any,
+  collection: any,
   checkRules: ValidatorAllowedTypes,
   expectedButMissing: string[],
   typeMismatch: string[],
   unexpectedAttribute: string[]
 ) => {
-  for (let i = 0; i < array.length; i++) {
+  for (const key in collection) {
     // Validate each item in the array
     validateAttribute(
-      `${attributeRoot}[${i}]`,
-      array[i],
+      `${attributeRoot}[${key}]`,
+      collection[key],
       checkRules,
       expectedButMissing,
       typeMismatch,
@@ -134,22 +134,27 @@ const validateAttribute = (
       ? "null"
       : Array.isArray(attributeValue)
       ? "array"
+      : attributeValue === ""
+      ? "emptystring"
       : typeof attributeValue;
 
   const arrayHandlers = getAdvancedTypeHandlers(
     checkRules,
     "array"
   ) as ValidatorArrayRules[];
-  const objectHandlers = getAdvancedTypeHandlers(
+  const objectHandlers = getAdvancedTypeHandlers(checkRules, "object").concat(
+    getAdvancedTypeHandlers(checkRules, "dictionary")
+  ) as (ValidatorObjectRules | ValidatorDictionaryRules)[];
+  const enumHandlers = getAdvancedTypeHandlers(
     checkRules,
-    "object"
-  ) as ValidatorObjectRules[];
+    "enum"
+  ) as ValidatorEnumRules[];
 
   if (attributeType === "array" && arrayHandlers.length > 0) {
     // Handle attribute as array
     if (arrayHandlers.length === 1) {
       // No branching required; directly pass up any errors
-      validateArray(
+      validateArrayOrDictionary(
         attributeRoot,
         attributeValue,
         arrayHandlers[0].rules,
@@ -168,14 +173,25 @@ const validateAttribute = (
     // Handle attribute as object
     if (objectHandlers.length === 1) {
       // No branching required; directly pass up any errors
-      validateObject(
-        attributeRoot,
-        attributeValue,
-        objectHandlers[0],
-        expectedButMissing,
-        typeMismatch,
-        unexpectedAttribute
-      );
+      if (objectHandlers[0].type === "object") {
+        validateObject(
+          attributeRoot,
+          attributeValue,
+          objectHandlers[0],
+          expectedButMissing,
+          typeMismatch,
+          unexpectedAttribute
+        );
+      } else {
+        validateArrayOrDictionary(
+          attributeRoot,
+          attributeValue,
+          objectHandlers[0].rules,
+          expectedButMissing,
+          typeMismatch,
+          unexpectedAttribute
+        );
+      }
     } else {
       // Branching required; multiple object types are possible
       // TODO: Implement type branching for objects
@@ -186,7 +202,10 @@ const validateAttribute = (
   } else if (
     attributeType !== "array" &&
     attributeType !== "object" &&
-    checkRules.includes(attributeType)
+    (enumHandlers.reduce((previousValue, currentValue) => {
+      return previousValue || currentValue.rules.includes(attributeValue);
+    }, false) ||
+      checkRules.includes(attributeType))
   ) {
     // Handle attribute as primiative
   } else {
@@ -200,7 +219,7 @@ const validateAttribute = (
 
 const getAdvancedTypeHandlers = (
   checkRules: ValidatorAllowedTypes,
-  handlerType: "array" | "object"
+  handlerType: "array" | "object" | "dictionary" | "enum"
 ) => {
   const handlers = [];
   for (const allowedType of checkRules) {
@@ -220,6 +239,11 @@ const getTypesForErrorMessage = (checkRules: ValidatorAllowedTypes) => {
     } else {
       if (allowedType.type === "array") {
         pushIfArrayDoesNotAlreadyInclude<string>(allowedTypes, "array");
+      } else if (allowedType.type === "enum") {
+        pushIfArrayDoesNotAlreadyInclude<string>(
+          allowedTypes,
+          `enum<${allowedType.rules.join(", ")}>`
+        );
       } else {
         pushIfArrayDoesNotAlreadyInclude<string>(allowedTypes, "object");
       }
@@ -244,7 +268,7 @@ const generateFullAttributeName = (
 
 export const internalFunctionsForTesting = {
   validateObject,
-  validateArray,
+  validateArrayOrDictionary,
   validateAttribute,
   getAdvancedTypeHandlers,
   getTypesForErrorMessage,

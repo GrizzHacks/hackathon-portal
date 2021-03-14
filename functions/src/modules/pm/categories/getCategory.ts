@@ -1,62 +1,85 @@
 import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory,requestBodyTypeValidator } from "../../../helpers";
+import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
-const getPrizeId: ExpressFunction = (req, res, next) => {
-    uasPermissionSwitch({
-      organizer: { accepted: validate },
-    })(req, res, next);
-  };
-
-  const validate: ExpressFunction = (req,res,next) => {
-    const validationRules: ValidatorObjectRules = {
-      type: "object",
-      rules: {
-        prizeCategoryId: {rules: ["string"]},
-        prizeCategoryName: {rules: ["string"]},
-        prizeCategoryDescription:{rules: ["string"]},
-        eligibility: {rules: ["string"]},
-        //prize?:{rules: ["Prize"]}; //TODO create new datatype prizes
-        companyId: {rules: ["string"]},
-        approvalStatus: {rules: ["string"]},
-      }
-    }
-    requestBodyTypeValidator(req,res,next)((validationRules), execute);
-  }
+const getCategory: ExpressFunction = (req, res, next) => {
+  execute(req, res, next);
+};
 
 const execute: ExpressFunction = (req, res, next) => {
-      const errorHandler = expressErrorHandlerFactory(req, res, next);
-      firebaseApp
-      .firestore()
-      .collection("Prizes")
-      .doc(req.params.prizeId)
-      .get()
-      .then((document) => {
-        const data = document.data() as STPMPrizeCatagories | undefined;
-        if(data){
-        res.status(200).send(data);
-        next();
-        } else{
-          errorHandler('PrizeCatagories${req.params.id} has no data');
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
 
-        }
-          
-      }).catch(errorHandler);
-  };
-
- /*  const executeIfPrizeCatagoryMatches: ExpressFunction = (req, res, next) => {
-      const errorHandler = expressErrorHandlerFactory(req, res, next);
-      const prizeId = (res.locals.permissions as UserPermission).company;
-      if(prizeId === req.params.prizeId){
-          execute(req, res, next);
+  firebaseApp
+    .firestore()
+    .collection("prizeCategories")
+    .doc(req.params.categoryId)
+    .get()
+    .then((document) => {
+      const data = document.data() as PMCategory | undefined;
+      if (data) {
+        uasPermissionSwitch({
+          organizer: {
+            accepted: send(data),
+            pending: sendIfApproved(data),
+            rejected: sendIfApproved(data),
+          },
+          sponsor: {
+            accepted: sendIfSponsorMatches(data),
+            pending: sendIfApproved(data),
+            rejected: sendIfApproved(data),
+          },
+          mentor: sendIfApproved(data),
+          volunteer: sendIfApproved(data),
+          hacker: sendIfApproved(data),
+          public: sendIfApproved(data),
+        })(req, res, next);
       } else {
-        errorHandler(
-          `A sponsor from ${} tried viewing a prize for ${req.params.companyId}.`,
-          403,
-          "Sorry, you do not have access to perform that operation."
-        );
+        errorHandler(`prizeCategories/${req.params.categoryId} has no data.`);
       }
-  };  wasnt sure how to implement this */
+    })
+    .catch(errorHandler);
+};
 
-  export default getPrizeId;
+const send: (data: PMCategory) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
+  res.status(200).send(JSON.stringify(data));
+  next();
+};
+
+const sendIfSponsorMatches: (data: PMCategory) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
+  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+
+  if (sponsorCompany === data.companyId) {
+    send(data)(req, res, next);
+  } else {
+    sendIfApproved(data)(req, res, next);
+  }
+};
+
+const sendIfApproved: (data: PMCategory) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  if (data.approvalStatus === "approved") {
+    send(data)(req, res, next);
+  } else {
+    errorHandler(
+      `Someone unauthorized tried viewing a prize that is still undergoing approval.`,
+      403,
+      "Sorry, you do not have access to perform that operation."
+    );
+  }
+};
+
+export default getCategory;
