@@ -50,7 +50,7 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
         }
       } else {
         errorHandler(
-          `A sponsor from ${sponsorCompany} tried deleting the approved event ${req.params.eventId}.`,
+          `A sponsor from ${sponsorCompany} tried deleting the event ${req.params.eventId}.`,
           403,
           "Sorry, you do not have access to perform that operation."
         );
