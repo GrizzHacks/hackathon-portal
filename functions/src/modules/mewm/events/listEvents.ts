@@ -88,11 +88,12 @@ const executeIfApproved: ExpressFunction = (req, res, next) => {
 const send: (
   docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
 ) => ExpressFunction = (docs) => (req, res, next) => {
-  const miniEvents: MEWMEvent[] = [];
+  const events: MEWMEvent[] = [];
   for (const doc of docs) {
-    miniEvents.push(doc.data() as MEWMEvent);
+    events.push(doc.data() as MEWMEvent);
   }
-  res.status(200).send(JSON.stringify({ miniEvents } as MEWMEventList));
+  res.status(200).send(JSON.stringify({ events } as MEWMEventList));
   next();
 };
+
 export default listEvents;

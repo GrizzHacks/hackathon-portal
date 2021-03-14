@@ -70,7 +70,7 @@ const ValidateSponsor: ExpressFunction = (req, res, next) => {
         rules: [
           {
             type: "enum",
-            rules: ["approved", "rejected", "inProgress", "awaitingApproval"],
+            rules: ["inProgress", "awaitingApproval"],
           },
         ],
       },
@@ -122,7 +122,7 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("prizeCategories")
+    .collection("events")
     .doc(req.params.eventId)
     .get()
     .then((doc) => {
