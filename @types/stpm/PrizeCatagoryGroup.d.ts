@@ -11,9 +11,14 @@ declare interface STPMPrizeCatGroupUpdateRequest {
     prizeCategoryOrder?: Array<string>;
 }
 
-declare interface STPMPrizeCatGroupCreateRequest {
+declare interface STPMPrizeCatGroupCreateRequest extends STPMPrizeCatagoriesCreateRequest {
     prizeCatagoryName: string;
     prizeCategoryDescription: string;
     prizeCategoryOrder: Array<string>;
 }
+
+
+declare interface STPMPrizeCatGroupList {
+    prizeCategorys: STPMPrizeCatagoryGroup[];
+  }
 
