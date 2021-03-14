@@ -122,7 +122,7 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("prizeCategories")
+    .collection("events")
     .doc(req.params.eventId)
     .get()
     .then((doc) => {
