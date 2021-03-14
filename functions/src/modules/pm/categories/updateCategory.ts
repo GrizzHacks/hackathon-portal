@@ -9,7 +9,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 const updateCategory: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: validateOrganizer },
-    sponsor: { accepted: executeIfSponsorMatches },
+    sponsor: { accepted: validateSponsor },
   })(req, res, next);
 };
 
@@ -17,45 +17,57 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-        prizeCategoryName: { rules: ["string"] },
-        prizeCategoryDescription: { rules: ["string"]},
-        eligibility: { rules: ["string"]},
-        approvalStatus: { rules: [{
-          type: "enum",
-          rules: ["string"],
-        }]},
-        companyId: { rules: ["string"] },
+      prizeCategoryName: { rules: ["string"] },
+      prizeCategoryDescription: { rules: ["string"] },
+      eligibility: { rules: ["string"] },
+      approvalStatus: {
+        rules: [
+          {
+            type: "enum",
+            rules: ["approved", "rejected", "inProgress", "awaitingApproval"],
+          },
+        ],
+      },
+      companyId: { rules: ["string"] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
 
 const validateSponsor: ExpressFunction = (req, res, next) => {
-    const validationRules: ValidatorObjectRules = {
-      type: "object",
-      rules: {
-          prizeCategoryName: { rules: ["string"] },
-          prizeCategoryDescription: { rules: ["string"]},
-          approvalStatus: { rules: ["string"]},
-          eligibility: { rules: ["string"]},
+  const validationRules: ValidatorObjectRules = {
+    type: "object",
+    rules: {
+      prizeCategoryName: { rules: ["string"] },
+      prizeCategoryDescription: { rules: ["string"] },
+      approvalStatus: {
+        rules: [
+          {
+            type: "enum",
+            rules: ["inProgress", "awaitingApproval"],
+          },
+        ],
       },
-    };
-    requestBodyTypeValidator(req, res, next)(validationRules, execute);
+      eligibility: { rules: ["string"] },
+    },
   };
+  requestBodyTypeValidator(
+    req,
+    res,
+    next
+  )(validationRules, executeIfSponsorMatches);
+};
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   const body = res.locals.parsedBody as PMCategoryUpdateRequest;
-  if(body.approvalStatus === undefined){
-    body.approvalStatus = "inProgress"
-  }
 
   firebaseApp
     .firestore()
     .collection("prizeCategories")
     .doc(req.params.categoryId)
-    .update(res.locals.parsedBody as PMCategoryUpdateRequest)
+    .update(body)
     .then(() => {
       res.status(200).send();
       next();
@@ -64,17 +76,29 @@ const execute: ExpressFunction = (req, res, next) => {
 };
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
-    const errorHandler = expressErrorHandlerFactory(req, res, next);
-    const sponsorCompany = (res.locals.permissions as UserPermission).company;
-    if (sponsorCompany === req.params.companyId) {
-      validateSponsor(req, res, next);
-    } else {
-      errorHandler(
-        `A sponsor from ${sponsorCompany} tried viewing information for ${req.params.companyId}.`,
-        403,
-        "Sorry, you do not have access to perform that operation."
-      );
-    }
-  };
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+
+  firebaseApp
+    .firestore()
+    .collection("prizeCategories")
+    .doc(req.params.categoryId)
+    .get()
+    .then((doc) => {
+      if (
+        sponsorCompany === (doc.data() as PMCategory | undefined)?.companyId
+      ) {
+        execute(req, res, next);
+      } else {
+        errorHandler(
+          `A sponsor from ${sponsorCompany} tried updating prizeCategory ${req.params.categoryId}.`,
+          403,
+          "Sorry, you do not have access to perform that operation."
+        );
+      }
+    })
+    .catch(errorHandler);
+};
 
 export default updateCategory;

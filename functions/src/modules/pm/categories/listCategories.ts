@@ -5,12 +5,20 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const listCategories: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: execute },
-    sponsor: { accepted: executeIfSponsorMatches },
-    mentor: { accepted: executeIfApprovalStatusApproved },
-    volunteer: { accepted: executeIfApprovalStatusApproved },
-    hacker: { accepted: executeIfApprovalStatusApproved },
-    public: executeIfApprovalStatusApproved
+    organizer: {
+      accepted: execute,
+      pending: executeIfApproved,
+      rejected: executeIfApproved,
+    },
+    sponsor: {
+      accepted: executeIfSponsorMatches,
+      pending: executeIfApproved,
+      rejected: executeIfApproved,
+    },
+    mentor: executeIfApproved,
+    volunteer: executeIfApproved,
+    hacker: executeIfApproved,
+    public: executeIfApproved,
   })(req, res, next);
 };
 
@@ -23,44 +31,69 @@ const execute: ExpressFunction = (req, res, next) => {
     .orderBy("prizeCategoryName", "asc")
     .get()
     .then((documents) => {
-      const prizeCategories: PMCategory[] = [];
-      for (const doc of documents.docs) {
-        prizeCategories.push(doc.data() as PMCategory);
-      }
-      res
-        .status(200)
-        .send(JSON.stringify({ prizeCategories } as PMCategoryList));
-      next();
+      send(documents.docs)(req, res, next);
     })
-
     .catch(errorHandler);
 };
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
-  if (sponsorCompany === req.params.companyId || req.params.approvalStatus === "approved") {
-    execute(req, res, next);
-  } else {
-    errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
-  }
+
+  firebaseApp
+    .firestore()
+    .collection("prizeCategories")
+    .orderBy("prizeCategoryName", "asc")
+    .where("companyId", "==", sponsorCompany)
+    .get()
+    .then((documentsMatchSponsorCompany) => {
+      firebaseApp
+        .firestore()
+        .collection("prizeCategories")
+        .orderBy("prizeCategoryName", "asc")
+        .where("approvalStatus", "==", "approved")
+        .get()
+        .then((documentsApproved) => {
+          const combinedDocs = documentsMatchSponsorCompany.docs.concat(
+            documentsApproved.docs.reduce((array, doc) => {
+              if ((doc.data() as PMCategory).companyId !== sponsorCompany) {
+                array.push(doc);
+              }
+              return array;
+            }, [] as FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[])
+          );
+          send(combinedDocs)(req, res, next);
+        })
+        .catch(errorHandler);
+    })
+    .catch(errorHandler);
 };
 
-const executeIfApprovalStatusApproved: ExpressFunction = (req, res, next) => {
+const executeIfApproved: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-  if (req.params.approvalStatus === "approved") {
-    execute(req, res, next);
-  } else {
-    errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
+
+  firebaseApp
+    .firestore()
+    .collection("prizeCategories")
+    .orderBy("prizeCategoryName", "asc")
+    .where("approvalStatus", "==", "approved")
+    .get()
+    .then((documents) => {
+      send(documents.docs)(req, res, next);
+    })
+    .catch(errorHandler);
+};
+
+const send: (
+  docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
+) => ExpressFunction = (docs) => (req, res, next) => {
+  const prizeCategories: PMCategory[] = [];
+  for (const doc of docs) {
+    prizeCategories.push(doc.data() as PMCategory);
   }
+  res.status(200).send(JSON.stringify({ prizeCategories } as PMCategoryList));
+  next();
 };
 
 export default listCategories;
