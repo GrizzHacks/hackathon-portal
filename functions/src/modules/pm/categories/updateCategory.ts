@@ -89,7 +89,17 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
       if (
         sponsorCompany === (doc.data() as PMCategory | undefined)?.companyId
       ) {
-        execute(req, res, next);
+        if (
+          (doc.data() as PMCategory | undefined)?.approvalStatus !== "approved"
+        ) {
+          execute(req, res, next);
+        } else {
+          errorHandler(
+            `A sponsor from ${sponsorCompany} tried updating the approved prizeCategory ${req.params.categoryId}.`,
+            400,
+            "Sorry, this prize category has already been approved and published. Reach out to the organizing team if you still want to make an edit."
+          );
+        }
       } else {
         errorHandler(
           `A sponsor from ${sponsorCompany} tried updating prizeCategory ${req.params.categoryId}.`,
