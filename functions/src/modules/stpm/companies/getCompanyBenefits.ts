@@ -46,7 +46,7 @@ export const extractAndMergeSponsorCompanyBenefits: (
         firebaseApp
           .firestore()
           .collection("sponsorTiers")
-          .doc(req.params.tierId)
+          .doc(companyData.sponsorTierId)
           .get()
           .then((document) => {
             const tierData = document.data() as STPMTier | undefined;
@@ -57,7 +57,9 @@ export const extractAndMergeSponsorCompanyBenefits: (
               );
               callback(mergedData)(req, res, next);
             } else {
-              errorHandler(`sponsorTiers/${req.params.tierId} has no data.`);
+              errorHandler(
+                `sponsorTiers/${companyData.sponsorTierId} has no data.`
+              );
             }
           })
           .catch(errorHandler);
