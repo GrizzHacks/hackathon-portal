@@ -17,7 +17,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      categoryId: { rules: ["string"], required: true },
+      prizeCategoryId: { rules: ["string"], required: true },
       prizeCategoryName: { rules: ["string"], required: true },
       prizeCategoryDescription: { rules: ["string"], required: true },
       approvalStatus: {

@@ -33,7 +33,7 @@ const execute: ExpressFunction = (req, res, next) => {
           volunteer: sendIfApproved(data),
           hacker: sendIfApproved(data),
           public: sendIfApproved(data),
-        });
+        })(req, res, next);
       } else {
         errorHandler(`prizeCategories/${req.params.categoryId} has no data.`);
       }
