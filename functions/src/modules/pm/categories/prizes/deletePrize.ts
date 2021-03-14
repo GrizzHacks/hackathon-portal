@@ -1,7 +1,7 @@
-import type { ExpressFunction } from "../../../@types";
-import { firebaseApp } from "../../../config/firebaseConfig";
-import { expressErrorHandlerFactory,  requestBodyTypeValidator} from "../../../helpers";
-import { uasPermissionSwitch } from "../../../systems/uas";
+import type { ExpressFunction } from "../../../../@types";
+import { firebaseApp } from "../../../../config/firebaseConfig";
+import { expressErrorHandlerFactory,  requestBodyTypeValidator} from "../../../../helpers";
+import { uasPermissionSwitch } from "../../../../systems/uas";
 
 const deleteCatagoryAndPrizeId: ExpressFunction = (req, res, next) => {
     uasPermissionSwitch({
