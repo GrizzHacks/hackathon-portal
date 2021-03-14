@@ -21,8 +21,8 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       eventName: { rules: ["string"], required: true },
       eventDescription: { rules: ["string"], required: true },
       virtual: { rules: ["boolean"], required: true },
-      location: { rules: ["string"] },
-      joinLink: { rules: ["string"] },
+      location: { rules: ["string", "emptystring"] },
+      joinLink: { rules: ["string", "emptystring"] },
       joinLinkToPresenters: { rules: ["number"] },
       joinLinkToAttendees: { rules: ["number"] },
       approvalStatus: {
@@ -33,7 +33,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
           },
         ],
       },
-      companyId: { rules: ["string"] },
+      companyId: { rules: ["string", "emptystring"] },
       managers: {
         rules: [
           {
@@ -63,16 +63,16 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
       eventName: { rules: ["string"], required: true },
       eventDescription: { rules: ["string"], required: true },
       virtual: { rules: ["boolean"], required: true },
-      location: { rules: ["string"] },
-      joinLink: { rules: ["string"] },
+      location: { rules: ["string", "emptystring"] },
+      joinLink: { rules: ["string", "emptystring"] },
       joinLinkToPresenters: { rules: ["number"] },
       joinLinkToAttendees: { rules: ["number"] },
-      companyId: { rules: ["string"] },
+      companyId: { rules: ["string"], required: true },
       approvalStatus: {
         rules: [
           {
             type: "enum",
-            rules: ["approved", "rejected", "inProgress", "awaitingApproval"],
+            rules: ["inProgress", "awaitingApproval"],
           },
         ],
       },
@@ -131,7 +131,7 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
     execute(req, res, next);
   } else {
     errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
+      `A sponsor from ${sponsorCompany} tried creating an event for ${body.companyId}.`,
       403,
       "Sorry, you do not have access to perform that operation."
     );

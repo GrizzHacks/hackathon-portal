@@ -35,7 +35,7 @@ const execute: ExpressFunction = (req, res, next) => {
           public: sendIfApproved(data),
         })(req, res, next);
       } else {
-        errorHandler(`events/${req.params.eventId} have no data.`);
+        errorHandler(`events/${req.params.eventId} has no data.`);
       }
     })
     .catch(errorHandler);

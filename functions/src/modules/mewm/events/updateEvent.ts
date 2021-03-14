@@ -70,7 +70,7 @@ const ValidateSponsor: ExpressFunction = (req, res, next) => {
         rules: [
           {
             type: "enum",
-            rules: ["approved", "rejected", "inProgress", "awaitingApproval"],
+            rules: ["inProgress", "awaitingApproval"],
           },
         ],
       },
