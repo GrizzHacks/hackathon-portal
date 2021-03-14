@@ -13,5 +13,5 @@ export default (app: Express, endpoint: string) => {
   app.post(`${endpoint}/`, createCompany);
   app.patch(`${endpoint}/:companyId`, updateCompany);
   app.delete(`${endpoint}/:companyId`, deleteCompany);
-  app.get(`${endpoint}/:companyId/benefits`, getCompanyBenefits);
+  app.get(`${endpoint}/:companyId/benefits/`, getCompanyBenefits);
 };
