@@ -9,6 +9,7 @@ declare interface MEWMEventUpdateRequest {
     companyId?: string;
     managers?: string[];
     speakers?: string[];
+    approvalStatus?: "approved" |  "rejected" | "inProgress" | "awaitingApproval"
 }
 
 declare interface MEWMEventCreateRequest extends MEWMEventUpdateRequest{
@@ -26,6 +27,7 @@ declare interface MEWMEvent extends MEWMEventCreateRequest{
     companyId?: string;
     managers: string[];
     speakers: string[];
+    approvalStatus: "approved" |  "rejected" | "inProgress" | "awaitingApproval"
 }
 
 declare interface MEWMEventList {

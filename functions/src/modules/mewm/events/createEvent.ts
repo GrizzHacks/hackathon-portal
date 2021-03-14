@@ -44,6 +44,10 @@ const execute: ExpressFunction = (req, res, next) => {
 
   const body = res.locals.parsedBody as MEWMEventCreateRequest;
 
+  if(body.approvalStatus === undefined){
+    body.approvalStatus = "inProgress"
+  }
+
   firebaseApp
     .firestore()
     .collection("events")
