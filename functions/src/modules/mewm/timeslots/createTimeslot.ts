@@ -1,30 +1,49 @@
+import type { ExpressFunction } from "../../../@types";
 import { firebaseApp } from "../../../config/firebaseConfig";
 import {
   expressErrorHandlerFactory,
   requestBodyTypeValidator,
 } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
-import type { ExpressFunction } from "../../../@types";
 
-const replaceMe: ExpressFunction = (req, res, next) => {};
-const createEvent: ExpressFunction = (req, res, next) => {
+const createTimeSlot: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: validate },
-    sponsor: { accepted: validate }, // TO-DO: Need to filter for only sponsors where the benefit allows
   })(req, res, next);
 };
 
-
-export default replaceMe;
 const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      eventId: { rules: ["string"], required: true },
-      eventName: { rules: ["string"], required: true },
-      eventDescription: { rules: ["string"], required: true },
-      virtual: { rules: ["boolean"], required: true },
-      location: { rules: ["string"]},
-      joinLink: { rules: ["string"]},
-      joinLinkToPresenters: { rules: ["string"]},
-      joinLinkToAttendees: { rules: ["string"]},
+      timeslotId: { rules: ["string"], required: true },
+      startTime: { rules: ["string"], required: true },
+      endTime: { rules: ["string"], required: true },
+      
+      
+    }
+  };
+  requestBodyTypeValidator(req, res, next)(validationRules, execute);
+};
+
+
+const execute: ExpressFunction = (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  const body = res.locals.parsedBody as MEWMTimeslotCreateRequest;
+
+
+
+  firebaseApp
+    .firestore()
+    .collection("sponsorCompanies")
+    .doc(body.timeslotId)
+    .set(body)
+    .then(() => {
+      res.status(201).send();
+      next();
+    })
+    .catch(errorHandler);
+};
+
+export default createTimeSlot;
