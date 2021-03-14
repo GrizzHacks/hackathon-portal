@@ -10,12 +10,12 @@ declare interface PMCategoryUpdateRequest {
     categoryId: string;
     prizeCategoryName: string;
     prizeCategoryDescription: string;
-    approvalStatus: "approved" | "rejected" | "inProgress" | "awaitingApproval" | "public";
   }
   
   declare interface PMCategory extends PMCategoryCreateRequest {
     eligibility: string;
-    companyId: string
+    companyId: string;
+    approvalStatus: "approved" | "rejected" | "inProgress" | "awaitingApproval" | "public";
   }
   
   declare interface PMCategoryList {

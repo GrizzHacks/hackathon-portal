@@ -5,6 +5,11 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const getCategory: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
+    organizer: { accepted: execute },
+    sponsor: { accepted: executeIfSponsorMatches },
+    mentor: { accepted: executeIfApprovalStatusApproved },
+    volunteer: { accepted: executeIfApprovalStatusApproved },
+    hacker: { accepted: executeIfApprovalStatusApproved },
     public: execute
   })(req, res, next);
 };
@@ -26,6 +31,33 @@ const execute: ExpressFunction = (req, res, next) => {
       }
     })
     .catch(errorHandler);
+};
+
+const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+  if (sponsorCompany === req.params.companyId || req.params.approvalStatus === "approved") {
+    execute(req, res, next);
+  } else {
+    errorHandler(
+      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
+      403,
+      "Sorry, you do not have access to perform that operation."
+    );
+  }
+};
+
+const executeIfApprovalStatusApproved: ExpressFunction = (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+  if (req.params.approvalStatus === "approved") {
+    execute(req, res, next);
+  } else {
+    errorHandler(
+      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
+      403,
+      "Sorry, you do not have access to perform that operation."
+    );
+  }
 };
 
 export default getCategory;

@@ -34,7 +34,7 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
     const validationRules: ValidatorObjectRules = {
       type: "object",
       rules: {
-          prizeCategoryName: { rules: ["string"], required: true },
+          prizeCategoryName: { rules: ["string"] },
           prizeCategoryDescription: { rules: ["string"]},
           approvalStatus: { rules: ["string"]},
           eligibility: { rules: ["string"]},
@@ -48,7 +48,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   const body = res.locals.parsedBody as PMCategoryUpdateRequest;
   if(body.approvalStatus === undefined){
-    body.approvalStatus = "awaitingApproval"
+    body.approvalStatus = "inProgress"
   }
 
   firebaseApp
@@ -66,11 +66,11 @@ const execute: ExpressFunction = (req, res, next) => {
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     const sponsorCompany = (res.locals.permissions as UserPermission).company;
-    if (sponsorCompany === req.params.categoryId) {
+    if (sponsorCompany === req.params.companyId) {
       validateSponsor(req, res, next);
     } else {
       errorHandler(
-        `A sponsor from ${sponsorCompany} tried viewing information for ${req.params.categoryId}.`,
+        `A sponsor from ${sponsorCompany} tried viewing information for ${req.params.companyId}.`,
         403,
         "Sorry, you do not have access to perform that operation."
       );
