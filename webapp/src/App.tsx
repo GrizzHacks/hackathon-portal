@@ -1,6 +1,7 @@
 import { Container } from "@material-ui/core";
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import LoginBox from "./components/auth/Login";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
 import LoadingScreen from "./components/misc/LoadingScreen";
@@ -37,6 +38,9 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/api-explorer" component={ApiExplorer} />
+            <Route path="/login">
+              <LoginBox />
+            </Route>
             <Route
               render={() => (
                 <ErrorPage
