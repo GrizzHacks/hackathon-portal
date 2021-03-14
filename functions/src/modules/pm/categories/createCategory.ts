@@ -24,8 +24,8 @@ const validate: ExpressFunction = (req, res, next) => {
         type: "enum",
         rules: ["string"],
       }]},
-      eligibility: { rules: ["string"]},
-      companyId: { rules: ["string"]},
+      eligibility: { rules: ["string", "emptystring"]},
+      companyId: { rules: ["string", "emptystring"]},
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
