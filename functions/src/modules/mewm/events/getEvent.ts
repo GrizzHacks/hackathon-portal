@@ -10,7 +10,7 @@ const getEvent: ExpressFunction = (req, res, next) => {
     mentor: { accepted: executeIfApprovalStatusApproved },
     volunteer: { accepted: executeIfApprovalStatusApproved },
     hacker: { accepted: executeIfApprovalStatusApproved },
-    public: execute
+    public: executeIfApprovalStatusApproved
   })(req, res, next);
 };
 
