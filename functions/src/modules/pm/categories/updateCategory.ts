@@ -19,7 +19,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     rules: {
       prizeCategoryName: { rules: ["string"] },
       prizeCategoryDescription: { rules: ["string"] },
-      eligibility: { rules: ["string"] },
+      eligibility: { rules: ["string", "emptystring"] },
       approvalStatus: {
         rules: [
           {
@@ -28,7 +28,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
           },
         ],
       },
-      companyId: { rules: ["string"] },
+      companyId: { rules: ["string", "emptystring"] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -48,7 +48,7 @@ const validateSponsor: ExpressFunction = (req, res, next) => {
           },
         ],
       },
-      eligibility: { rules: ["string"] },
+      eligibility: { rules: ["string", "emptystring"] },
     },
   };
   requestBodyTypeValidator(
