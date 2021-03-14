@@ -4,18 +4,12 @@ import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
 const getEvent: ExpressFunction = (req, res, next) => {
-  uasPermissionSwitch({
-    organizer: { accepted: execute },
-    sponsor: { accepted: executeIfSponsorMatches },
-    mentor: { accepted: executeIfApprovalStatusApproved },
-    volunteer: { accepted: executeIfApprovalStatusApproved },
-    hacker: { accepted: executeIfApprovalStatusApproved },
-    public: executeIfApprovalStatusApproved
-  })(req, res, next);
+  execute(req, res, next);
 };
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   firebaseApp
     .firestore()
     .collection("events")
@@ -24,8 +18,22 @@ const execute: ExpressFunction = (req, res, next) => {
     .then((document) => {
       const data = document.data() as MEWMEvent | undefined;
       if (data) {
-        res.status(200).send(JSON.stringify(data));
-        next();
+        uasPermissionSwitch({
+          organizer: {
+            accepted: send(data),
+            pending: sendIfApproved(data),
+            rejected: sendIfApproved(data),
+          },
+          sponsor: {
+            accepted: sendIfSponsorMatches(data),
+            pending: sendIfApproved(data),
+            rejected: sendIfApproved(data),
+          },
+          mentor: sendIfApproved(data),
+          volunteer: sendIfApproved(data),
+          hacker: sendIfApproved(data),
+          public: sendIfApproved(data),
+        })(req, res, next);
       } else {
         errorHandler(`events/${req.params.eventId} have no data.`);
       }
@@ -33,27 +41,42 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-const executeIfApprovalStatusApproved: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-  if (req.params.approvalStatus === "approved") {
-    execute(req, res, next);
+const send: (data: MEWMEvent) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
+  res.status(200).send(JSON.stringify(data));
+  next();
+};
+
+const sendIfSponsorMatches: (data: MEWMEvent) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
+  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+  const body = res.locals.parsedBody as MEWMEventCreateRequest;
+
+  if (sponsorCompany === body.companyId) {
+    send(data)(req, res, next);
   } else {
-    errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
+    sendIfApproved(data)(req, res, next);
   }
 };
 
-const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
+const sendIfApproved: (data: MEWMEvent) => ExpressFunction = (data) => (
+  req,
+  res,
+  next
+) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-  const sponsorCompany = (res.locals.permissions as UserPermission).company;
-  if (sponsorCompany === req.params.companyId || req.params.approvalStatus === "approved") {
-    execute(req, res, next);
+
+  if (data.approvalStatus === "approved") {
+    send(data)(req, res, next);
   } else {
     errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
+      `Someone unauthorized tried viewing an prize that is still undergoing approval.`,
       403,
       "Sorry, you do not have access to perform that operation."
     );

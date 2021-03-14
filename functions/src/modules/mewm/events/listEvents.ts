@@ -5,12 +5,20 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const listEvents: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: execute },
-    sponsor: { accepted: executeIfSponsorMatches },
-    mentor: { accepted: executeIfApprovalStatusApproved },
-    volunteer: { accepted: executeIfApprovalStatusApproved },
-    hacker: { accepted: executeIfApprovalStatusApproved },
-    public: executeIfApprovalStatusApproved
+    organizer: {
+      accepted: execute,
+      pending: executeIfApproved,
+      rejected: executeIfApproved,
+    },
+    sponsor: {
+      accepted: executeIfSponsorMatches,
+      pending: executeIfApproved,
+      rejected: executeIfApproved,
+    },
+    mentor: executeIfApproved,
+    volunteer: executeIfApproved,
+    hacker: executeIfApproved,
+    public: executeIfApproved,
   })(req, res, next);
 };
 
@@ -23,44 +31,68 @@ const execute: ExpressFunction = (req, res, next) => {
     .orderBy("eventName", "asc")
     .get()
     .then((documents) => {
-      const miniEvents: MEWMEvent[] = [];
-      for (const doc of documents.docs) {
-        miniEvents.push(doc.data() as MEWMEvent);
-      }
-      res
-        .status(200)
-        .send(JSON.stringify({ miniEvents } as MEWMEventList));
-      next();
+      send(documents.docs)(req, res, next);
     })
-
     .catch(errorHandler);
-};
-
-const executeIfApprovalStatusApproved: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-  if (req.params.approvalStatus === "approved") {
-    execute(req, res, next);
-  } else {
-    errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
-  }
 };
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
+
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
-  if (sponsorCompany === req.params.companyId || req.params.approvalStatus === "approved") {
-    execute(req, res, next);
-  } else {
-    errorHandler(
-      `Someone unauthorized tried viewing an event that is still undergoing approval.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
-  }
+
+  firebaseApp
+    .firestore()
+    .collection("events")
+    .orderBy("eventName", "asc")
+    .where("companyId", "==", sponsorCompany)
+    .get()
+    .then((documentsMatchSponsorCompany) => {
+      firebaseApp
+        .firestore()
+        .collection("events")
+        .orderBy("eventName", "asc")
+        .where("approvalStatus", "==", "approved")
+        .get()
+        .then((documentsApproved) => {
+          const combinedDocs = documentsMatchSponsorCompany.docs.concat(
+            documentsApproved.docs.reduce((array, doc) => {
+              if ((doc.data() as MEWMEvent).companyId !== sponsorCompany) {
+                array.push(doc);
+              }
+              return array;
+            }, [] as FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[])
+          );
+          send(combinedDocs)(req, res, next);
+        })
+        .catch(errorHandler);
+    })
+    .catch(errorHandler);
 };
 
+const executeIfApproved: ExpressFunction = (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  firebaseApp
+    .firestore()
+    .collection("events")
+    .orderBy("eventName", "asc")
+    .where("approvalStatus", "==", "approved")
+    .get()
+    .then((documents) => {
+      send(documents.docs)(req, res, next);
+    })
+    .catch(errorHandler);
+};
+
+const send: (
+  docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
+) => ExpressFunction = (docs) => (req, res, next) => {
+  const miniEvents: MEWMEvent[] = [];
+  for (const doc of docs) {
+    miniEvents.push(doc.data() as MEWMEvent);
+  }
+  res.status(200).send(JSON.stringify({ miniEvents } as MEWMEventList));
+  next();
+};
 export default listEvents;
