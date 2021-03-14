@@ -11,19 +11,10 @@ const getCompanyBenefits: ExpressFunction = (req, res, next) => {
 };
 
 const execute: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-  firebaseApp
-    .firestore()
-    .collection("sponsorCompanies")
-    .doc(req.params.companyId)
-    .get()
-    .then((document) => {
-      console.log(req.params.companyId);
-      console.log(document.data());
-      res.status(200).send(document.data());
-      next();
-    })
-    .catch(errorHandler);
+  extractAndMergeSponsorCompanyBenefits((mergedData) => (req, res, next) => {
+    res.status(200).send(JSON.stringify(mergedData));
+    next();
+  })(req, res, next);
 };
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
@@ -38,6 +29,63 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
       "Sorry, you do not have access to perform that operation."
     );
   }
+};
+
+export const extractAndMergeSponsorCompanyBenefits: (
+  callback: (mergedData: STPMTier) => ExpressFunction
+) => ExpressFunction = (callback) => (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+  firebaseApp
+    .firestore()
+    .collection("sponsorCompanies")
+    .doc(req.params.companyId)
+    .get()
+    .then((document) => {
+      const companyData = document.data() as STPMCompany | undefined;
+      if (companyData) {
+        firebaseApp
+          .firestore()
+          .collection("sponsorTiers")
+          .doc(companyData.sponsorTierId)
+          .get()
+          .then((document) => {
+            const tierData = document.data() as STPMTier | undefined;
+            if (tierData) {
+              const mergedData = mergeTierBenefitsAndCompanyOverriddenBenefits(
+                tierData,
+                companyData.overriddenBenefits
+              );
+              callback(mergedData)(req, res, next);
+            } else {
+              errorHandler(
+                `sponsorTiers/${companyData.sponsorTierId} has no data.`
+              );
+            }
+          })
+          .catch(errorHandler);
+      } else {
+        errorHandler(`sponsorCompanies/${req.params.companyId} has no data.`);
+      }
+    })
+    .catch(errorHandler);
+};
+
+const mergeTierBenefitsAndCompanyOverriddenBenefits = (
+  tierData: STPMTier,
+  overriddenBenefits: STPMTierUpdateRequest
+): STPMTier => {
+  // Override all shared properties in tierData with the overriddenBenefits
+  const mergedData: STPMTier = { ...tierData, ...overriddenBenefits };
+  // Override all shared properties in tierData.otherBenefits with the overriddenBenefits.otherBenefits
+  mergedData.otherBenefits = {
+    ...tierData.otherBenefits,
+    ...overriddenBenefits.otherBenefits,
+  };
+  return mergedData;
+};
+
+export const internalFunctionsForTesting = {
+  mergeTierBenefitsAndCompanyOverriddenBenefits,
 };
 
 export default getCompanyBenefits;

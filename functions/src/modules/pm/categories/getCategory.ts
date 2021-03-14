@@ -56,9 +56,8 @@ const sendIfSponsorMatches: (data: PMCategory) => ExpressFunction = (data) => (
   next
 ) => {
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
-  const body = res.locals.parsedBody as PMCategoryCreateRequest;
 
-  if (sponsorCompany === body.companyId) {
+  if (sponsorCompany === data.companyId) {
     send(data)(req, res, next);
   } else {
     sendIfApproved(data)(req, res, next);
@@ -76,7 +75,7 @@ const sendIfApproved: (data: PMCategory) => ExpressFunction = (data) => (
     send(data)(req, res, next);
   } else {
     errorHandler(
-      `Someone unauthorized tried viewing an prize that is still undergoing approval.`,
+      `Someone unauthorized tried viewing a prize that is still undergoing approval.`,
       403,
       "Sorry, you do not have access to perform that operation."
     );
