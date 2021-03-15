@@ -1,7 +1,12 @@
-declare interface UserPermission {
+declare interface UserPermissionCustomClaim {
   role: PermissionLevel;
   accepted?: boolean;
   companyId?: string;
+}
+
+declare interface UserPermission extends UserPermissionCustomClaim {
+  userId?: string;
+  companyBenefits?: STPMTier;
 }
 
 declare type PermissionLevel =

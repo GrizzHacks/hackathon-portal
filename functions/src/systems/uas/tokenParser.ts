@@ -21,12 +21,13 @@ const tokenParser: ExpressFunction = (req, res, next) => {
           .getUser(decodedUser.uid)
           .then((user) => {
             if (user.customClaims) {
-              setPermission(user.customClaims as UserPermission);
+              const customClaims = user.customClaims as UserPermissionCustomClaim;
+              setPermission({ ...customClaims, userId: user.uid });
             } else {
               logger.warn(
                 `The user with the uid of ${decodedUser.uid} does not have any auth information. The user is now being treated as a PUBLIC user.`
               );
-              setPermission(publicPermission);
+              setPermission({ ...publicPermission, userId: user.uid });
             }
           })
           .catch((err) => {
