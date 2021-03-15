@@ -1,7 +1,7 @@
 declare interface UserPermission {
   role: PermissionLevel;
   accepted?: boolean;
-  company?: string;
+  companyId?: string;
 }
 
 declare type PermissionLevel =

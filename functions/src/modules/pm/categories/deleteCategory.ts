@@ -27,7 +27,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-
+  companyId;
   const sponsorCompany = (res.locals.permissions as UserPermission).company;
 
   firebaseApp
