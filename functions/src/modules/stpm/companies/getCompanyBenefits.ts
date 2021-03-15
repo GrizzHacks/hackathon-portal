@@ -11,10 +11,13 @@ const getCompanyBenefits: ExpressFunction = (req, res, next) => {
 };
 
 const execute: ExpressFunction = (req, res, next) => {
-  extractAndMergeSponsorCompanyBenefits((mergedData) => (req, res, next) => {
-    res.status(200).send(JSON.stringify(mergedData));
-    next();
-  })(req, res, next);
+  extractAndMergeSponsorCompanyBenefits(
+    req.params.companyId,
+    (mergedData) => (req, res, next) => {
+      res.status(200).send(JSON.stringify(mergedData));
+      next();
+    }
+  )(req, res, next);
 };
 
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
@@ -32,13 +35,14 @@ const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
 };
 
 export const extractAndMergeSponsorCompanyBenefits: (
+  companyId: string,
   callback: (mergedData: STPMTier) => ExpressFunction
-) => ExpressFunction = (callback) => (req, res, next) => {
+) => ExpressFunction = (companyId, callback) => (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
     .collection("sponsorCompanies")
-    .doc(req.params.companyId)
+    .doc(companyId)
     .get()
     .then((document) => {
       const companyData = document.data() as STPMCompany | undefined;

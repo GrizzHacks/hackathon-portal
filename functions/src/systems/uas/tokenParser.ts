@@ -1,6 +1,7 @@
-import { logger } from "../../helpers";
-import { firebaseApp } from "./../../config/firebaseConfig";
 import type { ExpressFunction } from "../../@types";
+import { logger } from "../../helpers";
+import { extractAndMergeSponsorCompanyBenefits } from "../../modules/stpm/companies/getCompanyBenefits";
+import { firebaseApp } from "./../../config/firebaseConfig";
 
 const tokenParser: ExpressFunction = (req, res, next) => {
   const setPermission = setPermissionFactory(req, res, next);
@@ -23,6 +24,7 @@ const tokenParser: ExpressFunction = (req, res, next) => {
             if (user.customClaims) {
               const customClaims = user.customClaims as UserPermissionCustomClaim;
               setPermission({ ...customClaims, userId: user.uid });
+              setCompnayBenefitsFactory(req, res, next)(customClaims.companyId);
             } else {
               logger.warn(
                 `The user with the uid of ${decodedUser.uid} does not have any auth information. The user is now being treated as a PUBLIC user.`
@@ -63,13 +65,27 @@ const setPermissionFactory: ExpressFunction<
         : " rejected"
     } ${res.locals.permissions.role.toLowerCase()}`
   );
-  // Set auth to organizer for testing
-  // const currentPermissions: UserPermission = {
-  //   role: "ORGANIZER",
-  //   accepted: true,
-  // };
-  // res.locals.permissions = currentPermissions;
   next();
+};
+
+const setCompnayBenefitsFactory: ExpressFunction<
+  (companyId?: string) => void
+> = (req, res, next) => (companyId) => {
+  if (companyId) {
+    extractAndMergeSponsorCompanyBenefits(
+      companyId,
+      (mergedData) => (req, res, next) => {
+        res.locals.permissions.companyBenefits = mergedData;
+        logger.info(
+          {
+            message: "Current user has the following sponsor benefits:",
+            companyBenefits: mergedData,
+          },
+          { structuredData: true }
+        );
+      }
+    )(req, res, next);
+  }
 };
 
 export default tokenParser;
