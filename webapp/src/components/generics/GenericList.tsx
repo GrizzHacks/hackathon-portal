@@ -1,118 +1,97 @@
-import React, { Component } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Divider from "@material-ui/core/Divider";
+import ApiClient from "../../helper/ApiClient";
+import { ApiExplorerFirebaseApp } from "../../devTools/apiExplorerFirebaseConfig";
 
 export interface GenericList {
-  key: string;
-  line1: string;
-  linesunder: string[];
-  multiline: boolean | undefined;
-  icon: Component | undefined;
-  detailedViewLink: string | undefined;
-  detailedViewText: string | undefined;
-  deleteEndpoint: string | undefined;
-  deleteText: string | undefined;
+  genericList: GenericListSchema;
+  classes: any;
 }
-const Home: React.FunctionComponent<GenericList> = ({
-  key,
-  line1,
-  linesunder,
-  multiline,
-  icon,
-  detailedViewLink,
-  deleteEndpoint,
-  detailedViewText,
-  deleteText,
-}) => {
-  const a = linesunder.map((val, index) => {
-    return (
-      <div key={index}>
-        <React.Fragment>
-          <Typography
-            component="span"
-            variant="body2"
-            className={val}
-            color="textPrimary"
-          ></Typography>
-          {val}
-        </React.Fragment>
-      </div>
-    );
-  });
 
-  if (multiline === false || multiline === undefined) {
+const apiClient = new ApiClient(ApiExplorerFirebaseApp);
+
+function deleteElement(x: string | undefined) {
+  if (x != undefined) apiClient.delete(x);
+}
+
+const GenericList: React.FunctionComponent<GenericList> = ({
+  genericList,
+  classes,
+}) => {
+  if (genericList.multiline === false || genericList.multiline === undefined) {
     return (
       <div>
-        <List className={key}>
-          <ListItem alignItems="flex-start">
-            <ListItemIcon> {icon}</ListItemIcon>
-            <ListItemText primary={line1} />
+        <List className={classes.pageTitle}>
+          <ListItem>
+            <ListItemIcon>
+              <genericList.icon />
+            </ListItemIcon>
+            <ListItemText primary={genericList.line1} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments">
-                <DeleteIcon />
-              </IconButton>
+              <Button
+                href={genericList.detailedViewLink}
+                variant="contained"
+                color="primary"
+              >
+                {genericList.detailedViewText}
+              </Button>
+              &nbsp; &nbsp; &nbsp;
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  deleteElement(genericList.deleteEndpoint);
+                }}
+              >
+                {genericList.deleteText}
+              </Button>
             </ListItemSecondaryAction>
           </ListItem>
         </List>
-        <Divider variant="inset" component="li" />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            window.open(detailedViewLink, key);
-          }}
-        >
-          {detailedViewText}
-        </Button>
-        <Button variant="contained" color="primary">
-          {deleteText}
-        </Button>
       </div>
     );
   }
 
   return (
     <div>
-      <List className={key}>
-        <ListItem alignItems="flex-start">
-          <ListItemIcon> {icon}</ListItemIcon>
-          <ListItemText primary={line1} secondary={a} />
+      <List className={classes.pageTitle}>
+        <ListItem>
+          <ListItemIcon>
+            <genericList.icon />
+          </ListItemIcon>
+          <ListItemText
+            primary={genericList.line1}
+            secondary={genericList.line2}
+          />
           <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="comments">
-              <DeleteIcon />
-            </IconButton>
+            <Button
+              href={genericList.detailedViewLink}
+              variant="contained"
+              color="primary"
+            >
+              {genericList.detailedViewText}
+            </Button>
+            &nbsp; &nbsp; &nbsp;
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                deleteElement(genericList.deleteEndpoint);
+              }}
+            >
+              {genericList.deleteText}
+            </Button>
           </ListItemSecondaryAction>
         </ListItem>
       </List>
-      <Divider variant="inset" component="li" />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          window.open(detailedViewLink, key);
-        }}
-      >
-        {detailedViewText}
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          window.open(deleteEndpoint, key);
-        }}
-      >
-        {deleteText}
-      </Button>
     </div>
   );
 };
 
-export default Home;
+export default GenericList;
