@@ -78,7 +78,7 @@ const execute: ExpressFunction = (req, res, next) => {
 const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
-  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+  const sponsorCompany = (res.locals.permissions as UserPermission).companyId;
 
   firebaseApp
     .firestore()
