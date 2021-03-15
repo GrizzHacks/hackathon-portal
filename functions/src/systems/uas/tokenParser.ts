@@ -76,13 +76,9 @@ const setCompnayBenefitsFactory: ExpressFunction<
       companyId,
       (mergedData) => (req, res, next) => {
         res.locals.permissions.companyBenefits = mergedData;
-        logger.info(
-          {
-            message: "Current user has the following sponsor benefits:",
-            companyBenefits: mergedData,
-          },
-          { structuredData: true }
-        );
+        logger.info("Current user has the above sponsor benefits.", {
+          companyBenefits: mergedData,
+        });
       }
     )(req, res, next);
   }
