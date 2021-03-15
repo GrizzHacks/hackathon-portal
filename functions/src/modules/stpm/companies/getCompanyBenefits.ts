@@ -68,7 +68,7 @@ export const extractAndMergeSponsorCompanyBenefits: (
           })
           .catch(errorHandler);
       } else {
-        errorHandler(`sponsorCompanies/${req.params.companyId} has no data.`);
+        errorHandler(`sponsorCompanies/${companyId} has no data.`);
       }
     })
     .catch(errorHandler);
