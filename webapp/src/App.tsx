@@ -1,6 +1,7 @@
-import { Container } from "@material-ui/core";
+import { Container, Divider, List } from "@material-ui/core";
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import DetailsEditForm from "./components/layouts/DetailsEditForm";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
 import LoadingScreen from "./components/misc/LoadingScreen";
@@ -10,6 +11,7 @@ import NotificationBar, {
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
+import { styles } from "./styles";
 
 declare interface AppProps {
   theme: "light" | "dark";
@@ -17,6 +19,8 @@ declare interface AppProps {
 }
 
 const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
+  const classes = styles();
+
   const [loadingMessage, setLoadingMessage] = React.useState("");
   const [notification, setNotification] = React.useState<NotificationMessage>({
     type: "info",
@@ -49,6 +53,15 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
             />
           </Switch>
         </Router>
+        <List>
+          <DetailsEditForm
+            attributeName="First Name"
+            attributeValue="Howdy"
+            handleUpdate={() => {}}
+            classes={classes}
+          />
+        </List>
+        <Divider />
       </Container>
       <LoadingScreen loadingMessage={loadingMessage} />
       <NotificationBar
