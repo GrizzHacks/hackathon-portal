@@ -8,6 +8,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import ApiClient from "../../helper/ApiClient";
 import { ApiExplorerFirebaseApp } from "../../devTools/apiExplorerFirebaseConfig";
+import { GenericListSchema } from "../../../../@types/generics/GenericListSchema";
+import { Divider } from "@material-ui/core";
 
 export interface GenericList {
   genericList: GenericListSchema;
@@ -20,22 +22,29 @@ function deleteElement(x: string | undefined) {
   if (x != undefined) apiClient.delete(x);
 }
 
+function getElement(x: string | undefined) {
+  if (x != undefined) apiClient.get(x);
+}
+
 const GenericList: React.FunctionComponent<GenericList> = ({
   genericList,
   classes,
 }) => {
+  const UntypedComponent = genericList.icon as any;
   if (genericList.multiline === false || genericList.multiline === undefined) {
     return (
       <div>
         <List className={classes.pageTitle}>
           <ListItem>
             <ListItemIcon>
-              <genericList.icon />
+              <UntypedComponent />
             </ListItemIcon>
             <ListItemText primary={genericList.line1} />
             <ListItemSecondaryAction>
               <Button
-                href={genericList.detailedViewLink}
+                onClick={() => {
+                  getElement(genericList.deleteEndpoint);
+                }}
                 variant="contained"
                 color="primary"
               >
@@ -53,7 +62,9 @@ const GenericList: React.FunctionComponent<GenericList> = ({
               </Button>
             </ListItemSecondaryAction>
           </ListItem>
+          <Divider component="li" variant="inset" />
         </List>
+        <Divider light />
       </div>
     );
   }
@@ -63,7 +74,7 @@ const GenericList: React.FunctionComponent<GenericList> = ({
       <List className={classes.pageTitle}>
         <ListItem>
           <ListItemIcon>
-            <genericList.icon />
+            <UntypedComponent />
           </ListItemIcon>
           <ListItemText
             primary={genericList.line1}
@@ -71,7 +82,9 @@ const GenericList: React.FunctionComponent<GenericList> = ({
           />
           <ListItemSecondaryAction>
             <Button
-              href={genericList.detailedViewLink}
+              onClick={() => {
+                getElement(genericList.deleteEndpoint);
+              }}
               variant="contained"
               color="primary"
             >
@@ -89,6 +102,7 @@ const GenericList: React.FunctionComponent<GenericList> = ({
             </Button>
           </ListItemSecondaryAction>
         </ListItem>
+        <Divider component="li" variant="inset" />
       </List>
     </div>
   );

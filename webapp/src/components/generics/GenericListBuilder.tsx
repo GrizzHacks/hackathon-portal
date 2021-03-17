@@ -3,6 +3,7 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import { Container } from "@material-ui/core";
 import GenericList from "./GenericList";
+import { GenericListSchema } from "../../../../@types/generics/GenericListSchema";
 
 export interface GenericListBuilderProps {
   genericList: GenericListSchema[];

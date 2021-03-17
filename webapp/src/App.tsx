@@ -9,7 +9,7 @@ import NotificationBar, {
 } from "./components/misc/Notifications";
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
-import TestGenericList from "./components/TestGenericList";
+import SponsorList from "./components/SponsorList";
 import ApiExplorer from "./devTools/ApiExplorer";
 
 declare interface AppProps {
@@ -38,7 +38,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/api-explorer" component={ApiExplorer} />
-            <Route path="/sponsor-list" component={TestGenericList} />
+            <Route path="/sponsor-list" component={SponsorList} />
             <Route
               render={() => (
                 <ErrorPage
