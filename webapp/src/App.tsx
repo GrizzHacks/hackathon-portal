@@ -56,7 +56,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
         <List>
           <DetailsEditForm
             attributeName="First Name"
-            attributeValue={undefined}
+            attributeValue={"Howdy" as any}
             handleUpdate={() => {}}
             attributeOptions={[
               { label: "True", value: true },

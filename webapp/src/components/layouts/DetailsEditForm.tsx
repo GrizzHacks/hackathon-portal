@@ -10,20 +10,22 @@ import {
   TextField,
 } from "@material-ui/core";
 import { Clear, Done, Edit, Error } from "@material-ui/icons";
-import React, { Fragment } from "react";
+import React, { Fragment, ReactNode } from "react";
 
-declare interface DetailsEditFormProps {
+declare interface DetailsEditFormProps<T> {
   attributeName: string;
-  attributeValue: any;
+  attributeValue: T;
   allowEmptyString?: boolean;
   attributeTypeIsNumber?: boolean;
-  attributeOptions?: { label: string; value: any }[];
-  handleUpdate: (newValue: any) => void;
+  attributeOptions?: { label: string; value: T }[];
+  handleUpdate: (newValue: T) => void;
   createOnly?: boolean;
   classes: any;
 }
 
-const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
+const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ = <
+  T,
+>({
   attributeName,
   attributeValue,
   allowEmptyString,
@@ -32,24 +34,30 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
   handleUpdate,
   createOnly,
   classes,
-}) => {
-  const getLabelForOptionValue = (value: any) => {
+}: DetailsEditFormProps<T> & { children?: ReactNode }) => {
+  const getIndexForOptionValue = (value: T) => {
     if (attributeOptions) {
-      for (const item of attributeOptions) {
-        if (item.value === value) {
-          return item.label;
+      for (let i = 0; i < attributeOptions.length; i++) {
+        if (attributeOptions[i].value === value) {
+          return i;
         }
       }
     }
-    return `Error! Somehow, the label was not found for the option value ${getLabelForOptionValue}`;
+    return -1;
+  };
+
+  const getOptionsLabelOrAttributeValue = (value: T) => {
+    return attributeOptions && attributeOptions.length > 0
+      ? getIndexForOptionValue(value) >= 0
+        ? attributeOptions[getIndexForOptionValue(value)].label
+        : `Error! Somehow, the label was not found for the option value ${value}`
+      : value;
   };
 
   const [currentValue, setCurrentValue] = React.useState<any>(attributeValue);
-  const [temp, setTemp] = React.useState<any>(attributeValue);
-  const [tempDisplay, setTempDisplay] = React.useState<any>(
-    attributeOptions && attributeOptions.length > 0
-      ? getLabelForOptionValue(attributeValue)
-      : attributeValue
+  const [temp, setTemp] = React.useState<T>(attributeValue);
+  const [selectIndex, setSelectIndex] = React.useState<number>(
+    getIndexForOptionValue(attributeValue)
   );
   const [errorText, setErrorTest] = React.useState<string>("");
   const [editing, setEditing] = React.useState(createOnly);
@@ -61,45 +69,43 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
   const cancelEditing = () => {
     setEditing(false);
     setErrorTest("");
+    setSelectIndex(getIndexForOptionValue(currentValue));
     setTemp(currentValue);
-    setTempDisplay(
-      attributeOptions && attributeOptions.length > 0
-        ? getLabelForOptionValue(attributeValue)
-        : currentValue
-    );
   };
 
   const saveAttribute = () => {
     setErrorTest("");
-    if (
-      allowEmptyString ||
-      (attributeOptions && attributeOptions.length > 0) ||
-      !!temp
-    ) {
-      const tempNumber = Number(temp);
-      if (!attributeTypeIsNumber || !isNaN(tempNumber)) {
-        setEditing(false);
-        setCurrentValue(temp);
-        handleUpdate(attributeTypeIsNumber ? tempNumber : temp);
-      } else {
-        setErrorTest(`Sorry, ${attributeName} must be a number`);
-      }
+    if (attributeOptions && attributeOptions.length > 0) {
+      setEditing(false);
+      setTemp(attributeOptions[selectIndex].value);
+      setCurrentValue(attributeOptions[selectIndex].value);
+      handleUpdate(attributeOptions[selectIndex].value);
     } else {
-      setErrorTest(`Sorry, ${attributeName} cannot be empty`);
+      if (allowEmptyString || !!temp) {
+        const tempNumber = Number(temp);
+        if (!attributeTypeIsNumber || !isNaN(tempNumber)) {
+          setEditing(false);
+          setCurrentValue(temp);
+          handleUpdate((attributeTypeIsNumber ? tempNumber : temp) as any); // Loss of specifity due to text box
+        } else {
+          setErrorTest(`Sorry, ${attributeName} must be a number`);
+        }
+      } else {
+        setErrorTest(`Sorry, ${attributeName} cannot be empty`);
+      }
     }
   };
 
   const handleAttributeValueChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | { name?: string | undefined; value: unknown }
-    >
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setTemp(event.target.value);
-    setTempDisplay(
-      attributeOptions && attributeOptions.length > 0
-        ? getLabelForOptionValue(attributeValue)
-        : event.target.value
-    );
+    setTemp(event.target.value as any); // Loss of specifity due to text box
+  };
+
+  const handleSelectValueChange = (
+    event: React.ChangeEvent<{ name?: string | undefined; value: unknown }>
+  ) => {
+    setSelectIndex(event.target.value as number);
   };
 
   return (
@@ -126,16 +132,19 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
                 }
               />
             ) : (
-              <FormControl variant="outlined" fullWidth>
-                <Select value={temp} onChange={handleAttributeValueChange}>
-                  {attributeOptions.map((item) => {
-                    return <MenuItem value={item.value}>{item.label}</MenuItem>;
+              <FormControl variant="outlined" fullWidth error={selectIndex < 0}>
+                <Select
+                  value={selectIndex >= 0 ? selectIndex : ""}
+                  onChange={handleSelectValueChange}
+                >
+                  {attributeOptions.map((item, index) => {
+                    return <MenuItem value={index}>{item.label}</MenuItem>;
                   })}
                 </Select>
               </FormControl>
             )
           ) : (
-            tempDisplay
+            getOptionsLabelOrAttributeValue(temp)
           )
         }
       />
