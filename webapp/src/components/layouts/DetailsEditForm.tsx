@@ -6,10 +6,8 @@ import {
   ListItemText,
   TextField,
 } from "@material-ui/core";
-import ClearIcon from "@material-ui/icons/Clear";
-import DoneIcon from "@material-ui/icons/Done";
-import EditIcon from "@material-ui/icons/Edit";
-import React from "react";
+import { Clear, Done, Edit, Error } from "@material-ui/icons";
+import React, { Fragment } from "react";
 
 declare interface DetailsEditFormProps {
   attributeName: string;
@@ -34,6 +32,7 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
 }) => {
   const [temp, setTemp] = React.useState<any>(attributeValue);
   const [currentValue, setCurrentValue] = React.useState<any>(attributeValue);
+  const [errorText, setErrorTest] = React.useState<string>("");
   const [editing, setEditing] = React.useState(createOnly);
 
   const startEditing = () => {
@@ -42,13 +41,24 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
 
   const cancelEditing = () => {
     setEditing(false);
+    setErrorTest("");
     setTemp(currentValue);
   };
 
   const saveAttribute = () => {
-    setEditing(false);
-    setCurrentValue(temp);
-    handleUpdate(temp);
+    setErrorTest("");
+    if (allowEmptyString || !!temp) {
+      const tempNumber = Number(temp);
+      if (!attributeTypeIsNumber || !isNaN(tempNumber)) {
+        setEditing(false);
+        setCurrentValue(temp);
+        handleUpdate(attributeTypeIsNumber ? tempNumber : temp);
+      } else {
+        setErrorTest(`Sorry, ${attributeName} must be a number`);
+      }
+    } else {
+      setErrorTest(`Sorry, ${attributeName} cannot be empty`);
+    }
   };
 
   const handleAttributeValueChange = (
@@ -65,9 +75,18 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
           editing ? (
             <TextField
               fullWidth
+              error={!!errorText}
               value={temp}
               onChange={handleAttributeValueChange}
               variant="outlined"
+              helperText={
+                errorText && (
+                  <Fragment>
+                    <Error fontSize="inherit" />
+                    {" " + errorText}
+                  </Fragment>
+                )
+              }
             />
           ) : (
             temp
@@ -83,7 +102,7 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
               saveAttribute();
             }}
           >
-            <DoneIcon />
+            <Done />
           </Fab>
         </ListItemIcon>
       )}
@@ -97,7 +116,7 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
               cancelEditing();
             }}
           >
-            <ClearIcon />
+            <Clear />
           </Fab>
         ) : (
           <Fab
@@ -107,7 +126,7 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
               startEditing();
             }}
           >
-            <EditIcon />
+            <Edit />
           </Fab>
         )}
       </ListItemSecondaryAction>

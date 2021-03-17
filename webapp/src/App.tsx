@@ -58,6 +58,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
             attributeName="First Name"
             attributeValue="Howdy"
             handleUpdate={() => {}}
+            attributeTypeIsNumber={true}
             classes={classes}
           />
         </List>
