@@ -1,9 +1,12 @@
 import {
   Fab,
+  FormControl,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  MenuItem,
+  Select,
   TextField,
 } from "@material-ui/core";
 import { Clear, Done, Edit, Error } from "@material-ui/icons";
@@ -14,7 +17,7 @@ declare interface DetailsEditFormProps {
   attributeValue: any;
   allowEmptyString?: boolean;
   attributeTypeIsNumber?: boolean;
-  attributeOptions?: any[];
+  attributeOptions?: { label: string; value: any }[];
   handleUpdate: (newValue: any) => void;
   createOnly?: boolean;
   classes: any;
@@ -30,8 +33,24 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
   createOnly,
   classes,
 }) => {
-  const [temp, setTemp] = React.useState<any>(attributeValue);
+  const getLabelForOptionValue = (value: any) => {
+    if (attributeOptions) {
+      for (const item of attributeOptions) {
+        if (item.value === value) {
+          return item.label;
+        }
+      }
+    }
+    return `Error! Somehow, the label was not found for the option value ${getLabelForOptionValue}`;
+  };
+
   const [currentValue, setCurrentValue] = React.useState<any>(attributeValue);
+  const [temp, setTemp] = React.useState<any>(attributeValue);
+  const [tempDisplay, setTempDisplay] = React.useState<any>(
+    attributeOptions && attributeOptions.length > 0
+      ? getLabelForOptionValue(attributeValue)
+      : attributeValue
+  );
   const [errorText, setErrorTest] = React.useState<string>("");
   const [editing, setEditing] = React.useState(createOnly);
 
@@ -43,11 +62,20 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
     setEditing(false);
     setErrorTest("");
     setTemp(currentValue);
+    setTempDisplay(
+      attributeOptions && attributeOptions.length > 0
+        ? getLabelForOptionValue(attributeValue)
+        : currentValue
+    );
   };
 
   const saveAttribute = () => {
     setErrorTest("");
-    if (allowEmptyString || !!temp) {
+    if (
+      allowEmptyString ||
+      (attributeOptions && attributeOptions.length > 0) ||
+      !!temp
+    ) {
       const tempNumber = Number(temp);
       if (!attributeTypeIsNumber || !isNaN(tempNumber)) {
         setEditing(false);
@@ -62,9 +90,16 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
   };
 
   const handleAttributeValueChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | { name?: string | undefined; value: unknown }
+    >
   ) => {
     setTemp(event.target.value);
+    setTempDisplay(
+      attributeOptions && attributeOptions.length > 0
+        ? getLabelForOptionValue(attributeValue)
+        : event.target.value
+    );
   };
 
   return (
@@ -73,23 +108,34 @@ const DetailsEditForm: React.FunctionComponent<DetailsEditFormProps> = ({
         primary={attributeName}
         secondary={
           editing ? (
-            <TextField
-              fullWidth
-              error={!!errorText}
-              value={temp}
-              onChange={handleAttributeValueChange}
-              variant="outlined"
-              helperText={
-                errorText && (
-                  <Fragment>
-                    <Error fontSize="inherit" />
-                    {" " + errorText}
-                  </Fragment>
-                )
-              }
-            />
+            !(attributeOptions && attributeOptions.length > 0) ? (
+              <TextField
+                fullWidth
+                multiline
+                error={!!errorText}
+                value={temp}
+                onChange={handleAttributeValueChange}
+                variant="outlined"
+                helperText={
+                  errorText && (
+                    <Fragment>
+                      <Error fontSize="inherit" />
+                      {" " + errorText}
+                    </Fragment>
+                  )
+                }
+              />
+            ) : (
+              <FormControl variant="outlined" fullWidth>
+                <Select value={temp} onChange={handleAttributeValueChange}>
+                  {attributeOptions.map((item) => {
+                    return <MenuItem value={item.value}>{item.label}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            )
           ) : (
-            temp
+            tempDisplay
           )
         }
       />
