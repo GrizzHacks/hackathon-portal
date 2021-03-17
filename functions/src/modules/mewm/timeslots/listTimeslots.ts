@@ -45,13 +45,13 @@ const executeIfApproved: ExpressFunction = (req, res, next) => {
 const send: (
   docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
 ) => ExpressFunction = (docs) => (req, res, next) => {
-  const timeslot: MEWMTimeslotList[] = [];
+  const timeslots: MEWMTimeslotList[] = [];
   const time: MEWMTimeslotList[] = [];
   for (const doc of docs) {
-    timeslot.push(doc.data() as MEWMTimeslotList);
-    time.push(doc.data() as MEWMTimeslotList);
+    timeslots.push(doc.data() as MEWMTimeslotList );
+    time.push(doc.data() as MEWMTimeslotList );
   }
-  //res.status(200).send(JSON.stringify({ timeslot } as MEWMTimeslotList));
+  //res.status(200).send(JSON.stringify({ timeslots } as MEWMTimeslotList));
   next();
 };
 

@@ -19,6 +19,10 @@ const validate: ExpressFunction = (req, res, next) => {
       timeslotId: { rules: ["string"], required: true },
       startTime: { rules: ["string"], required: true },
       endTime: { rules: ["string"], required: true },
+      eventTypeId: { rules: ["string"], required: true },
+      eventId: { rules: ["string"]},
+
+
       
       
     }
