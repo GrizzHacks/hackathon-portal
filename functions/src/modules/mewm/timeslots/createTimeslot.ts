@@ -20,27 +20,20 @@ const validate: ExpressFunction = (req, res, next) => {
       startTime: { rules: ["string"], required: true },
       endTime: { rules: ["string"], required: true },
       eventTypeId: { rules: ["string"], required: true },
-      eventId: { rules: ["string"]},
-
-
-      
-      
-    }
+      eventId: { rules: ["string"] },
+    },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
-
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   const body = res.locals.parsedBody as MEWMTimeslotCreateRequest;
 
-
-
   firebaseApp
     .firestore()
-    .collection("sponsorCompanies")
+    .collection("timeslots")
     .doc(body.timeslotId)
     .set(body)
     .then(() => {

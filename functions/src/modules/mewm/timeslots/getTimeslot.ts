@@ -6,7 +6,7 @@ import { uasPermissionSwitch } from "../../../systems/uas";
 
 const getTimeslot: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    public: execute
+    organizer: { accepted: execute }
   })(req, res, next);
 };
 
@@ -16,8 +16,8 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
-    .collection("events")
-    .doc(req.params.eventId)
+    .collection("timeslots")
+    .doc(req.params.timeslotId)
     .get()
     .then((document) => {
       const data = document.data() as MEWMTimeslot | undefined;

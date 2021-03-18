@@ -17,10 +17,10 @@ const ValidateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      timeslotId: { rules: ["string"], required: true },
-      startTime: { rules: ["string"], required: true },
-      endTime: { rules: ["string"], required: true },
-      eventTypeId: { rules: ["string"], required: true },
+      timeslotId: { rules: ["string"] },
+      startTime: { rules: ["string"] },
+      endTime: { rules: ["string"] },
+      eventTypeId: { rules: ["string"] },
       eventId: { rules: ["string"]},
     }
     
@@ -35,7 +35,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("timeslot")
+    .collection("timeslots")
     .doc(req.params.timeslotId)
     .update(body)
     .then(() => {
