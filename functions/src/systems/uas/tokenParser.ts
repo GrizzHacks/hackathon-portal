@@ -1,6 +1,7 @@
-import { logger } from "../../helpers";
-import { firebaseApp } from "./../../config/firebaseConfig";
 import type { ExpressFunction } from "../../@types";
+import { logger } from "../../helpers";
+import { extractAndMergeSponsorCompanyBenefits } from "../../modules/stpm/companies/getCompanyBenefits";
+import { firebaseApp } from "./../../config/firebaseConfig";
 
 const tokenParser: ExpressFunction = (req, res, next) => {
   const setPermission = setPermissionFactory(req, res, next);
@@ -21,12 +22,14 @@ const tokenParser: ExpressFunction = (req, res, next) => {
           .getUser(decodedUser.uid)
           .then((user) => {
             if (user.customClaims) {
-              setPermission(user.customClaims as UserPermission);
+              const customClaims = user.customClaims as UserPermissionCustomClaim;
+              setPermission({ ...customClaims, userId: user.uid });
+              setCompnayBenefitsFactory(req, res, next)(customClaims.companyId);
             } else {
               logger.warn(
                 `The user with the uid of ${decodedUser.uid} does not have any auth information. The user is now being treated as a PUBLIC user.`
               );
-              setPermission(publicPermission);
+              setPermission({ ...publicPermission, userId: user.uid });
             }
           })
           .catch((err) => {
@@ -62,13 +65,23 @@ const setPermissionFactory: ExpressFunction<
         : " rejected"
     } ${res.locals.permissions.role.toLowerCase()}`
   );
-  // Set auth to organizer for testing
-  // const currentPermissions: UserPermission = {
-  //   role: "ORGANIZER",
-  //   accepted: true,
-  // };
-  // res.locals.permissions = currentPermissions;
   next();
+};
+
+const setCompnayBenefitsFactory: ExpressFunction<
+  (companyId?: string) => void
+> = (req, res, next) => (companyId) => {
+  if (companyId) {
+    extractAndMergeSponsorCompanyBenefits(
+      companyId,
+      (mergedData) => (req, res, next) => {
+        res.locals.permissions.companyBenefits = mergedData;
+        logger.info("Current user has the above sponsor benefits.", {
+          companyBenefits: mergedData,
+        });
+      }
+    )(req, res, next);
+  }
 };
 
 export default tokenParser;

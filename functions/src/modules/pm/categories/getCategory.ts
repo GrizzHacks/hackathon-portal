@@ -55,7 +55,7 @@ const sendIfSponsorMatches: (data: PMCategory) => ExpressFunction = (data) => (
   res,
   next
 ) => {
-  const sponsorCompany = (res.locals.permissions as UserPermission).company;
+  const sponsorCompany = (res.locals.permissions as UserPermission).companyId;
 
   if (sponsorCompany === data.companyId) {
     send(data)(req, res, next);
