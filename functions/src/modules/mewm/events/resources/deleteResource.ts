@@ -16,7 +16,9 @@ const validateExecute: ExpressFunction = (req, res, next) => {
   
     firebaseApp
       .firestore()
-      .collection("mewm/events/resources") //TO-DO pull the eventId as well to go to the correct resource folder as well
+      .collection("events")
+      .doc(req.params.eventId)
+      .collection("resources")
       .doc(req.params.resourceId)
       .delete()
       .then(() => {

@@ -6,7 +6,9 @@ const listResources: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     firebaseApp
       .firestore()
-      .collection("mewm/events/resources")
+      .collection("events")
+      .doc(req.params.eventId)
+      .collection("resources")
       .orderBy("resourceName", "asc")
       .get()
       .then((documents) => {

@@ -28,12 +28,14 @@ const validate: ExpressFunction = (req, res, next) => {
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-
+  const body = res.locals.parsedBody as MEWMEventResourcesUpdateRequest;
   firebaseApp
     .firestore()
+    .collection("events")
+    .doc(req.params.eventId)
     .collection("resources")
     .doc(req.params.resourceId)
-    .update(res.locals.parsedBody as MEWMEventResources)
+    .update(body)
     .then(() => {
       res.status(200).send();
       next();

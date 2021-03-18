@@ -31,6 +31,8 @@ const validate: ExpressFunction = (req, res, next) => {
     const body = res.locals.parsedBody as MEWMEventResources;
     firebaseApp
       .firestore()
+      .collection("events")
+      .doc(req.params.eventId)
       .collection("resources")
       .doc(body.resourceId)
       .set(body)

@@ -7,7 +7,9 @@ const getRecources: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
     firebaseApp
       .firestore()
-      .collection("mewm/events/resources")
+      .collection("events")
+      .doc(req.params.eventId)
+      .collection("resources")
       .doc(req.params.resourceId)
       .get()
       .then((document) => {
