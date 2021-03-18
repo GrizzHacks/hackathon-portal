@@ -19,6 +19,7 @@ const validate: ExpressFunction = (req, res, next) => {
       eventTypeId: { rules: ["string"], required: true },
       eventTypeName: { rules: ["string"], required: true },
       eventTypeDescription: { rules: ["string", "emptystring"] },
+ //   permissions: {rules: }
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -28,6 +29,10 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   const body = res.locals.parsedBody as MEWMEventTypeCreateRequest;
+
+  if (body.eventTypeDescription === undefined) {
+    body.eventTypeDescription = "";
+  }
 
   firebaseApp
     .firestore()

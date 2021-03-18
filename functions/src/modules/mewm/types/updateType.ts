@@ -18,6 +18,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     rules: {
       eventTypeName: { rules: ["string"] },
       eventTypeDescription: { rules: ["string", "emptystring"] },
+//   permissions: {rules: }
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
