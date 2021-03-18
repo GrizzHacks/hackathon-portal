@@ -32,6 +32,12 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
   const [email, setEmail] = React.useState<string>("");
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [errorText, setErrorText] = React.useState<string>("");
+  const [passwordReset, setPasswordReset] = React.useState<boolean>(false);
+
+  const getRedirectUrl = () => {
+    const redirect = qs.parse(routeLocation.search.substr(1)).redirect;
+    return typeof redirect === "string" ? redirect : "/";
+  };
 
   const handleSubmit = () => {
     setErrorText("");
@@ -75,8 +81,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          const redirect = qs.parse(routeLocation.search.substr(1)).redirect;
-          routeHistory.replace(typeof redirect === "string" ? redirect : "/");
+          routeHistory.replace(getRedirectUrl());
         })
         .catch((err) => {
           if (err.code === "auth/wrong-password") {
@@ -91,6 +96,13 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
     } else {
       setErrorText("Enter an password");
     }
+  };
+
+  const resetPassword = () => {
+    firebaseAppLocal
+      .auth()
+      .sendPasswordResetEmail(email, { url: getRedirectUrl() });
+    setPasswordReset(true);
   };
 
   const handleChangeEmail = () => {
@@ -123,72 +135,81 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
               )}
             </Container>
           </Grid>
-
-          <Grid item xs={12}>
-            <TextField
-              error={!!errorText}
-              label={!email ? "Email" : "Enter your password"}
-              type={!email ? "email" : showPassword ? "text" : "password"}
-              fullWidth
-              variant="outlined"
-              value={temp}
-              onChange={(element) => {
-                setTemp(element.target.value);
-              }}
-              onKeyDown={(key) => {
-                if (key.key === "Enter") {
-                  handleSubmit();
-                }
-              }}
-              helperText={
-                errorText && (
-                  <Fragment>
-                    <Error fontSize="inherit" />
-                    {" " + errorText}
-                  </Fragment>
-                )
-              }
-            />
-          </Grid>
-          {!!email && (
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={showPassword}
-                    onChange={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                    name="showPassword"
-                    color="primary"
+          {!passwordReset ? (
+            <Fragment>
+              <Grid item xs={12}>
+                <TextField
+                  error={!!errorText}
+                  label={!email ? "Email" : "Enter your password"}
+                  type={!email ? "email" : showPassword ? "text" : "password"}
+                  fullWidth
+                  variant="outlined"
+                  value={temp}
+                  onChange={(element) => {
+                    setTemp(element.target.value);
+                  }}
+                  onKeyDown={(key) => {
+                    if (key.key === "Enter") {
+                      handleSubmit();
+                    }
+                  }}
+                  helperText={
+                    errorText && (
+                      <Fragment>
+                        <Error fontSize="inherit" />
+                        {" " + errorText}
+                      </Fragment>
+                    )
+                  }
+                />
+              </Grid>
+              {!!email && (
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={showPassword}
+                        onChange={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                        name="showPassword"
+                        color="primary"
+                      />
+                    }
+                    label="Show Password"
                   />
-                }
-                label="Show Password"
-              />
-            </Grid>
+                </Grid>
+              )}
+              <Grid item xs={6}>
+                {!!email && (
+                  <Button
+                    variant="text"
+                    fullWidth
+                    color="primary"
+                    onClick={resetPassword}
+                  >
+                    Forgot password?
+                  </Button>
+                )}
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={handleSubmit}
+                >
+                  Next
+                </Button>
+              </Grid>
+            </Fragment>
+          ) : (
+            <Container className={classes.centerText}>
+              <Typography variant="body1">
+                A password reset email has been sent to {email.toLowerCase()}.
+              </Typography>
+            </Container>
           )}
-          <Grid item xs={6}>
-            {!!email && (
-              <Button
-                variant="text"
-                fullWidth
-                color="primary"
-                onClick={() => {}}
-              >
-                Forgot password?
-              </Button>
-            )}
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              fullWidth
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Next
-            </Button>
-          </Grid>
         </Grid>
       </Card>
     </Fragment>
