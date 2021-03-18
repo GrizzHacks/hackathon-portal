@@ -1,6 +1,8 @@
 declare interface MEWMTimeslotUpdateRequest {
-    startTime: string;
-    endTime: string;
+    startTime?: string;
+    endTime?: string;
+    eventTypeID? : string;
+    eventID? : string;
 }
 
 declare interface MEWMTimeslotCreateRequest extends MEWMTimeslotUpdateRequest {
@@ -18,5 +20,5 @@ declare interface MEWMTimeslot extends MEWMTimeslotCreateRequest{
 }
 
 declare interface MEWMTimeslotList {
-    minitimeslot: MEWMTimeslot[];
+    timeslot: MEWMTimeslot[];
 } 
