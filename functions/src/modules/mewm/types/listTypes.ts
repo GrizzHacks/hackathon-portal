@@ -24,7 +24,6 @@ const execute: ExpressFunction = (req, res, next) => {
         .send(JSON.stringify({ eventTypes } as MEWMEventTypeList));
       next();
     })
-
     .catch(errorHandler);
 };
 

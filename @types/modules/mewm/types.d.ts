@@ -1,6 +1,7 @@
 declare interface MEWMEventTypeUpdateRequest {
   eventTypeName?: string;
   eventTypeDescription?: string;
+  permissions?: UASPermissionSwitchConfig<boolean>;
 }
 
 declare interface MEWMEventTypeCreateRequest
@@ -11,6 +12,7 @@ declare interface MEWMEventTypeCreateRequest
 
 declare interface MEWMEventType extends MEWMEventTypeCreateRequest {
   eventTypeDescription: string;
+  permissions: UASPermissionSwitchConfig<boolean>;
 }
 
 declare interface MEWMEventTypeList {
