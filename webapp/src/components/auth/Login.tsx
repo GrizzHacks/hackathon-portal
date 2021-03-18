@@ -4,6 +4,7 @@ import {
   Card,
   Checkbox,
   Chip,
+  Container,
   FormControlLabel,
   Grid,
   TextField,
@@ -12,14 +13,21 @@ import {
 import { ExpandMore, Error } from "@material-ui/icons";
 import firebase from "firebase";
 import React, { Fragment } from "react";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { firebaseApp as FirebaseAppGlobal } from "../../config/firebaseConfig";
+import { styles } from "../../styles";
+import qs from "qs";
 
 declare interface LoginBoxProps {
   firebaseApp?: firebase.app.App;
 }
 
 const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
+  const classes = styles();
   const firebaseAppLocal = firebaseApp ? firebaseApp : FirebaseAppGlobal;
+  const routeLocation = useLocation();
+  const routeHistory = useHistory();
+
   const [temp, setTemp] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -67,7 +75,8 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          console.log("Signed In Successfully!");
+          const redirect = qs.parse(routeLocation.search.substr(1)).redirect;
+          routeHistory.replace(typeof redirect === "string" ? redirect : "/");
         })
         .catch((err) => {
           if (err.code === "auth/wrong-password") {
@@ -92,25 +101,29 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
 
   return (
     <Fragment>
-      <Card>
+      <Card variant="outlined" className={classes.padded}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4">{!email ? "Sign in" : "Hi"}</Typography>
+            <Container className={classes.pageTitle}>
+              <Typography variant="h4">{!email ? "Sign in" : "Hi"}</Typography>
+              {!!email && (
+                <Chip
+                  variant="outlined"
+                  avatar={
+                    <Avatar
+                      alt={email.toUpperCase()}
+                      src="/static/images/avatar/1.jpg"
+                    />
+                  }
+                  label={email.toLowerCase()}
+                  onClick={handleChangeEmail}
+                  onDelete={handleChangeEmail}
+                  deleteIcon={<ExpandMore />}
+                />
+              )}
+            </Container>
           </Grid>
-          {!!email && (
-            <Grid item xs={12}>
-              <Chip
-                variant="outlined"
-                avatar={
-                  <Avatar alt="Andrew" src="/static/images/avatar/1.jpg" />
-                }
-                label={email}
-                onClick={handleChangeEmail}
-                onDelete={handleChangeEmail}
-                deleteIcon={<ExpandMore />}
-              />
-            </Grid>
-          )}
+
           <Grid item xs={12}>
             <TextField
               error={!!errorText}
