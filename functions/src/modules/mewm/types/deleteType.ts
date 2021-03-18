@@ -15,7 +15,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("eventTypes")
-    .doc(req.params.eventTypeId)
+    .doc(req.params.typeId)
     .delete()
     .then(() => {
       res.status(200).send();

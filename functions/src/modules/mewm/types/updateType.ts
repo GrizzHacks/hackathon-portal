@@ -16,30 +16,27 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-        eventTypeName: { rules: ["string"] },
-        eventTypeDescription: { rules: ["string", "emptystring"] },
+      eventTypeName: { rules: ["string"] },
+      eventTypeDescription: { rules: ["string", "emptystring"] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
 
-
 const execute: ExpressFunction = (req, res, next) => {
-    const errorHandler = expressErrorHandlerFactory(req, res, next);
-    const body = res.locals.parsedBody as MEWMEventTypeUpdateRequest;
-  
-    firebaseApp
-      .firestore()
-      .collection("eventTypes")
-      .doc(req.params.eventTypeId)
-      .update(body)
-      .then(() => {
-        res.status(200).send();
-        next();
-      })
-      .catch(errorHandler);
-  };
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+  const body = res.locals.parsedBody as MEWMEventTypeUpdateRequest;
 
-
+  firebaseApp
+    .firestore()
+    .collection("eventTypes")
+    .doc(req.params.typeId)
+    .update(body)
+    .then(() => {
+      res.status(200).send();
+      next();
+    })
+    .catch(errorHandler);
+};
 
 export default updateType;

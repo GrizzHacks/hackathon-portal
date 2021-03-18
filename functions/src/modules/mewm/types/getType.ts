@@ -3,15 +3,15 @@ import { firebaseApp } from "../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../helpers";
 
 const getEventType: ExpressFunction = (req, res, next) => {
-    execute(req, res, next);
-  };
+  execute(req, res, next);
+};
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
     .collection("eventTypes")
-    .doc(req.params.eventTypeId)
+    .doc(req.params.typeId)
     .get()
     .then((document) => {
       const data = document.data() as MEWMEventType | undefined;
@@ -19,7 +19,7 @@ const execute: ExpressFunction = (req, res, next) => {
         res.status(200).send(JSON.stringify(data));
         next();
       } else {
-        errorHandler(`eventtypes/${req.params.eventTypeId} has no data.`);
+        errorHandler(`eventTypes/${req.params.typeId} has no data.`);
       }
     })
     .catch(errorHandler);
