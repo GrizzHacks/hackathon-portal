@@ -4,7 +4,6 @@ export const useDarkMode = () => {
   const [theme, setTheme] = React.useState<"light" | "dark">("light");
   const [componentMounted, setComponentMounted] = React.useState(false);
   const setMode = (mode: "light" | "dark") => {
-    console.log(mode);
     window.localStorage.setItem("theme", mode);
     setTheme(mode);
   };
