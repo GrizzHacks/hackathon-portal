@@ -13,12 +13,50 @@ const updateType: ExpressFunction = (req, res, next) => {
 };
 
 const validateOrganizer: ExpressFunction = (req, res, next) => {
+  const permissionsObjectValidationRules: ValidatorObjectRules = {
+    type: "object",
+    rules: {
+      accepted: {
+        rules: ["boolean"],
+      },
+      pending: {
+        rules: ["boolean"],
+      },
+      rejected: {
+        rules: ["boolean"],
+      },
+    },
+  };
+
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
       eventTypeName: { rules: ["string"] },
       eventTypeDescription: { rules: ["string", "emptystring"] },
-//   permissions: {rules: }
+      permissions: {
+        rules: [
+          {
+            type: "object",
+            rules: {
+              organizer: {
+                rules: ["boolean", permissionsObjectValidationRules],
+              },
+              sponsor: {
+                rules: ["boolean", permissionsObjectValidationRules],
+              },
+              mentor: {
+                rules: ["boolean", permissionsObjectValidationRules],
+              },
+              volunteer: {
+                rules: ["boolean", permissionsObjectValidationRules],
+              },
+              hacker: {
+                rules: ["boolean", permissionsObjectValidationRules],
+              },
+            },
+          },
+        ],
+      },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
