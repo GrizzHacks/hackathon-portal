@@ -18,7 +18,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
         prizeCategoryId: { rules: ["string"] },
         prizeCatagoryName: { rules: ["string"] },
         prizeCategoryDescription: { rules: ["string"] },
-        prizeCategoryOrder: { rules: ["string"] },
+       // prizeCategoryOrder: { rules: ["string"] },
           },
     };
     requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -29,9 +29,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("Groups")
+    .collection("PrizeCatagoryGroup")
     .doc(req.params.prizeCategoryId)
-    .update(res.locals.parsedBody as PMGroupUpdateRequest)
+    .update(res.locals.parsedBody as STPMPrizeCatGroupUpdateRequest)
     .then(() => {
       res.status(200).send();
       next();

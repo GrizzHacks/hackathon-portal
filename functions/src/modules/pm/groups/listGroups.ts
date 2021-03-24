@@ -14,8 +14,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("pm/groups")
-    .orderBy("GroupOrder", "asc")
+    .collection("PrizeCatagoryGroup")
     .get()
     .then((documents) => {
       const prizeCategorys: STPMPrizeCatagoryGroup[] = [];
