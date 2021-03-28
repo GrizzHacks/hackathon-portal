@@ -16,10 +16,12 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "array-move": "^3.0.1",
     "cors": "^2.8.5",
     "firebase": "^8.2.6",
     "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0"
+    "firebase-functions": "^3.11.0",
+    "react-smooth-dnd": "^0.11.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.9",
