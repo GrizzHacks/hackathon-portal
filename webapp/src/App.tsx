@@ -3,6 +3,8 @@ import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LoginBox from "./components/auth/Login";
 import NavBar from "./components/layouts/NavBar";
+import MiniEventsList from "./components/MiniEventsList";
+import MiniEventTypesList from "./components/MiniEventTypesList";
 import BugReportFab from "./components/misc/BugReportFab";
 import LoadingScreen from "./components/misc/LoadingScreen";
 import NotificationBar, {
@@ -11,6 +13,7 @@ import NotificationBar, {
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
 import SponsorList from "./components/SponsorList";
+import TierList from "./components/TierList";
 import ApiExplorer from "./devTools/ApiExplorer";
 import { styles } from "./styles";
 
@@ -45,6 +48,12 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
               <LoginBox />
             </Route>
             <Route path="/sponsor-list" component={SponsorList} />
+            <Route path="/mini-event-list" component={MiniEventsList} />
+            <Route path="/tier-list" component={TierList} />
+            <Route
+              path="/mini-event-type-list"
+              component={MiniEventTypesList}
+            />
             <Route
               render={() => (
                 <ErrorPage
