@@ -19,7 +19,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("timeslot")
+    .collection("timeslots")
     .orderBy("startTime", "asc")
     .get()
     .then((documents) => {
@@ -33,7 +33,7 @@ const executeIfApproved: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("timeslot")
+    .collection("timeslots")
     .orderBy("startTime", "asc")
     .get()
     .then((documents) => {
@@ -45,11 +45,11 @@ const executeIfApproved: ExpressFunction = (req, res, next) => {
 const send: (
   docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
 ) => ExpressFunction = (docs) => (req, res, next) => {
-  const timeslot: MEWMTimeslotList[] = [];
+  const timeslots: MEWMTimeslot[] = [];
   for (const doc of docs) {
-    timeslot.push(doc.data() as MEWMTimeslotList );
+    timeslots.push(doc.data() as MEWMTimeslot );
   }
-  //res.status(200).send(JSON.stringify({ timeslot } as MEWMTimeslotList));
+  res.status(200).send(JSON.stringify({ timeslots } as MEWMTimeslotList));
   next();
 };
 

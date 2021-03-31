@@ -20,5 +20,5 @@ declare interface MEWMTimeslot extends MEWMTimeslotCreateRequest{
 }
 
 declare interface MEWMTimeslotList {
-    timeslot: MEWMTimeslot[];
+    timeslots: MEWMTimeslot[];
 } 
