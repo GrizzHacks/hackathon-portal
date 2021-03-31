@@ -16,11 +16,19 @@ const validate: ExpressFunction = (req, res, next) => {
     const validationRules: ValidatorObjectRules = {
       type: "object",
       rules: {
-        prizeCategoryId: { rules: ["string"], required: true },
-        prizeCatagoryName: { rules: ["string"], required: true },
-        prizeCategoryDescription: { rules: ["string"], required: true },
-        //prizeCategoryOrder: { [key: string]: string }; TODO: Support Dictionary Advanced Types
-      },
+        prizeGroupId: { rules: ["string"], required: true },
+        prizeGroupName: { rules: ["string"], required: true },
+        prizeGroupDescription: { rules: ["string"], required: true },
+        prizeGroupOrder: {
+          rules: [
+          {
+              type: "array",
+              rules: ["string"],
+          },
+          ],
+      required: true},
+          
+         }, 
     };
     requestBodyTypeValidator(req, res, next)(validationRules, execute);
   };
@@ -28,13 +36,13 @@ const validate: ExpressFunction = (req, res, next) => {
   const execute: ExpressFunction = (req, res, next) => {
     const errorHandler = expressErrorHandlerFactory(req, res, next);
   
-    const body = res.locals.parsedBody as STPMPrizeCatGroupCreateRequest;
+    const body = res.locals.parsedBody as PMGroupCreateRequest;
 
   
     firebaseApp
       .firestore()
-      .collection("PrizeCatagoryGroup")
-      .doc(body.prizeCategoryId)
+      .collection("PrizeCategoryGroup")
+      .doc(body.prizeGroupId)
       .set(body)
       .then(() => {
         res.status(201).send();

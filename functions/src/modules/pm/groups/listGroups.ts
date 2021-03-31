@@ -14,16 +14,16 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("PrizeCatagoryGroup")
+    .collection("PrizeCategoryGroup")
     .get()
     .then((documents) => {
-      const prizeCategorys: STPMPrizeCatagoryGroup[] = [];
+      const prizegroups: PMGroup[] = [];
       for (const doc of documents.docs) {
-        prizeCategorys.push(doc.data() as STPMPrizeCatagoryGroup);
+        prizegroups.push(doc.data() as PMGroup);
       }
       res
         .status(200)
-        .send(JSON.stringify( { prizeCategorys } as STPMPrizeCatGroupList));
+        .send(JSON.stringify( { prizegroups } as PMGroupList));
       next();
     })
 

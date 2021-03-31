@@ -4,10 +4,10 @@ import { expressErrorHandlerFactory } from "../../../helpers";
 
 const getGroup: ExpressFunction = (req, res, next) => { 
    const errorHandler = expressErrorHandlerFactory(req, res, next);
-  firebaseApp
+    firebaseApp
     .firestore()
-    .collection("PrizeCatagoryGroup")
-    .doc(req.params.prizeCategoryId)
+    .collection("PrizeCategoryGroup")
+    .doc(req.params.prizeGroupId)
     .get()
     .then((document) => {
       const data = document.data() as PMGroup | undefined;
@@ -15,7 +15,7 @@ const getGroup: ExpressFunction = (req, res, next) => {
         res.status(200).send(JSON.stringify(data));
         next();
       } else {
-        errorHandler(`PrizeCatagoryGroup /${req.params.prizeCategoryId} has no data.`);
+        errorHandler(`Prize Group /${req.params.prizeGroupId} has no data.`);
       }
     })
     .catch(errorHandler);

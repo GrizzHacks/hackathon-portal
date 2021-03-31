@@ -15,10 +15,17 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     const validationRules: ValidatorObjectRules = {
       type: "object",
       rules: {
-        prizeCategoryId: { rules: ["string"] },
-        prizeCatagoryName: { rules: ["string"] },
-        prizeCategoryDescription: { rules: ["string"] },
-       // prizeCategoryOrder: { rules: ["string"] },
+        prizeGroupId: { rules: ["string"] },
+        prizeGroupName: { rules: ["string"] },
+        prizeGroupDescription: { rules: ["string"] },
+        prizeGroupOrder: {
+          rules: [
+          {
+              type: "array",
+              rules: ["string"],
+          },
+          ],
+        },
           },
     };
     requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -29,9 +36,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("PrizeCatagoryGroup")
-    .doc(req.params.prizeCategoryId)
-    .update(res.locals.parsedBody as STPMPrizeCatGroupUpdateRequest)
+    .collection("PrizeCategoryGroup")
+    .doc(req.params.prizeGroupId)
+    .update(res.locals.parsedBody as PMGroupUpdateRequest)
     .then(() => {
       res.status(200).send();
       next();
