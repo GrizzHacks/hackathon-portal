@@ -39,7 +39,7 @@ const GroupsPages: React.FunctionComponent = () => {
           attributeLabel: "Prize Group Name",
         },
         {
-          attributeName: "prizeGroupName",
+          attributeName: "prizeGroupDescription",
           attributeLabel: "Prize Group Description",
         },
       ]}
