@@ -7,7 +7,6 @@ const listPrizes: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: {
       accepted: execute,
-     
     },
   })(req, res, next);
 };
@@ -17,7 +16,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("prizeCategories)
+    .collection("prizeCategories")
     .doc(req.params.categoryId)
     .collection("prizes")
     .orderBy("prizeId", "asc")
@@ -27,8 +26,6 @@ const execute: ExpressFunction = (req, res, next) => {
     })
     .catch(errorHandler);
 };
-
-
 
 // const executeIfApproved: ExpressFunction = (req, res, next) => {
 //   const errorHandler = expressErrorHandlerFactory(req, res, next);
@@ -50,7 +47,7 @@ const send: (
 ) => ExpressFunction = (docs) => (req, res, next) => {
   const prizes: PMPrize[] = [];
   for (const doc of docs) {
-    prizes.push(doc.data() as PMPrize );
+    prizes.push(doc.data() as PMPrize);
   }
   res.status(200).send(JSON.stringify({ prizes } as PMPrizeList));
   next();

@@ -3,20 +3,18 @@ import { firebaseApp } from "../../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-
 const deletePrize: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
   })(req, res, next);
 };
 
-
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   firebaseApp
     .firestore()
-    .collection("prizeCategories)
+    .collection("prizeCategories")
     .doc(req.params.categoryId)
     .collection("prizes")
     .doc(req.params.prizeId)
