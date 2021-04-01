@@ -1,44 +1,30 @@
 import type { ExpressFunction } from "../../../../@types";
 import { firebaseApp } from "../../../../config/firebaseConfig";
-import { expressErrorHandlerFactory,requestBodyTypeValidator } from "../../../../helpers";
+import { expressErrorHandlerFactory } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
 const getPrizeId: ExpressFunction = (req, res, next) => {
     uasPermissionSwitch({
-      organizer: { accepted: validate },
+      organizer: { accepted: execute },
     })(req, res, next);
   };
 
-  const validate: ExpressFunction = (req,res,next) => {
-    const validationRules: ValidatorObjectRules = {
-      type: "object",
-      rules: {
-        prizeCategoryId: {rules: ["string"]},
-        prizeCategoryName: {rules: ["string"]},
-        prizeCategoryDescription:{rules: ["string"]},
-        eligibility: {rules: ["string"]},
-        //prize?:{rules: ["Prize"]}; //TODO create new datatype prizes
-        companyId: {rules: ["string"]},
-        approvalStatus: {rules: ["string"]},
-      }
-    }
-    requestBodyTypeValidator(req,res,next)((validationRules), execute);
-  }
+
 
 const execute: ExpressFunction = (req, res, next) => {
       const errorHandler = expressErrorHandlerFactory(req, res, next);
       firebaseApp
       .firestore()
-      .collection("Prizes")
+      .collection("Prize")
       .doc(req.params.prizeId)
       .get()
       .then((document) => {
-        const data = document.data() as STPMPrizeCatagories | undefined;
+        const data = document.data() as PMPrize | undefined;
         if(data){
         res.status(200).send(data);
         next();
         } else{
-          errorHandler('PrizeCatagories${req.params.id} has no data');
+          errorHandler('Prizes ${req.params.Prizeid} has no data');
 
         }
           

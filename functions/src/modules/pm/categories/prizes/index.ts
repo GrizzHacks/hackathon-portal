@@ -2,7 +2,7 @@ import type { Express } from "express";
 import createPrize from "./createPrize";
 import deletePrize from "./deletePrize";
 import getPrize from "./getPrize";
-import listPrizes from "./listPrizes";
+import listPrizes from "./listPrize";
 import updatePrize from "./updatePrize";
 
 export default (app: Express, endpoint: string) => {

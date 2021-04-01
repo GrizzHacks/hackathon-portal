@@ -7,9 +7,8 @@ import {
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
 
-const createCategory: ExpressFunction = (req, res, next) => {
-  res.status(200).send();
-  next();
+const createprize: ExpressFunction = (req, res, next) => {
+
   uasPermissionSwitch({
     organizer: { accepted: validate},
   })(req, res, next);
@@ -19,12 +18,13 @@ const validate: ExpressFunction = (req, res, next) => {
     const validationRules: ValidatorObjectRules = {
       type: "object",
       rules: {
-        prizeId: { rules: ["string"], required: true },
-        prizeName: { rules: ["string"], required: true },
-        PrizeUrl: { rules: ["string"]},
-        prizeCategory: { rules: ["string"]},
+        prizeId: { rules: ["string"], required: true  },
+        prizeDisplayName: { rules: ["string"], required: true  },
+        prizePrice: { rules: ["string"], required: true },
         prizeListingName: { rules: ["string"], required: true },
-        //overriddenBenefits: { [key: string]: string }; TODO: Support Dictionary Advanced Types
+        prizeURL: { rules: ["string"], required: true  },
+        prizeasin: { rules: ["string"], required: true  },
+        
       },
     };
     requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -33,14 +33,13 @@ const validate: ExpressFunction = (req, res, next) => {
 
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-
-
-  const body = JSON.parse(req.body)
+ 
+ const body = res.locals.parsedBody as PMPrizeCreateRequest;
 
   firebaseApp
     .firestore()
-    .collection("prizeCategories")
-    .doc(body.CategoryId)
+    .collection("Prize")
+    .doc(body.prizeId)
     .set(body)
     .then(() => {
       res.status(201).send();
@@ -50,4 +49,4 @@ const execute: ExpressFunction = (req, res, next) => {
 };
 
 
-export default createCategory;
+export default createprize;

@@ -1,36 +1,29 @@
-import type { ExpressFunction } from "../../../../@types";
+import { ExpressFunction } from "../../../../@types";
 import { firebaseApp } from "../../../../config/firebaseConfig";
-import { expressErrorHandlerFactory,  requestBodyTypeValidator} from "../../../../helpers";
+import { expressErrorHandlerFactory } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-const deleteCatagoryAndPrizeId: ExpressFunction = (req, res, next) => {
-    uasPermissionSwitch({
-        organizer: {accepted: validate},
-    })(req, res, next);
-  };
 
-  const validate: ExpressFunction = (req,res,next) => {
-    const validationRules: ValidatorObjectRules = {
-      type: "object",
-      rules: {
-        prizeCatagoryName: {rules: ["string"]},
-        prizeCategoryDescription: {rules: ["string"]},
-        //prizeCategoryOrder: {rules: ["Array<string>"]}, // TODO support advance types
-      }
-    }
-    requestBodyTypeValidator(req,res,next)((validationRules), execute);
-  }
+const deletePrize: ExpressFunction = (req, res, next) => {
+  uasPermissionSwitch({
+    organizer: { accepted: execute },
+  })(req, res, next);
+};
+
 
 const execute: ExpressFunction = (req, res, next) => {
-    const errorHandler = expressErrorHandlerFactory(req, res, next);
-    firebaseApp
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  firebaseApp
     .firestore()
-    .collection("PrizeCatagoryGroup")
-    .doc(req.params.id)
+    .collection("Prize")
+    .doc(req.params.prizeId)
     .delete()
     .then(() => {
-        res.status(200).send();
+      res.status(200).send();
+      next();
     })
-    .catch(errorHandler)
-  };
-export default deleteCatagoryAndPrizeId;
+    .catch(errorHandler);
+};
+
+export default deletePrize;
