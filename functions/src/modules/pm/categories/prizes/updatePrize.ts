@@ -11,21 +11,21 @@ import { uasPermissionSwitch } from "../../../../systems/uas";
 
 const updatePrize: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: ValidateOrganizer },
+    organizer: { accepted: validateOrganizer },
   })(req, res, next);
 };
 
 
-const ValidateOrganizer: ExpressFunction = (req, res, next) => {
+const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
       prizeDisplayName: { rules: ["string"],  },
       prizePrice: { rules: ["string"],  },
       prizeUrl: { rules: ["string"]},
-      prizeasin: { rules: ["string"]},
+      prizeASIN: { rules: ["string"]},
       prizeListingName: { rules: ["string"], },
-      prizeurl: { rules: ["string"], },
+     },
     }
 
   };
@@ -40,7 +40,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("Prize")
+    .collection("prizeCategories)
+    .doc(req.params.categoryId)
+    .collection("prizes")
     .doc(req.params.prizeId)
     .update(body)
     .then(() => {

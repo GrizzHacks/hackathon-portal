@@ -3,7 +3,7 @@ import { firebaseApp } from "../../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-const listPrize: ExpressFunction = (req, res, next) => {
+const listPrizes: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: {
       accepted: execute,
@@ -17,7 +17,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("Prize")
+    .collection("prizeCategories)
+    .doc(req.params.categoryId)
+    .collection("prizes")
     .orderBy("prizeId", "asc")
     .get()
     .then((documents) => {
@@ -46,12 +48,12 @@ const execute: ExpressFunction = (req, res, next) => {
 const send: (
   docs: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>[]
 ) => ExpressFunction = (docs) => (req, res, next) => {
-  const Prize: PMPrize[] = [];
+  const prizes: PMPrize[] = [];
   for (const doc of docs) {
-    Prize.push(doc.data() as PMPrize );
+    prizes.push(doc.data() as PMPrize );
   }
-  res.status(200).send(JSON.stringify({ Prize } as PMPrizeList));
+  res.status(200).send(JSON.stringify({ prizes } as PMPrizeList));
   next();
 };
 
-export default listPrize;
+export default listPrizes;

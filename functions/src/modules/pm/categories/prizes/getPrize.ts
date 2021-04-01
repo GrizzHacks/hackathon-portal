@@ -15,7 +15,9 @@ const execute: ExpressFunction = (req, res, next) => {
       const errorHandler = expressErrorHandlerFactory(req, res, next);
       firebaseApp
       .firestore()
-      .collection("Prize")
+    .collection("prizeCategories)
+    .doc(req.params.categoryId)
+    .collection("prizes")
       .doc(req.params.prizeId)
       .get()
       .then((document) => {
@@ -24,7 +26,7 @@ const execute: ExpressFunction = (req, res, next) => {
         res.status(200).send(data);
         next();
         } else{
-          errorHandler('Prizes ${req.params.Prizeid} has no data');
+          errorHandler('Prizes ${req.params.prizeId} has no data');
 
         }
           
