@@ -107,7 +107,7 @@ const CompaniesPages: React.FunctionComponent = () => {
       <Route path="/stpm/companies/create">
         {CompanyCreateEditDetailsPageComponent}
       </Route>
-      <Route path="/stpm/companies/company/:id">
+      <Route path="/stpm/companies/company/:companyId">
         {CompanyCreateEditDetailsPageComponent}
       </Route>
       <Route component={Error404Page} />
