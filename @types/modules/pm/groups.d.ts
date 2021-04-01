@@ -1,7 +1,7 @@
 declare interface PMGroupUpdateRequest {
     prizeGroupName?: string;
     prizeGroupDescription?: string;
-    prizeGroupOrder?: Array<string>;
+    prizeGroupOrder?: string[];
   }
 
   declare interface PMGroupCreateRequest extends PMGroupUpdateRequest {
