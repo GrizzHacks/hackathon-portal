@@ -6,7 +6,7 @@ const getGroup: ExpressFunction = (req, res, next) => {
    const errorHandler = expressErrorHandlerFactory(req, res, next);
     firebaseApp
     .firestore()
-    .collection("PrizeCategoryGroup")
+    .collection("prizeGroups")
     .doc(req.params.prizeGroupId)
     .get()
     .then((document) => {
