@@ -58,7 +58,15 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
             { label: "Sponsor Tiers", route: "/stpm/tiers" },
             { label: "Sponsor Companies", route: "/stpm/companies" },
           ]}
-          closeLeftMenu={() => {}}
+          closeLeftMenu={closeLeftMenu}
+        />
+        <MenuItemGroup
+          groupName="Prizes"
+          groupItems={[
+            { label: "Prize Groups", route: "/pm/groups" },
+            { label: "Prize Categories", route: "/pm/categories" },
+          ]}
+          closeLeftMenu={closeLeftMenu}
         />
         <MenuItemGroup
           groupName="Developer Tools"

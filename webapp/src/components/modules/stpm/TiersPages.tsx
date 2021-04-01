@@ -131,7 +131,7 @@ const TiersPages: React.FunctionComponent = () => {
       <Route path="/stpm/tiers/create">
         {TierCreateEditDetailsPageComponent}
       </Route>
-      <Route path="/stpm/tiers/tier/:id">
+      <Route path="/stpm/tiers/tier/:sponsorTierId">
         {TierCreateEditDetailsPageComponent}
       </Route>
       <Route component={Error404Page} />

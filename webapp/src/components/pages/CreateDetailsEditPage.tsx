@@ -26,7 +26,8 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
 }: CreateDetailEditPageProps<ObjectType> & { children?: ReactNode }) => {
   const routeParams = useParams() as any;
   const routeHistory = useHistory();
-  const id = routeParams.id !== "create" ? routeParams.id : "";
+  const id =
+    routeParams[idAttribute] !== "create" ? routeParams[idAttribute] : "";
 
   const [object, setObject] = React.useState<ObjectType | undefined>();
   const [updateObject, setUpdateObject] = React.useState<Partial<ObjectType>>();
