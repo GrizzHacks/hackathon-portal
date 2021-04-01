@@ -8,7 +8,7 @@ declare interface PMGroupUpdateRequest {
     prizeGroupId: string;
     prizeGroupName: string;
     prizeGroupDescription: string;
-    prizeGroupOrder: Array<string>;
+    prizeGroupOrder?: string[];
   }
 
   declare interface PMGroup extends PMGroupCreateRequest {
