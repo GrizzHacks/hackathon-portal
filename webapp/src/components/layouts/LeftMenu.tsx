@@ -1,5 +1,4 @@
 import {
-  Collapse,
   createStyles,
   Drawer,
   List,
@@ -8,7 +7,6 @@ import {
   makeStyles,
   Theme,
 } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import React from "react";
 import { useHistory } from "react-router";
 import MenuItemGroup from "../misc/MenuItemGroup";
@@ -37,10 +35,6 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
 }) => {
   const classes = useStyles();
   const routeHistory = useHistory();
-
-  const [stpmOpen, setStpmOpen] = React.useState<boolean>(true);
-  const [pmOpen, setPmOpen] = React.useState<boolean>(true);
-  const [devToolsOpen, setDevToolsOpen] = React.useState<boolean>(true);
 
   return (
     <Drawer
