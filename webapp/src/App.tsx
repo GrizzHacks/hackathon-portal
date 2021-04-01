@@ -1,6 +1,7 @@
-import { Container } from "@material-ui/core";
+import { Container, Divider, List } from "@material-ui/core";
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import DetailsEditForm from "./components/layouts/DetailsEditForm";
 import LoginBox from "./components/auth/Login";
 import NavBar from "./components/layouts/NavBar";
 import BugReportFab from "./components/misc/BugReportFab";
@@ -20,6 +21,7 @@ declare interface AppProps {
 
 const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
   const classes = styles();
+
   const [loadingMessage, setLoadingMessage] = React.useState("");
   const [notification, setNotification] = React.useState<NotificationMessage>({
     type: "info",
@@ -55,6 +57,19 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
             />
           </Switch>
         </Router>
+        <List>
+          <DetailsEditForm
+            attributeLabel="First Name"
+            attributeValue={"Howdy" as any}
+            handleUpdate={() => {}}
+            attributeOptions={[
+              { label: "True", value: true },
+              { label: "False", value: false },
+              { label: "None", value: undefined },
+            ]}
+          />
+        </List>
+        <Divider />
       </Container>
       <LoadingScreen loadingMessage={loadingMessage} />
       <NotificationBar
