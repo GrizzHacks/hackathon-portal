@@ -51,7 +51,7 @@ const GroupsPages: React.FunctionComponent = () => {
       <Route exact path="/pm/groups">
         <ListPage
           pageTitle="Prize Groups"
-          objectTypeName="Prize Groups"
+          objectTypeName="Prize Group"
           apiEndpoint="pm/groups"
           createNewLink="/pm/groups/create"
           listMapFunction={listMapFunction}
