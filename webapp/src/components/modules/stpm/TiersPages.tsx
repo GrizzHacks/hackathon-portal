@@ -73,7 +73,7 @@ const TiersPages: React.FunctionComponent = () => {
         },
         {
           attributeName: "prizeBudget",
-          attributeLabel: "Prize Budget",
+          attributeLabel: "Prize Budget (USD)",
           attributeTypeIsNumber: true,
         },
         {
@@ -105,12 +105,12 @@ const TiersPages: React.FunctionComponent = () => {
         },
         {
           attributeName: "openingSessionTalkLength",
-          attributeLabel: "Opening Session Talk Length",
+          attributeLabel: "Opening Session Talk Length (mins)",
           attributeTypeIsNumber: true,
         },
         {
           attributeName: "closingSessionTalkLength",
-          attributeLabel: "Closing Session Talk Length",
+          attributeLabel: "Closing Session Talk Length (mins)",
           attributeTypeIsNumber: true,
         },
       ]}
