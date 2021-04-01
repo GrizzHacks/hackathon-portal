@@ -7,28 +7,12 @@ const listTimeSlot: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: {
       accepted: execute,
-      pending: executeIfApproved,
-      rejected: executeIfApproved,
     },
  
   })(req, res, next);
 };
 
 const execute: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-
-  firebaseApp
-    .firestore()
-    .collection("timeslots")
-    .orderBy("startTime", "asc")
-    .get()
-    .then((documents) => {
-      send(documents.docs)(req, res, next);
-    })
-    .catch(errorHandler);
-};
-
-const executeIfApproved: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   firebaseApp

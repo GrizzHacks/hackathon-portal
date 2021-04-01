@@ -14,8 +14,6 @@ declare interface MEWMTimeslotCreateRequest extends MEWMTimeslotUpdateRequest {
 }
 
 declare interface MEWMTimeslot extends MEWMTimeslotCreateRequest{
-    startTime: string;
-    endTime: string;
 }
 
 declare interface MEWMTimeslotList {

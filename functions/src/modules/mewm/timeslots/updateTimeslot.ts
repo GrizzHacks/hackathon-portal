@@ -17,7 +17,6 @@ const ValidateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      timeslotId: { rules: ["string"] },
       startTime: { rules: ["string"] },
       endTime: { rules: ["string"] },
       eventTypeId: { rules: ["string"] },
