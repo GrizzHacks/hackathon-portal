@@ -9,7 +9,6 @@ import { uasPermissionSwitch } from "../../../../systems/uas";
 const updateResources: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: validate },
-    sponsor: { accepted: executeIfSponsorMatches },
   })(req, res, next);
 };
 
