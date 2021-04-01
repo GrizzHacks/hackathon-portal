@@ -8,6 +8,7 @@ import LoadingScreen from "./components/misc/LoadingScreen";
 import NotificationBar, {
   NotificationMessage,
 } from "./components/misc/Notifications";
+import MEWMPages from "./components/modules/mewm";
 import PMPages from "./components/modules/pm";
 import STPMPages from "./components/modules/stpm";
 import Error404Page from "./components/pages/Error404Page";
@@ -47,6 +48,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           </Route>
           <Route path="/stpm" component={STPMPages} />
           <Route path="/pm" component={PMPages} />
+          <Route path="/mewm" component={MEWMPages} />
           <Route component={Error404Page} />
         </Switch>
       </Container>

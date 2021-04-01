@@ -16,18 +16,17 @@ const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-        resourceName: { rules: ["string"] },
-        resourceDescription: { rules: ["string"] },
-        resourceUrl: { rules:  ["string"] },
+      resourceName: { rules: ["string"] },
+      resourceDescription: { rules: ["string"] },
+      resourceUrl: { rules: ["string"] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
 
-
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
-  const body = res.locals.parsedBody as MEWMEventResourcesUpdateRequest;
+  const body = res.locals.parsedBody as MEWMEventResourceUpdateRequest;
   firebaseApp
     .firestore()
     .collection("events")

@@ -69,6 +69,15 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
           closeLeftMenu={closeLeftMenu}
         />
         <MenuItemGroup
+          groupName="Mini-Events and Workshops"
+          groupItems={[
+            { label: "Events", route: "/mewm/events" },
+            { label: "Time Slots", route: "/mewm/timeslots" },
+            { label: "Event Types", route: "/mewm/types" },
+          ]}
+          closeLeftMenu={closeLeftMenu}
+        />
+        <MenuItemGroup
           groupName="Developer Tools"
           groupItems={[{ label: "API Explorer", route: "/api-explorer" }]}
           closeLeftMenu={closeLeftMenu}
