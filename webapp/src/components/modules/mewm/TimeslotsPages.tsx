@@ -47,7 +47,7 @@ const TimeslotsPages: React.FunctionComponent = () => {
       .then((typesRaw) => {
         typesRaw.json().then((types) => {
           const typesTyped = (types as MEWMEventTypeList).eventTypes;
-          setEventInfo(
+          setEventTypeInfo(
             typesTyped.map((type) => {
               return {
                 label: type.eventTypeName,
@@ -77,10 +77,10 @@ const TimeslotsPages: React.FunctionComponent = () => {
     const schemasTyped = schemas as MEWMTimeslotList;
     setListItems(
       schemasTyped.timeslots.map((value) => {
-        const eventId = value.eventID ? `: ${value.eventID}` : "";
+        const eventId = value.eventId ? `: ${value.eventId}` : "";
         return {
           line1: `${getEventTypeNameFromEventTypeId(
-            value.eventTypeID
+            value.eventTypeId
           )}${eventId}`,
           deleteEndpoint: `mewm/timeslots/${value.timeslotId}`,
           deleteText: "Delete Time Slot",
@@ -110,14 +110,16 @@ const TimeslotsPages: React.FunctionComponent = () => {
           attributeLabel: "End Time (ISO String)",
         },
         {
-          attributeName: "eventTypeID",
+          attributeName: "eventTypeId",
           attributeLabel: "Event Type (required)",
           attributeOptions: eventTypeInfo,
         },
         {
-          attributeName: "eventID",
+          attributeName: "eventId",
           attributeLabel: "Event (optional, can be completed later)",
-          attributeOptions: eventInfo,
+          attributeOptions: eventInfo.concat([
+            { label: "None", value: undefined },
+          ]),
         },
       ]}
     />

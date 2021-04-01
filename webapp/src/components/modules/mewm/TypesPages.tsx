@@ -60,7 +60,7 @@ const TypesPages: React.FunctionComponent = () => {
       <Route path="/mewm/types/create">
         {EventTypeCreateEditDetailsPageComponent}
       </Route>
-      <Route path="/mewm/types/group/:eventTypeId">
+      <Route path="/mewm/types/type/:eventTypeId">
         {EventTypeCreateEditDetailsPageComponent}
       </Route>
       <Route component={Error404Page} />

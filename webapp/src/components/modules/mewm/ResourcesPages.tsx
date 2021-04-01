@@ -41,7 +41,7 @@ const ResourcesPages: React.FunctionComponent = () => {
     <CreateDetailEditPage<MEWMEventResource>
       objectTypeName={"Resource"}
       listEndpoint={`/mewm/events/event/${getEventId()}`}
-      apiEndpoint={`mewm/events/${getEventId()}/resources/`}
+      apiEndpoint={`mewm/events/${getEventId()}/resources`}
       idAttribute="resourceId"
       attributes={[
         {
