@@ -1,20 +1,19 @@
-declare interface MEWMEventResourcesUpdateRequest {
-    resourceName?: string;
-    resourceDescription?: string;
-    resourceUrl?: string;
+declare interface MEWMEventResourceUpdateRequest {
+  resourceName?: string;
+  resourceDescription?: string;
+  resourceUrl?: string;
 }
 
-declare interface MEWMEventResourcescreateRequest extends MEWMEventResourcesUpdateRequest {
-    resourceId: string;
-    resourceName: string;
-    resourceDescription: string;
-    resourceUrl: string;
+declare interface MEWMEventResourceCreateRequest
+  extends MEWMEventResourceUpdateRequest {
+  resourceId: string;
+  resourceName: string;
+  resourceDescription: string;
+  resourceUrl: string;
 }
 
-declare interface MEWMEventResources extends MEWMEventResourcescreateRequest {
-    
-}
+declare interface MEWMEventResource extends MEWMEventResourceCreateRequest {}
 
 declare interface MEWMResourceList {
-    resources: MEWMEventResources[];
+  resources: MEWMEventResource[];
 }
