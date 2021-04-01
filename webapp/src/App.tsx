@@ -11,7 +11,6 @@ import NotificationBar, {
 } from "./components/misc/Notifications";
 import ErrorPage from "./components/pages/ErrorPage";
 import Home from "./components/pages/Home";
-import SponsorList from "./components/SponsorList";
 import ApiExplorer from "./devTools/ApiExplorer";
 import { styles } from "./styles";
 
@@ -43,7 +42,6 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/api-explorer" component={ApiExplorer} />
-            <Route path="/sponsor-list" component={SponsorList} />
             <Route path="/login">
               <LoginBox />
             </Route>
