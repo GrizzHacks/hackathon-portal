@@ -36,7 +36,7 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("PrizeCategoryGroup")
+    .collection("prizeGroups")
     .doc(req.params.prizeGroupId)
     .update(res.locals.parsedBody as PMGroupUpdateRequest)
     .then(() => {
