@@ -8,6 +8,7 @@ import LoadingScreen from "./components/misc/LoadingScreen";
 import NotificationBar, {
   NotificationMessage,
 } from "./components/misc/Notifications";
+import STPMPages from "./components/modules/stpm";
 import Error404Page from "./components/pages/Error404Page";
 import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
@@ -43,6 +44,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           <Route path="/login">
             <LoginBox />
           </Route>
+          <Route path="/stpm" component={STPMPages} />
           <Route component={Error404Page} />
         </Switch>
       </Container>
