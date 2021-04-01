@@ -12,10 +12,7 @@ declare interface MEWMEventResourcescreateRequest extends MEWMEventResourcesUpda
 }
 
 declare interface MEWMEventResources extends MEWMEventResourcescreateRequest {
-    resourceId: string;
-    resourceName: string;
-    resourceDescription: string;
-    resourceUrl: string;
+    
 }
 
 declare interface MEWMResourceList {
