@@ -40,11 +40,11 @@ const TiersPages: React.FunctionComponent = () => {
           attributeName: "logoSize",
           attributeLabel: "Sponsor Logo Size",
           attributeOptions: [
-            { label: "xs", value: "xs" },
-            { label: "s", value: "s" },
-            { label: "m", value: "m" },
-            { label: "l", value: "l" },
-            { label: "xl", value: "xl" },
+            { label: "Extra Small", value: "xs" },
+            { label: "Small", value: "sm" },
+            { label: "Medium", value: "m" },
+            { label: "Large", value: "lg" },
+            { label: "Extra Large", value: "xl" },
           ],
         },
         {
