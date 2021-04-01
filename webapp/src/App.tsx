@@ -59,7 +59,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
         </Router>
         <List>
           <DetailsEditForm
-            attributeName="First Name"
+            attributeLabel="First Name"
             attributeValue={"Howdy" as any}
             handleUpdate={() => {}}
             attributeOptions={[
@@ -67,7 +67,6 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
               { label: "False", value: false },
               { label: "None", value: undefined },
             ]}
-            classes={classes}
           />
         </List>
         <Divider />

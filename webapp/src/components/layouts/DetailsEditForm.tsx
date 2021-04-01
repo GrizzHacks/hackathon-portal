@@ -11,30 +11,32 @@ import {
 } from "@material-ui/core";
 import { Clear, Done, Edit, Error } from "@material-ui/icons";
 import React, { Fragment, ReactNode } from "react";
+import { nanoid } from "nanoid";
+import { styles } from "../../styles";
 
 declare interface DetailsEditFormProps<T> {
-  attributeName: string;
+  attributeLabel: string;
   attributeValue: T;
   allowEmptyString?: boolean;
   attributeTypeIsNumber?: boolean;
   attributeOptions?: { label: string; value: T }[];
   handleUpdate: (newValue: T) => void;
   createOnly?: boolean;
-  classes: any;
 }
 
 const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ = <
   T,
 >({
-  attributeName,
+  attributeLabel,
   attributeValue,
   allowEmptyString,
   attributeTypeIsNumber,
   attributeOptions,
   handleUpdate,
   createOnly,
-  classes,
 }: DetailsEditFormProps<T> & { children?: ReactNode }) => {
+  const classes = styles();
+
   const getIndexForOptionValue = (value: T) => {
     if (attributeOptions) {
       for (let i = 0; i < attributeOptions.length; i++) {
@@ -62,6 +64,13 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   const [errorText, setErrorTest] = React.useState<string>("");
   const [editing, setEditing] = React.useState(createOnly);
 
+  // Reset form when input value changes
+  React.useEffect(() => {
+    setCurrentValue(attributeValue);
+    setTemp(attributeValue);
+    setSelectIndex(getIndexForOptionValue(attributeValue));
+  }, [attributeValue]);
+
   const startEditing = () => {
     setEditing(true);
   };
@@ -88,10 +97,10 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
           setCurrentValue(temp);
           handleUpdate((attributeTypeIsNumber ? tempNumber : temp) as any); // Loss of specifity due to text box
         } else {
-          setErrorTest(`Sorry, ${attributeName} must be a number`);
+          setErrorTest(`Sorry, ${attributeLabel} must be a number`);
         }
       } else {
-        setErrorTest(`Sorry, ${attributeName} cannot be empty`);
+        setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
       }
     }
   };
@@ -109,9 +118,9 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   };
 
   return (
-    <ListItem key={attributeName}>
+    <ListItem key={`edit_display_${attributeLabel}`}>
       <ListItemText
-        primary={attributeName}
+        primary={attributeLabel}
         secondary={
           editing ? (
             !(attributeOptions && attributeOptions.length > 0) ? (
