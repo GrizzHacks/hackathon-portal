@@ -1,5 +1,6 @@
 import ky, { Input, Options } from "ky";
 import { apiUrl, firebaseApp } from "../config/firebaseConfig";
+import firebase from "firebase";
 
 const options: Options = {
   prefixUrl: apiUrl,
@@ -9,7 +10,7 @@ const options: Options = {
 
 const apiKyClient = ky.create(options);
 
-const getUserToken = (firebaseAppLocal: firebase.default.app.App) => {
+const getUserToken = (firebaseAppLocal: firebase.app.App) => {
   const currentUser = firebaseAppLocal.auth().currentUser;
   return currentUser
     ? currentUser
@@ -25,7 +26,7 @@ const getUserToken = (firebaseAppLocal: firebase.default.app.App) => {
 };
 
 const createAuthHeaderOptions = (
-  firebaseAppLocal: firebase.default.app.App,
+  firebaseAppLocal: firebase.app.App,
   options?: Options
 ) => {
   return getUserToken(firebaseAppLocal)?.then((token) => {
@@ -42,7 +43,7 @@ const createAuthHeaderOptions = (
 class ApiClient {
   firebaseAppLocal;
 
-  constructor(firebaseAppLocal?: firebase.default.app.App) {
+  constructor(firebaseAppLocal?: firebase.app.App) {
     this.firebaseAppLocal = firebaseAppLocal ? firebaseAppLocal : firebaseApp;
   }
 
