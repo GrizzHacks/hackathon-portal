@@ -26,7 +26,7 @@ const validate: ExpressFunction = (req, res, next) => {
               rules: ["string"],
           },
           ],
-      required: true},
+      },
           
          }, 
     };
@@ -38,7 +38,10 @@ const validate: ExpressFunction = (req, res, next) => {
   
     const body = res.locals.parsedBody as PMGroupCreateRequest;
 
-  
+    body.prizeGroupOrder = body.prizeGroupOrder 
+    ? body.prizeGroupOrder 
+    : [""] ;
+
     firebaseApp
       .firestore()
       .collection("prizeGroups")
