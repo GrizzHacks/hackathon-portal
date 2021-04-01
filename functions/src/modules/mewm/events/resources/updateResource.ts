@@ -43,18 +43,4 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-const executeIfSponsorMatches: ExpressFunction = (req, res, next) => {
-  const errorHandler = expressErrorHandlerFactory(req, res, next);
-  const sponsorCompany = (res.locals.permissions as UserPermission).companyId;
-  if (sponsorCompany === req.params.companyId) {
-    validate(req, res, next);
-  } else {
-    errorHandler(
-      `A sponsor from ${sponsorCompany} tried updating resources for ${req.params.resourceId}.`,
-      403,
-      "Sorry, you do not have access to perform that operation."
-    );
-  }
-};
-
 export default updateResources;
