@@ -3,7 +3,7 @@ declare interface PMPrizeUpdateRequest {
     prizePrice?: string;
     prizeListingName?: string;
     prizeUrl?: string;
-    prizeasin?: string;
+    prizeASIN?: string;
   }
   
   declare interface PMPrizeCreateRequest extends PMPrizeUpdateRequest {
@@ -12,8 +12,7 @@ declare interface PMPrizeUpdateRequest {
     prizePrice: string;
     prizeListingName: string;
     prizeUrl: string;
-    prizeasin: string;
-
+    prizeASIN: string;
   }
   
   declare interface PMPrize extends PMPrizeCreateRequest {
@@ -21,6 +20,5 @@ declare interface PMPrizeUpdateRequest {
   }
   
   declare interface PMPrizeList {
-    Prize: PMPrize[];
+    prizes: PMPrize[];
   }
-

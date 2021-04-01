@@ -23,7 +23,7 @@ const validate: ExpressFunction = (req, res, next) => {
         prizePrice: { rules: ["string"], required: true },
         prizeListingName: { rules: ["string"], required: true },
         prizeURL: { rules: ["string"], required: true  },
-        prizeasin: { rules: ["string"], required: true  },
+        prizeASIN: { rules: ["string"], required: true  },
         
       },
     };
