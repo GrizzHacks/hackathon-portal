@@ -36,37 +36,41 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
   const classes = useStyles();
   const routeHistory = useHistory();
 
+  const closeLeftMenu = () => {
+    setOpen(false);
+  };
+
   return (
-    <Drawer
-      anchor="left"
-      open={open}
-      onClose={() => {
-        setOpen(false);
-      }}
-    >
+    <Drawer anchor="left" open={open} onClose={closeLeftMenu}>
       <List className={classes.root}>
         <ListItem button key={"menu_item_home"}>
           <ListItemText
             primary="Home"
             onClick={() => {
               routeHistory.push("/");
-              setOpen(false);
+              closeLeftMenu();
             }}
           />
         </ListItem>
         <MenuItemGroup
+          groupName="Sponsor Tiers and Permissions"
+          groupItems={[
+            { label: "Sponsor Tiers", route: "/stpm/tiers" },
+            { label: "Sponsor Companies", route: "/stpm/companies" },
+          ]}
+          closeLeftMenu={() => {}}
+        />
+        <MenuItemGroup
           groupName="Developer Tools"
           groupItems={[{ label: "API Explorer", route: "/api-explorer" }]}
-          closeLeftMenu={() => {
-            setOpen(!open);
-          }}
+          closeLeftMenu={closeLeftMenu}
         />
         <ListItem button key={"menu_item_login"}>
           <ListItemText
             primary="Login"
             onClick={() => {
               routeHistory.push("/login");
-              setOpen(false);
+              closeLeftMenu();
             }}
           />
         </ListItem>
