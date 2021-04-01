@@ -1,9 +1,9 @@
+import { render } from "@testing-library/react";
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import App from "./App";
+import CustomThemeProvider from "./styles/CustomThemeProvider";
 
 test("renders learn react link", () => {
-  render(<App />);
+  render(<CustomThemeProvider />);
   // Dummy test to confirm that it basically builds.
   // TODO: update once we have a home page...
   // const linkElement = screen.getByText(/learn react/i);
