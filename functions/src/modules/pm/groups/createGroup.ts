@@ -41,7 +41,7 @@ const validate: ExpressFunction = (req, res, next) => {
   
     firebaseApp
       .firestore()
-      .collection("PrizeCategoryGroup")
+      .collection("prizeGroups")
       .doc(body.prizeGroupId)
       .set(body)
       .then(() => {
