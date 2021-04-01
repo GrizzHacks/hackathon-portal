@@ -38,7 +38,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("Prize")
+    .collection("prizeCategories)
+    .doc(req.params.categoryId)
+    .collection("prizes")
     .doc(body.prizeId)
     .set(body)
     .then(() => {
