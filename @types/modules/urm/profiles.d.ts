@@ -1,11 +1,10 @@
 declare interface URMProfileUpdateRequest {
   firstName?: string;
   lastName?: string;
-  university?: string;
-  bestSkill?: string;
+  phoneNumber?: string;
+  photoUrl?: string;
   email?: string;
-  numberOfPreviousHackathons: string;
-  studentStatus: "freshman" | "sophomore" | "junior" | "senior";
+  otherQuestions?: string[];
 }
 
 declare interface URMProfileCreateRequest extends URMProfileUpdateRequest {
@@ -16,10 +15,9 @@ declare interface URMProfileCreateRequest extends URMProfileUpdateRequest {
 }
 
 declare interface URMProfile extends URMProfileCreateRequest {
-  university: string;
-  bestSkill: string;
-  numberOfPreviousHackathons: string;
-  studentStatus: "freshman" | "sophomore" | "junior" | "senior";
+  phoneNumber: string;
+  photoUrl: string;
+  otherQuestions: string[];
 }
 
 declare interface URMProfileList {

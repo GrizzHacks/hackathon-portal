@@ -19,15 +19,14 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     rules: {
       firstName: { rules: ["string"] },
       lastName: { rules: ["string"] },
-      university: { rules: ["string", "emptystring"] },
-      bestSkill: { rules: ["string", "emptystring"] },
-      email: { rules: ["string", "emptystring"] },
-      numberOfPreviousHackathons: { rules: ["string", "emptystring"] },
-      studentStatus: {
+      phoneNumber: { rules: ["string", "emptystring"] },
+      photoUrl: { rules: ["string", "emptystring"] },
+      email: { rules: ["string"] },
+      otherQuestions: {
         rules: [
           {
-            type: "enum",
-            rules: ["freshman", "sophomore", "junior", "senior"],
+            type: "array",
+            rules: ["string"],
           },
         ],
       },
@@ -42,15 +41,14 @@ const validateHacker: ExpressFunction = (req, res, next) => {
     rules: {
       firstName: { rules: ["string"] },
       lastName: { rules: ["string"] },
-      university: { rules: ["string", "emptystring"] },
-      bestSkill: { rules: ["string", "emptystring"] },
-      email: { rules: ["string", "emptystring"] },
-      numberOfPreviousHackathons: { rules: ["string", "emptystring"] },
-      studentStatus: {
+      phoneNumber: { rules: ["string", "emptystring"] },
+      photoUrl: { rules: ["string", "emptystring"] },
+      email: { rules: ["string"] },
+      otherQuestions: {
         rules: [
           {
-            type: "enum",
-            rules: ["freshman", "sophomore", "junior", "senior"],
+            type: "array",
+            rules: ["string"],
           },
         ],
       },
