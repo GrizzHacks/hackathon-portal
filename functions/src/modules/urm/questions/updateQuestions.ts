@@ -6,52 +6,56 @@ import {
 } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 const updateQuestion: ExpressFunction = (req, res, next) => {
-    uasPermissionSwitch({
-        organizer: {accepted: validate}
-    })(req,res,next);
+  uasPermissionSwitch({
+    organizer: { accepted: validate },
+  })(req, res, next);
 };
 
 const validate: ExpressFunction = (req, res, next) => {
-    const validationRules: ValidatorObjectRules = {
-      type: "object",
-      rules: {
-        applicationQuestionId: { rules: ["string"], required: true },
-        applicationQuestionLabel: { rules: ["string"], required: true },
-        applicationQuestionUsage: {
-             rules: [
-                 {
-                     type: "enum", 
-                     rules: [1,2,3,4,5],
-                 },
-                ],
-                 required: true },
-        values: {
-            rules: [
-            {
-                type: "array",
-                rules: ["string"],
+  const validationRules: ValidatorObjectRules = {
+    type: "object",
+    rules: {
+      applicationQuestionLabel: { rules: ["string"] },
+      applicationQuestionUsage: {
+        rules: [
+          {
+            type: "object",
+            rules: {
+              organizer: { rules: ["boolean"] },
+              sponsor: { rules: ["boolean"] },
+              mentor: { rules: ["boolean"] },
+              volenteer: { rules: ["boolean"] },
+              hacker: { rules: ["boolean"] },
             },
-            ],
-        required: true},
-        
+          },
+        ],
       },
-    };
-    requestBodyTypeValidator(req, res, next)(validationRules, execute);
+      values: {
+        rules: [
+          {
+            type: "array",
+            rules: ["string"],
+          },
+        ],
+      },
+    },
   };
+  requestBodyTypeValidator(req, res, next)(validationRules, execute);
+};
 
-  const execute: ExpressFunction = (req, res, next) => {
-    const errorHandler = expressErrorHandlerFactory(req, res, next);
-  
-    firebaseApp
-      .firestore()
-      .collection("questions")
-      .doc(req.params.applicationQuestionId)
-      .update(res.locals.parsedBody as URMQuestionsCreateRequest)
-      .then(() => {
-        res.status(200).send();
-        next();
-      })
-      .catch(errorHandler);
-  };
+const execute: ExpressFunction = (req, res, next) => {
+  const errorHandler = expressErrorHandlerFactory(req, res, next);
+
+  firebaseApp
+    .firestore()
+    .collection("questions")
+    .doc(req.params.questionsId)
+    .update(res.locals.parsedBody as URMQuestionsCreateRequest)
+    .then(() => {
+      res.status(200).send();
+      next();
+    })
+    .catch(errorHandler);
+};
 
 export default updateQuestion;
