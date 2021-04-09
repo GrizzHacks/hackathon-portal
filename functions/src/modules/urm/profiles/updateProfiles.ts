@@ -22,14 +22,6 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       phoneNumber: { rules: ["string", "emptystring"] },
       photoUrl: { rules: ["string", "emptystring"] },
       email: { rules: ["string"] },
-      otherQuestions: {
-        rules: [
-          {
-            type: "array",
-            rules: ["string"],
-          },
-        ],
-      },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);

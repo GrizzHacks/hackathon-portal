@@ -4,7 +4,6 @@ declare interface URMProfileUpdateRequest {
   phoneNumber?: string;
   photoUrl?: string;
   email?: string;
-  otherQuestions?: string[];
 }
 
 declare interface URMProfileCreateRequest extends URMProfileUpdateRequest {
@@ -17,7 +16,6 @@ declare interface URMProfileCreateRequest extends URMProfileUpdateRequest {
 declare interface URMProfile extends URMProfileCreateRequest {
   phoneNumber: string;
   photoUrl: string;
-  otherQuestions: string[];
 }
 
 declare interface URMProfileList {
