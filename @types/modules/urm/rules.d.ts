@@ -11,12 +11,12 @@ declare interface URMRulesCreateRequest extends URMRulesUpdateRequest {
   ruleOrder: number;
   ruleName: string;
   applicationQuestionId: string;
-  acceptedValues: string;
-  matchesRemaining: number;
+
 }
 
 declare interface URMRules extends URMRulesCreateRequest {
-  //
+  acceptedValues: string;
+  matchesRemaining: number;
 }
 
 declare interface URMRulesList {
