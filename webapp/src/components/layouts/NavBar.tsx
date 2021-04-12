@@ -12,12 +12,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import MenuIcon from "@material-ui/icons/Menu";
 import React from "react";
 import SquareAvatar from "../misc/SquareAvatar";
+import LeftMenu from "./LeftMenu";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +39,6 @@ declare interface NavBarProps {
   toggleTheme: () => void;
   currentUserProfile: any | null;
   pageTitle: string;
-  backFunction?: () => void;
 }
 
 const NavBar: React.FunctionComponent<NavBarProps> = ({
@@ -46,11 +46,12 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
   toggleTheme,
   currentUserProfile,
   pageTitle,
-  backFunction,
 }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const [leftMenuOpen, setLeftMenuOpen] = React.useState<boolean>(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,17 +65,16 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {backFunction && (
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="back"
-              onClick={backFunction}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          )}
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            onClick={() => {
+              setLeftMenuOpen(!leftMenuOpen);
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" className={classes.title}>
             {pageTitle ? `${pageTitle} - ` : ""}Hackathon Portal
           </Typography>
@@ -136,6 +136,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
             >
               {[
                 {
+                  key: "login",
                   menuLabel: "Login",
                   menuIcon: ExitToAppIcon,
                 },
@@ -143,6 +144,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
                 const Icon = item.menuIcon;
                 return (
                   <MenuItem
+                    key={item.key}
                     onClick={() => {
                       // TODO: Actually do something on click...
                       handleClose();
@@ -159,6 +161,7 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           </div>
         </Toolbar>
       </AppBar>
+      <LeftMenu open={leftMenuOpen} setOpen={setLeftMenuOpen} />
     </div>
   );
 };
