@@ -16,7 +16,6 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      ruleId: { rules: ["string"] },
       ruleOrder: { rules: ["number"] },
       ruleName: { rules: ["string"] },
       applicationQuestionId: { rules: ["string"] },
@@ -34,7 +33,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("rules")
-    .doc(req.params.ruleId)
+    .doc(req.params.rulesId)
     .update(body)
     .then(() => {
       res.status(200).send();

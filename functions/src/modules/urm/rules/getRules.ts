@@ -11,7 +11,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("rules")
-    .doc(req.params.typeId)
+    .doc(req.params.rulesId)
     .get()
     .then((document) => {
       const data = document.data() as URMRules | undefined;
@@ -19,7 +19,7 @@ const execute: ExpressFunction = (req, res, next) => {
         res.status(200).send(JSON.stringify(data));
         next();
       } else {
-        errorHandler(`rules/${req.params.ruleId} has no data.`);
+        errorHandler(`rules/${req.params.rulesId} has no data.`);
       }
     })
     .catch(errorHandler);
