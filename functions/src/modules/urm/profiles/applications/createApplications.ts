@@ -9,22 +9,23 @@ import { uasPermissionSwitch } from "../../../../systems/uas";
 
 const createApplication: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: {
-      accepted: validate,
-      pending: validate,
-      rejected: validate,
-    },
-    sponsor: {
-      accepted: validate,
-      pending: validate,
-      rejected: validate,
-    },
-    mentor: validate,
-    volunteer: validate,
-    hacker: validate,
+    organizer: { accepted: validate },
   })(req, res, next);
 };
+    //   accepted: validate,
+    //   pending: validate,
+    //   rejected: validate,
+    // },
+    // sponsor: {
+    //   accepted: validate,
+    //   pending: validate,
+    //   rejected: validate,
+    // },
+    // mentor: validate,
+    // volunteer: validate,
+    // hacker: validate,
 
+  
 
 const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
