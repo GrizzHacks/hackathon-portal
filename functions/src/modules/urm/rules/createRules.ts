@@ -20,8 +20,6 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       ruleOrder: { rules: ["number"], required: true },
       ruleName: { rules: ["string"], required: true },
       applicationQuestionId: { rules: ["string"], required: true },
-      acceptedValues: { rules: ["string"], required: true },
-      matchesRemaining: { rules: ["number"], required: true },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
