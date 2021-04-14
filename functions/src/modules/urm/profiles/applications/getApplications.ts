@@ -28,7 +28,7 @@ const execute: ExpressFunction = (req, res, next) => {
         res.status(200).send(JSON.stringify(data));
         next();
       } else {
-        errorHandler(`profiles/${req.params.applicationId} has no data.`);
+        errorHandler(`application/${req.params.applicationId} has no data.`);
       }
     })
     .catch(errorHandler);

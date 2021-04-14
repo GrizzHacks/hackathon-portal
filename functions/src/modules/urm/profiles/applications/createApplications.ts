@@ -6,26 +6,23 @@ import {
 } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-
 const createApplication: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: validate },
   })(req, res, next);
 };
-    //   accepted: validate,
-    //   pending: validate,
-    //   rejected: validate,
-    // },
-    // sponsor: {
-    //   accepted: validate,
-    //   pending: validate,
-    //   rejected: validate,
-    // },
-    // mentor: validate,
-    // volunteer: validate,
-    // hacker: validate,
-
-  
+//   accepted: validate,
+//   pending: validate,
+//   rejected: validate,
+// },
+// sponsor: {
+//   accepted: validate,
+//   pending: validate,
+//   rejected: validate,
+// },
+// mentor: validate,
+// volunteer: validate,
+// hacker: validate,
 
 const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
@@ -50,7 +47,6 @@ const validate: ExpressFunction = (req, res, next) => {
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
 };
 
-
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
@@ -58,6 +54,8 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
+    .collection("profiles")
+    .doc(req.params.profileId)
     .collection("application")
     .doc(body.applicationId)
     .set(body)

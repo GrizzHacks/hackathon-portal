@@ -5,9 +5,10 @@
     university?: string;
     bestSkill?: string;
     email?: string;
-    numberOfPreviousHackathons: string;
-    studentStatus: "freshman" | "sophomore" | "junior" | "senior";
-    approved: "accepted" | "rejected" |  "pending" ;
+    numberOfPreviousHackathons?: string;
+    studentStatus?: "freshman" | "sophomore" | "junior" | "senior";
+    approved?: "accepted" | "rejected" |  "pending" ;
+    otherBenefits?: { [key: string]: string };
   }
   
   declare interface URMApplicationCreateRequest extends URMApplicationUpdateRequest {
