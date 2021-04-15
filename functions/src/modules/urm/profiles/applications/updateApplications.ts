@@ -6,14 +6,12 @@ import {
 } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-
 const updateApplication: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: validateOrganizer },
     hacker: { accepted: validateHacker },
   })(req, res, next);
 };
-
 
 const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
@@ -25,12 +23,16 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       bestSkill: { rules: ["string", "emptystring"] },
       email: { rules: ["string", "emptystring"] },
       numberOfPreviousHackathons: { rules: ["string", "emptystring"] },
+      otherQuestions: {
+        rules: [{ type: "dictionary", rules: ["string", "number"] }],
+      },
       studentStatus: {
         rules: [
           {
             type: "enum",
             rules: ["freshman", "sophomore", "junior", "senior"],
           },
+         
         ],
       },
     },
@@ -72,7 +74,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("application")
+    .collection("profiles")
+    .doc(req.params.profileId)
+    .collection("applications")
     .doc(req.params.applicationId)
     .update(body)
     .then(() => {
@@ -91,6 +95,8 @@ const executeIfHackerMatches: ExpressFunction = (req, res, next) => {
     .firestore()
     .collection("profiles")
     .doc(req.params.profileId)
+    .collection("applications")
+    .doc(req.params.applicationId)
     .get()
     .then((doc) => {
       if (user === (doc.data() as URMApplication | undefined)?.applicationId) {

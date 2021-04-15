@@ -3,7 +3,6 @@ import { firebaseApp } from "../../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
 
-
 const getProfile: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
@@ -14,16 +13,17 @@ const getProfile: ExpressFunction = (req, res, next) => {
   })(req, res, next);
 };
 
-
 const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
   firebaseApp
     .firestore()
-    .collection("application")
+    .collection("profiles")
+    .doc(req.params.profileId)
+    .collection("applications")
     .doc(req.params.applicationId)
     .get()
     .then((document) => {
-      const data = document.data() as URMApplication| undefined;
+      const data = document.data() as URMApplication | undefined;
       if (data) {
         res.status(200).send(JSON.stringify(data));
         next();

@@ -1,46 +1,40 @@
-import { ExpressFunction } from "../../../../@types";
+import type { ExpressFunction } from "../../../../@types";
 import { firebaseApp } from "../../../../config/firebaseConfig";
 import {
   expressErrorHandlerFactory,
   requestBodyTypeValidator,
 } from "../../../../helpers";
 import { uasPermissionSwitch } from "../../../../systems/uas";
-
-const createApplication: ExpressFunction = (req, res, next) => {
+const createapplications: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
-    organizer: { accepted: validate },
+    organizer: {
+      accepted: validate,
+      pending: validate,
+      rejected: validate,
+    },
+    sponsor: {
+      accepted: validate,
+      pending: validate,
+      rejected: validate,
+    },
+    mentor: validate,
+    volunteer: validate,
+    hacker: validate,
   })(req, res, next);
 };
-//   accepted: validate,
-//   pending: validate,
-//   rejected: validate,
-// },
-// sponsor: {
-//   accepted: validate,
-//   pending: validate,
-//   rejected: validate,
-// },
-// mentor: validate,
-// volunteer: validate,
-// hacker: validate,
 
 const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      firstName: { rules: ["string"] },
-      lastName: { rules: ["string"] },
-      university: { rules: ["string", "emptystring"] },
-      bestSkill: { rules: ["string", "emptystring"] },
-      email: { rules: ["string", "emptystring"] },
-      numberOfPreviousHackathons: { rules: ["string", "emptystring"] },
-      studentStatus: {
-        rules: [
-          {
-            type: "enum",
-            rules: ["freshman", "sophomore", "junior", "senior"],
-          },
-        ],
+      applicationId: { rules: ["string"], required: true },
+      firstName: { rules: ["string"], required: true },
+      lastName: { rules: ["string"], required: true },
+      phoneNumber: { rules: ["string", "emptystring"] },
+      photoUrl: { rules: ["string", "emptystring"] },
+      email: { rules: ["string"], required: true },
+      otherBenefits: {
+        rules: [{ type: "dictionary", rules: ["string", "number"] }],
       },
     },
   };
@@ -56,7 +50,7 @@ const execute: ExpressFunction = (req, res, next) => {
     .firestore()
     .collection("profiles")
     .doc(req.params.profileId)
-    .collection("application")
+    .collection("applications")
     .doc(body.applicationId)
     .set(body)
     .then(() => {
@@ -66,4 +60,4 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-export default createApplication;
+export default createapplications;

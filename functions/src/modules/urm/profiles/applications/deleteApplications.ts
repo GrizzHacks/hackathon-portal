@@ -16,7 +16,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("application")
+    .collection("profiles")
+    .doc(req.params.profileId)
+    .collection("applications")
     .doc(req.params.applicationId)
     .delete()
     .then(() => {

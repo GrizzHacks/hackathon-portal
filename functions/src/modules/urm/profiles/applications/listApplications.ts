@@ -26,7 +26,9 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("application")
+    .collection("profiles")
+    .doc(req.params.profileId)
+    .collection("applications")
     .orderBy("lastName", "asc")
     .get()
     .then((documents) => {
