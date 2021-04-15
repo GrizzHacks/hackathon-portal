@@ -1,10 +1,18 @@
 import React, { Fragment } from "react";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import { Button, Container, Divider } from "@material-ui/core";
-import GenericListItem from "../misc/GenericListItem";
+import {
+  Button,
+  Container,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core";
 import { styles } from "../../styles";
 import { useHistory } from "react-router";
+import BusinessIcon from "@material-ui/icons/Business";
 import { apiClient } from "../../helper";
 
 declare interface ListPageProps {
@@ -40,6 +48,17 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
       .catch((err) => console.log(err));
   }
 
+  const deleteElement = (x: GenericListItemInfo | undefined) => {
+    if (x != undefined) {
+      apiClient.delete(x.deleteEndpoint);
+      setListItems((listItems) => listItems.filter((q) => q.key !== x.key));
+    }
+  };
+
+  const getElement = (x: string | undefined) => {
+    if (x != undefined) routeHistory.push(x);
+  };
+
   return (
     <Fragment>
       <Container className={classes.pageTitle}>
@@ -50,7 +69,36 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
           return (
             <Fragment key={`list_item-${index}`}>
               {index > 0 && <Divider />}
-              <GenericListItem key={`event_${index}`} itemInfo={listItem} />
+              <ListItem>
+                <ListItemIcon>
+                  <BusinessIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={listItem.line1}
+                  secondary={listItem.line2}
+                />
+                <ListItemSecondaryAction>
+                  <Button
+                    onClick={() => {
+                      getElement(listItem.detailedViewLink);
+                    }}
+                    variant="contained"
+                    color="primary"
+                  >
+                    {listItem.detailedViewText}
+                  </Button>
+                  &nbsp; &nbsp; &nbsp;
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      deleteElement(listItem);
+                    }}
+                  >
+                    {listItem.deleteText}
+                  </Button>
+                </ListItemSecondaryAction>
+              </ListItem>
             </Fragment>
           );
         })}
