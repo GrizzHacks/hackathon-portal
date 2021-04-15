@@ -53,13 +53,6 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
           />
         </ListItem>
         <MenuItemGroup
-          groupName="Universal Registration Module"
-          groupItems={[
-            { label: "Application Rules", route: "/urm/rules" },
-          ]}
-          closeLeftMenu={closeLeftMenu}
-        />
-        <MenuItemGroup
           groupName="Sponsor Tiers and Permissions"
           groupItems={[
             { label: "Sponsor Tiers", route: "/stpm/tiers" },
@@ -81,6 +74,13 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
             { label: "Events", route: "/mewm/events" },
             { label: "Time Slots", route: "/mewm/timeslots" },
             { label: "Event Types", route: "/mewm/types" },
+          ]}
+          closeLeftMenu={closeLeftMenu}
+        />
+        <MenuItemGroup
+          groupName="Universal Registration Module"
+          groupItems={[
+            { label: "Application Rules", route: "/urm/rules" },
           ]}
           closeLeftMenu={closeLeftMenu}
         />
