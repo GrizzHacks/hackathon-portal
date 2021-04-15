@@ -27,11 +27,11 @@ const validate: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      firstName: { rules: ["string"] },
-      lastName: { rules: ["string"] },
+      firstName: { rules: ["string"], required: true },
+      lastName: { rules: ["string"], required: true },
       phoneNumber: { rules: ["string", "emptystring"] },
       photoUrl: { rules: ["string", "emptystring"] },
-      email: { rules: ["string"] },
+      email: { rules: ["string"], required: true },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);

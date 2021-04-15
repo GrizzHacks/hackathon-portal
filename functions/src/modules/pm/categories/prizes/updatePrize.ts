@@ -17,7 +17,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     type: "object",
     rules: {
       prizeDisplayName: { rules: ["string"] },
-      prizePrice: { rules: ["string"] },
+      prizePrice: { rules: ["number"] },
       prizeUrl: { rules: ["string"] },
       prizeASIN: { rules: ["string"] },
       prizeListingName: { rules: ["string"] },

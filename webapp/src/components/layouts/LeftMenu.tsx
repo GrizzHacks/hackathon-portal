@@ -7,13 +7,17 @@ import {
   makeStyles,
   Theme,
 } from "@material-ui/core";
-import React from "react";
+import React, { Fragment } from "react";
 import { useHistory } from "react-router";
 import MenuItemGroup from "../misc/MenuItemGroup";
+import { NotificationMessage } from "../misc/Notifications";
+import PermissionSwitchComponent from "../misc/PermissionSwitchComponent";
 
 declare interface LeftMenuProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  currentUserProfile: firebase.default.User | null;
+  setNotification: (notification: NotificationMessage) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,6 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
   open,
   setOpen,
+  currentUserProfile,
+  setNotification,
 }) => {
   const classes = useStyles();
   const routeHistory = useHistory();
@@ -39,6 +45,46 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
   const closeLeftMenu = () => {
     setOpen(false);
   };
+
+  const organizerMenu = (
+    <Fragment>
+      <MenuItemGroup
+        groupName="Sponsor Tiers and Permissions"
+        groupItems={[
+          { label: "Sponsor Tiers", route: "/stpm/tiers" },
+          { label: "Sponsor Companies", route: "/stpm/companies" },
+        ]}
+        closeLeftMenu={closeLeftMenu}
+      />
+      <MenuItemGroup
+        groupName="Prizes"
+        groupItems={[
+          { label: "Prize Groups", route: "/pm/groups" },
+          { label: "Prize Categories", route: "/pm/categories" },
+        ]}
+        closeLeftMenu={closeLeftMenu}
+      />
+      <MenuItemGroup
+        groupName="Mini-Events and Workshops"
+        groupItems={[
+          { label: "Events", route: "/mewm/events" },
+          { label: "Time Slots", route: "/mewm/timeslots" },
+          { label: "Event Types", route: "/mewm/types" },
+        ]}
+        closeLeftMenu={closeLeftMenu}
+      />
+      <MenuItemGroup
+        groupName="User Registration Module"
+        groupItems={[{ label: "Application Rules", route: "/urm/rules" }]}
+        closeLeftMenu={closeLeftMenu}
+      />
+      <MenuItemGroup
+        groupName="Developer Tools"
+        groupItems={[{ label: "API Explorer", route: "/api-explorer" }]}
+        closeLeftMenu={closeLeftMenu}
+      />
+    </Fragment>
+  );
 
   return (
     <Drawer anchor="left" open={open} onClose={closeLeftMenu}>
@@ -52,52 +98,51 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
             }}
           />
         </ListItem>
-        <MenuItemGroup
-          groupName="Sponsor Tiers and Permissions"
-          groupItems={[
-            { label: "Sponsor Tiers", route: "/stpm/tiers" },
-            { label: "Sponsor Companies", route: "/stpm/companies" },
-          ]}
-          closeLeftMenu={closeLeftMenu}
+        <PermissionSwitchComponent
+          organizer={{
+            accepted: organizerMenu,
+            pending: <Fragment />,
+            rejected: <Fragment />,
+          }}
+          sponsor={<Fragment />}
+          mentor={<Fragment />}
+          volunteer={<Fragment />}
+          hacker={<Fragment />}
+          public={<Fragment />}
+          setNotification={setNotification}
         />
-        <MenuItemGroup
-          groupName="Prizes"
-          groupItems={[
-            { label: "Prize Groups", route: "/pm/groups" },
-            { label: "Prize Categories", route: "/pm/categories" },
-          ]}
-          closeLeftMenu={closeLeftMenu}
-        />
-        <MenuItemGroup
-          groupName="Mini-Events and Workshops"
-          groupItems={[
-            { label: "Events", route: "/mewm/events" },
-            { label: "Time Slots", route: "/mewm/timeslots" },
-            { label: "Event Types", route: "/mewm/types" },
-          ]}
-          closeLeftMenu={closeLeftMenu}
-        />
-        <MenuItemGroup
-          groupName="Universal Registration Module"
-          groupItems={[
-            { label: "Application Rules", route: "/urm/rules" },
-          ]}
-          closeLeftMenu={closeLeftMenu}
-        />
-        <MenuItemGroup
-          groupName="Developer Tools"
-          groupItems={[{ label: "API Explorer", route: "/api-explorer" }]}
-          closeLeftMenu={closeLeftMenu}
-        />
-        <ListItem button key={"menu_item_login"}>
-          <ListItemText
-            primary="Login"
-            onClick={() => {
-              routeHistory.push("/login");
-              closeLeftMenu();
-            }}
-          />
-        </ListItem>
+        {currentUserProfile ? (
+          <Fragment>
+            <ListItem button key={"menu_item_profile"}>
+              <ListItemText
+                primary="Profile"
+                onClick={() => {
+                  routeHistory.push("/profile");
+                  closeLeftMenu();
+                }}
+              />
+            </ListItem>
+            <ListItem button key={"menu_item_logout"}>
+              <ListItemText
+                primary="Logout"
+                onClick={() => {
+                  routeHistory.push("/logout");
+                  closeLeftMenu();
+                }}
+              />
+            </ListItem>
+          </Fragment>
+        ) : (
+          <ListItem button key={"menu_item_login"}>
+            <ListItemText
+              primary="Login"
+              onClick={() => {
+                routeHistory.push("/login");
+                closeLeftMenu();
+              }}
+            />
+          </ListItem>
+        )}
       </List>
     </Drawer>
   );

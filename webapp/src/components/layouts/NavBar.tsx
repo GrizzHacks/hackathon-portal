@@ -17,6 +17,9 @@ import Brightness7Icon from "@material-ui/icons/Brightness7";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import MenuIcon from "@material-ui/icons/Menu";
 import React from "react";
+import { useHistory } from "react-router-dom";
+import { firebaseApp } from "../../config/firebaseConfig";
+import { NotificationMessage } from "../misc/Notifications";
 import SquareAvatar from "../misc/SquareAvatar";
 import LeftMenu from "./LeftMenu";
 
@@ -37,18 +40,28 @@ const useStyles = makeStyles((theme: Theme) =>
 declare interface NavBarProps {
   theme: "light" | "dark";
   toggleTheme: () => void;
-  currentUserProfile: any | null;
   pageTitle: string;
+  setNotification: (notification: NotificationMessage) => void;
 }
 
 const NavBar: React.FunctionComponent<NavBarProps> = ({
   theme,
   toggleTheme,
-  currentUserProfile,
   pageTitle,
+  setNotification,
 }) => {
   const classes = useStyles();
+  const routeHistory = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [
+    currentUserProfile,
+    setCurrentUserProfile,
+  ] = React.useState<firebase.default.User | null>(null);
+  const [firebaseAuthListener, setFirebaseAuthListener] = React.useState(
+    firebaseApp.auth().onAuthStateChanged((user) => {
+      setCurrentUserProfile(user);
+    })
+  );
   const open = Boolean(anchorEl);
 
   const [leftMenuOpen, setLeftMenuOpen] = React.useState<boolean>(false);
@@ -105,8 +118,8 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
                         : ""
                     }
                     src={
-                      currentUserProfile?.photoUrl
-                        ? currentUserProfile.photoUrl
+                      currentUserProfile?.photoURL
+                        ? currentUserProfile.photoURL
                         : ""
                     }
                     centerInContainer={true}
@@ -134,19 +147,36 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
               open={open}
               onClose={handleClose}
             >
-              {[
-                {
-                  key: "login",
-                  menuLabel: "Login",
-                  menuIcon: ExitToAppIcon,
-                },
-              ].map((item) => {
+              {(currentUserProfile
+                ? [
+                    {
+                      key: "profile_top_right_menu",
+                      menuLabel: "Profile",
+                      menuIcon: AccountCircleIcon,
+                      route: "/profile",
+                    },
+                    {
+                      key: "logout_top_right_menu",
+                      menuLabel: "Logout",
+                      menuIcon: ExitToAppIcon,
+                      route: "/logout",
+                    },
+                  ]
+                : [
+                    {
+                      key: "login_top_right_menu",
+                      menuLabel: "Login",
+                      menuIcon: ExitToAppIcon,
+                      route: "/login",
+                    },
+                  ]
+              ).map((item) => {
                 const Icon = item.menuIcon;
                 return (
                   <MenuItem
                     key={item.key}
                     onClick={() => {
-                      // TODO: Actually do something on click...
+                      routeHistory.push(item.route);
                       handleClose();
                     }}
                   >
@@ -161,7 +191,12 @@ const NavBar: React.FunctionComponent<NavBarProps> = ({
           </div>
         </Toolbar>
       </AppBar>
-      <LeftMenu open={leftMenuOpen} setOpen={setLeftMenuOpen} />
+      <LeftMenu
+        open={leftMenuOpen}
+        setOpen={setLeftMenuOpen}
+        currentUserProfile={currentUserProfile}
+        setNotification={setNotification}
+      />
     </div>
   );
 };

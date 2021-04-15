@@ -46,6 +46,13 @@ export const styles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       textAlign: "center",
     },
+    outlined: {
+      borderStyle: "solid",
+      borderWidth: theme.spacing(0.5),
+      borderColor: theme.palette.warning.main,
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+    },
   })
 );
 

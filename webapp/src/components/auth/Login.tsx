@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Card,
   Checkbox,
@@ -10,20 +9,26 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { ExpandMore, Error } from "@material-ui/icons";
+import { Error, ExpandMore } from "@material-ui/icons";
 import firebase from "firebase";
-import React, { Fragment } from "react";
-import { Redirect, useHistory, useLocation } from "react-router-dom";
-import { firebaseApp as FirebaseAppGlobal } from "../../config/firebaseConfig";
-import { styles } from "../../styles";
 import qs from "qs";
+import React, { Fragment } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { firebaseApp as FirebaseAppGlobal } from "../../config/firebaseConfig";
 import { apiClient } from "../../helper";
+import { styles } from "../../styles";
+import { NotificationMessage } from "../misc/Notifications";
+import SquareAvatar from "../misc/SquareAvatar";
 
 declare interface LoginBoxProps {
   firebaseApp?: firebase.app.App;
+  setNotification: (notification: NotificationMessage) => void;
 }
 
-const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
+const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
+  firebaseApp,
+  setNotification,
+}) => {
   const classes = styles();
   const firebaseAppLocal = firebaseApp ? firebaseApp : FirebaseAppGlobal;
   const routeLocation = useLocation();
@@ -135,6 +140,21 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
     setEmail("");
   };
 
+  // Listen for Firebase to check if the user is logged in
+  const listener = firebaseAppLocal.auth().onAuthStateChanged((user) => {
+    // If the user is already logged in, redirect them to the correct page.
+    if (user) {
+      setNotification({
+        type: "info",
+        message: "You are already logged in!",
+        open: true,
+      });
+      routeHistory.replace(getRedirectUrl());
+    }
+    // Only make one update at the beginning
+    listener();
+  });
+
   return (
     <Fragment>
       <Card variant="outlined" className={classes.padded}>
@@ -148,14 +168,20 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
                 <Chip
                   variant="outlined"
                   avatar={
-                    <Avatar
-                      alt={profile?.firstName.toUpperCase()}
-                      src={
-                        profile?.photoUrl
-                          ? profile.photoUrl
-                          : "No Image Defined"
-                      }
-                    />
+                    <div style={{ width: "24px", height: "24px" }}>
+                      <SquareAvatar
+                        alt={
+                          profile?.firstName
+                            ? profile.firstName.toUpperCase()
+                            : ""
+                        }
+                        src={profile?.photoUrl ? profile.photoUrl : ""}
+                        centerInContainer={true}
+                        maxHeightPercentageOfScreen={50}
+                        maxWidthPercentageOfParent={100}
+                        maxWidthPercentageOfScreen={50}
+                      />
+                    </div>
                   }
                   label={email.toLowerCase()}
                   onClick={handleChangeEmail}

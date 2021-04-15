@@ -62,6 +62,15 @@ const TimeslotsPages: React.FunctionComponent = () => {
       });
   }
 
+  const getEventNameFromEventId = (eventId: string) => {
+    for (const event of eventInfo) {
+      if (event.value === eventId) {
+        return event.label;
+      }
+    }
+    return "";
+  };
+
   const getEventTypeNameFromEventTypeId = (eventTypeId: string) => {
     for (const event of eventTypeInfo) {
       if (event.value === eventTypeId) {
@@ -77,11 +86,13 @@ const TimeslotsPages: React.FunctionComponent = () => {
     const schemasTyped = schemas as MEWMTimeslotList;
     setListItems(
       schemasTyped.timeslots.map((value) => {
-        const eventId = value.eventId ? `: ${value.eventId}` : "";
+        const eventName = value.eventId
+          ? `: ${getEventNameFromEventId(value.eventId)}`
+          : "";
         return {
           line1: `${getEventTypeNameFromEventTypeId(
             value.eventTypeId
-          )}${eventId}`,
+          )}${eventName}`,
           deleteEndpoint: `mewm/timeslots/${value.timeslotId}`,
           deleteText: "Delete Time Slot",
           detailedViewLink: `/mewm/timeslots/timeslot/${value.timeslotId}`,

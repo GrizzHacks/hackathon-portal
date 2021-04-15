@@ -5,6 +5,7 @@ import { apiClient } from "../../../helper";
 import ListPage from "../../pages/ListPage";
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
 import Error404Page from "../../pages/Error404Page";
+import CompanyBenefits from "./CompanyBenefits";
 
 const CompaniesPages: React.FunctionComponent = () => {
   const [attributeOptions, setAttributeOptions] = React.useState<
@@ -109,6 +110,7 @@ const CompaniesPages: React.FunctionComponent = () => {
       </Route>
       <Route path="/stpm/companies/company/:companyId">
         {CompanyCreateEditDetailsPageComponent}
+        <CompanyBenefits />
       </Route>
       <Route component={Error404Page} />
     </Switch>
