@@ -17,6 +17,7 @@ import { Redirect, useHistory, useLocation } from "react-router-dom";
 import { firebaseApp as FirebaseAppGlobal } from "../../config/firebaseConfig";
 import { styles } from "../../styles";
 import qs from "qs";
+import { apiClient } from "../../helper";
 
 declare interface LoginBoxProps {
   firebaseApp?: firebase.app.App;
@@ -33,6 +34,9 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [errorText, setErrorText] = React.useState<string>("");
   const [passwordReset, setPasswordReset] = React.useState<boolean>(false);
+  const [profile, setProfile] = React.useState<URMMinimalProfile | undefined>(
+    undefined
+  );
 
   const getRedirectUrl = () => {
     const redirect = qs.parse(routeLocation.search.substr(1)).redirect;
@@ -54,10 +58,30 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
         .auth()
         .fetchSignInMethodsForEmail(email)
         .then((methods) => {
-          console.log(methods);
           if (methods.length > 0) {
-            setEmail(email.toLowerCase());
-            setTemp("");
+            apiClient
+              .post("urm/profiles-by-email", {
+                body: JSON.stringify({ email }),
+              })
+              .then((response) => {
+                response
+                  .json()
+                  .then((responseJson) => {
+                    setProfile(responseJson as URMMinimalProfile);
+                    setEmail(email.toLowerCase());
+                    setTemp("");
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    setErrorText(
+                      "Something went wrong. Please try again later."
+                    );
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+                setErrorText("Something went wrong. Please try again later.");
+              });
           } else {
             setErrorText("No account found for that email");
           }
@@ -117,14 +141,20 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Container className={classes.pageTitle}>
-              <Typography variant="h4">{!email ? "Sign in" : "Hi"}</Typography>
+              <Typography variant="h4">
+                {!email ? "Sign in" : `Hi ${profile?.firstName}`}
+              </Typography>
               {!!email && (
                 <Chip
                   variant="outlined"
                   avatar={
                     <Avatar
-                      alt={email.toUpperCase()}
-                      src="/static/images/avatar/1.jpg"
+                      alt={profile?.firstName.toUpperCase()}
+                      src={
+                        profile?.photoUrl
+                          ? profile.photoUrl
+                          : "No Image Defined"
+                      }
                     />
                   }
                   label={email.toLowerCase()}
