@@ -11,6 +11,7 @@ import NotificationBar, {
 import MEWMPages from "./components/modules/mewm";
 import PMPages from "./components/modules/pm";
 import STPMPages from "./components/modules/stpm";
+import URMPages from "./components/modules/urm";
 import Error404Page from "./components/pages/Error404Page";
 import Home from "./components/pages/Home";
 import ApiExplorer from "./devTools/ApiExplorer";
@@ -49,6 +50,7 @@ const App: React.FunctionComponent<AppProps> = ({ theme, toggleTheme }) => {
           <Route path="/stpm" component={STPMPages} />
           <Route path="/pm" component={PMPages} />
           <Route path="/mewm" component={MEWMPages} />
+          <Route path="/urm" component={URMPages} />
           <Route component={Error404Page} />
         </Switch>
       </Container>
