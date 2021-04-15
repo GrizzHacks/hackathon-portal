@@ -1,11 +1,22 @@
 import React, { Fragment } from "react";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import { Button, Container, Divider } from "@material-ui/core";
-import GenericListItem from "../misc/GenericListItem";
+import {
+  Button,
+  Container,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemIcon,
+  ListItemSecondaryAction,
+  ListItemText,
+} from "@material-ui/core";
 import { styles } from "../../styles";
 import { useHistory } from "react-router";
+import BusinessIcon from "@material-ui/icons/Business";
 import { apiClient } from "../../helper";
+import DeleteIcon from "@material-ui/icons/Delete";
+import LaunchIcon from "@material-ui/icons/Launch";
 
 declare interface ListPageProps {
   pageTitle: string;
@@ -40,6 +51,17 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
       .catch((err) => console.log(err));
   }
 
+  const deleteElement = (x: GenericListItemInfo | undefined) => {
+    if (x != undefined) {
+      apiClient.delete(x.deleteEndpoint);
+      setListItems((listItems) => listItems.filter((q) => q.key !== x.key));
+    }
+  };
+
+  const getElement = (x: string | undefined) => {
+    if (x != undefined) routeHistory.push(x);
+  };
+
   return (
     <Fragment>
       <Container className={classes.pageTitle}>
@@ -50,7 +72,34 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
           return (
             <Fragment key={`list_item-${index}`}>
               {index > 0 && <Divider />}
-              <GenericListItem key={`event_${index}`} itemInfo={listItem} />
+              <ListItem>
+                <ListItemIcon>
+                  <BusinessIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary={listItem.line1}
+                  secondary={listItem.line2}
+                />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    aria-label="detail"
+                    onClick={() => {
+                      getElement(listItem.detailedViewLink);
+                    }}
+                  >
+                    <LaunchIcon />
+                  </IconButton>
+                  &nbsp; &nbsp; &nbsp;
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => {
+                      deleteElement(listItem);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
             </Fragment>
           );
         })}

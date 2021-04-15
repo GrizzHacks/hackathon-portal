@@ -40,7 +40,7 @@ const GenericListItem: React.FunctionComponent<GenericList> = ({
             variant="contained"
             color="primary"
           >
-            {itemInfo.detailedViewText}
+            {/* {itemInfo.detailedViewText} */}
           </Button>
           &nbsp; &nbsp; &nbsp;
           <Button
@@ -50,7 +50,7 @@ const GenericListItem: React.FunctionComponent<GenericList> = ({
               deleteElement(itemInfo.deleteEndpoint);
             }}
           >
-            {itemInfo.deleteText}
+            {/* {itemInfo.deleteText} */}
           </Button>
         </ListItemSecondaryAction>
       </ListItem>
@@ -71,7 +71,7 @@ const GenericListItem: React.FunctionComponent<GenericList> = ({
           variant="contained"
           color="primary"
         >
-          {itemInfo.detailedViewText}
+          {/* {itemInfo.detailedViewText} */}
         </Button>
         &nbsp; &nbsp; &nbsp;
         <Button
@@ -81,7 +81,7 @@ const GenericListItem: React.FunctionComponent<GenericList> = ({
             deleteElement(itemInfo.deleteEndpoint);
           }}
         >
-          {itemInfo.deleteText}
+          {/* {itemInfo.deleteText} */}
         </Button>
       </ListItemSecondaryAction>
     </ListItem>
