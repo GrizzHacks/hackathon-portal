@@ -6,7 +6,7 @@ import listApplications from "./listApplications";
 import updateApplications from "./updateApplications";
 
 export default (app: Express, endpoint: string) => {
-   app.get(`${endpoint}/`, listApplications);
+  app.get(`${endpoint}/`, listApplications);
   app.get(`${endpoint}/:applicationId`, getApplications);
   app.post(`${endpoint}/`, createApplications);
   app.patch(`${endpoint}/:applicationId`, updateApplications);
