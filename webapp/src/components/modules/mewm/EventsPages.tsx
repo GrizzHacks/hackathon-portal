@@ -1,4 +1,4 @@
-import { CalendarToday, Category } from "@material-ui/icons";
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { apiClient } from "../../../helper";
@@ -97,7 +97,7 @@ const EventsPages: React.FunctionComponent = () => {
           deleteText: "Delete Event",
           detailedViewLink: `/mewm/events/event/${value.eventId}`,
           detailedViewText: "Event Details",
-          icon: CalendarToday,
+          icon: EventAvailableIcon,
           key: `${value.eventId}`,
           line2: value.eventDescription,
           multiline: true,

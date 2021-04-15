@@ -18,5 +18,5 @@ declare interface PMGroupUpdateRequest {
   }
 
    declare interface PMGroupList {
-    prizegroups: PMGroup[];
+    prizeGroups: PMGroup[];
    }

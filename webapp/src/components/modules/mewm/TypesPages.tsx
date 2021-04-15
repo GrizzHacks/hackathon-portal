@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
@@ -18,7 +18,7 @@ const TypesPages: React.FunctionComponent = () => {
           deleteText: "Delete Event Type",
           detailedViewLink: `/mewm/types/type/${value.eventTypeId}`,
           detailedViewText: "Event Type Details",
-          icon: Category,
+          icon: EventNoteIcon,
           key: `${value.eventTypeId}`,
           line2: value.eventTypeDescription,
           multiline: true,
