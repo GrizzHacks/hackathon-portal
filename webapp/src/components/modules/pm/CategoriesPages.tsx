@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { apiClient } from "../../../helper";
@@ -64,7 +64,7 @@ const CategoriesPages: React.FunctionComponent = () => {
           deleteText: "Delete Prize Category",
           detailedViewLink: `/pm/categories/category/${value.prizeCategoryId}`,
           detailedViewText: "Prize Category Details",
-          icon: Category,
+          icon: EmojiEventsIcon,
           key: `${value.prizeCategoryId}`,
           line2: value.prizeCategoryDescription,
           multiline: true,

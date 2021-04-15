@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import ScheduleIcon from '@material-ui/icons/Schedule';
 import { type } from "os";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
@@ -86,7 +86,7 @@ const TimeslotsPages: React.FunctionComponent = () => {
           deleteText: "Delete Time Slot",
           detailedViewLink: `/mewm/timeslots/timeslot/${value.timeslotId}`,
           detailedViewText: "Time Slot Details",
-          icon: Category,
+          icon: ScheduleIcon,
           key: `${value.timeslotId}`,
           line2: `${value.startTime} - ${value.endTime}`,
         };

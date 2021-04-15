@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
@@ -28,7 +28,7 @@ const PrizesPages: React.FunctionComponent = () => {
             value.prizeId
           }`,
           detailedViewText: "Prize Details",
-          icon: Category,
+          icon: EmojiEventsIcon,
           key: `${value.prizeId}`,
         };
       })

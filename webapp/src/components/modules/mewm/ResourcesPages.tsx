@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
@@ -28,7 +28,7 @@ const ResourcesPages: React.FunctionComponent = () => {
             value.resourceId
           }`,
           detailedViewText: "Resource Details",
-          icon: Category,
+          icon: EmojiObjectsIcon,
           key: `${value.resourceId}`,
           line2: `${value.resourceDescription}\n${value.resourceUrl}`,
           multiline: true,

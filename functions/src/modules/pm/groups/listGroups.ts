@@ -17,13 +17,13 @@ const execute: ExpressFunction = (req, res, next) => {
     .collection("prizeGroups")
     .get()
     .then((documents) => {
-      const prizegroups: PMGroup[] = [];
+      const prizeGroups: PMGroup[] = [];
       for (const doc of documents.docs) {
-        prizegroups.push(doc.data() as PMGroup);
+        prizeGroups.push(doc.data() as PMGroup);
       }
       res
         .status(200)
-        .send(JSON.stringify( { prizegroups } as PMGroupList));
+        .send(JSON.stringify( { prizeGroups } as PMGroupList));
       next();
     })
 
