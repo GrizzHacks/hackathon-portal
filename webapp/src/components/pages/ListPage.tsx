@@ -5,6 +5,7 @@ import {
   Button,
   Container,
   Divider,
+  IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
@@ -14,6 +15,8 @@ import { styles } from "../../styles";
 import { useHistory } from "react-router";
 import BusinessIcon from "@material-ui/icons/Business";
 import { apiClient } from "../../helper";
+import DeleteIcon from "@material-ui/icons/Delete";
+import LaunchIcon from "@material-ui/icons/Launch";
 
 declare interface ListPageProps {
   pageTitle: string;
@@ -78,25 +81,23 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
                   secondary={listItem.line2}
                 />
                 <ListItemSecondaryAction>
-                  <Button
+                  <IconButton
+                    aria-label="detail"
                     onClick={() => {
                       getElement(listItem.detailedViewLink);
                     }}
-                    variant="contained"
-                    color="primary"
                   >
-                    {listItem.detailedViewText}
-                  </Button>
+                    <LaunchIcon />
+                  </IconButton>
                   &nbsp; &nbsp; &nbsp;
-                  <Button
-                    variant="contained"
-                    color="primary"
+                  <IconButton
+                    aria-label="delete"
                     onClick={() => {
                       deleteElement(listItem);
                     }}
                   >
-                    {listItem.deleteText}
-                  </Button>
+                    <DeleteIcon />
+                  </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
             </Fragment>
