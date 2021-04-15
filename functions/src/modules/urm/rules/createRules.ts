@@ -20,7 +20,7 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
       ruleOrder: { rules: ["number"], required: true },
       ruleName: { rules: ["string"], required: true },
       applicationQuestionId: { rules: ["string"], required: true },
-      acceptedValues: { rules: ["string"]},
+      acceptedValues: { rules: ["string"], required: true },
       matchesRemaining: { rules: ["number"]},
     },
   };
@@ -31,6 +31,11 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   const body = res.locals.parsedBody as URMRulesCreateRequest;
+
+  if (body.matchesRemaining === undefined) {
+    body.matchesRemaining = 1
+  }
+
 
   firebaseApp
     .firestore()
