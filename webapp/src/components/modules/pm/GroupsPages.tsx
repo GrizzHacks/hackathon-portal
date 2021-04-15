@@ -11,7 +11,7 @@ const GroupsPages: React.FunctionComponent = () => {
   ) => (schemas: any) => {
     const schemasTyped = schemas as PMGroupList;
     setListItems(
-      schemasTyped.prizegroups.map((value) => {
+      schemasTyped.prizeGroups.map((value) => {
         return {
           line1: `${value.prizeGroupName}`,
           deleteEndpoint: `pm/groups/${value.prizeGroupId}`,
