@@ -1,11 +1,43 @@
 import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import React from "react";
 import { Route, Switch, useParams } from "react-router-dom";
+import { apiClient } from '../../../helper';
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
 import Error404Page from "../../pages/Error404Page";
 import ListPage from "../../pages/ListPage";
 
 const RulesPages: React.FunctionComponent = () => {
+
+  const [attributeOptions, setAttributeOptions] = React.useState<
+    {
+      label: string;
+      value: any;
+    }[]
+  >([]);
+  const [loaded, setLoaded] = React.useState<boolean>(false);
+
+  if (!loaded) {
+    setLoaded(true);
+    apiClient
+      .get("urm/questions")
+      .then((questionsRaw) => {
+        questionsRaw.json().then((questions) => {
+          const questionsTyped = (questions as URMQuestionsList).urmquestions;
+          setAttributeOptions(
+            questionsTyped.map((question) => {
+              return {
+                label: question.applicationQuestionLabel,
+                value: question.questionsId,
+              };
+            })
+          );
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
     const listMapFunction = (
       setListItems: (listItems: GenericListItemInfo[]) => void
     ) => (schemas: any) => {
@@ -25,7 +57,7 @@ const RulesPages: React.FunctionComponent = () => {
       );
     };
   
-    const TierCreateEditDetailsPageComponent = (
+    const RuleCreateEditDetailsPageComponent = (
       <CreateDetailEditPage<URMRules>
         objectTypeName={"URM Rule"}
         listEndpoint="/urm/rules"
@@ -37,14 +69,9 @@ const RulesPages: React.FunctionComponent = () => {
             attributeLabel: "Application Rule Name",
           },
           {
-            attributeName: "ruleOrder",
-            attributeLabel: "Rule Order",
-            attributeTypeIsNumber: true,
-          },
-          {
             attributeName: "applicationQuestionId",
             attributeLabel: "Application Question",
-            // TODO: logic pairing component to application question
+            attributeOptions: attributeOptions,
           },
           {
             attributeName: "acceptedValues",
@@ -66,10 +93,10 @@ const RulesPages: React.FunctionComponent = () => {
           />
         </Route>
         <Route path="/urm/rules/create">
-          {TierCreateEditDetailsPageComponent}
+          {RuleCreateEditDetailsPageComponent}
         </Route>
         <Route path="/urm/rules/rule/:ruleId">
-          {TierCreateEditDetailsPageComponent}
+          {RuleCreateEditDetailsPageComponent}
         </Route>
         <Route component={Error404Page} />
       </Switch>
