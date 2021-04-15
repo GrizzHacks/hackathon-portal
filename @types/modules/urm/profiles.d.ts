@@ -18,6 +18,13 @@ declare interface URMProfile extends URMProfileCreateRequest {
   photoUrl: string;
 }
 
+declare interface URMMinimalProfile {
+  profileId: string;
+  firstName: string;
+  email: string;
+  photoUrl: string;
+}
+
 declare interface URMProfileList {
   profiles: URMProfile[];
 }

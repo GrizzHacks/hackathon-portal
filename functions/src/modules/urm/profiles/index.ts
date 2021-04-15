@@ -1,10 +1,11 @@
 import type { Express } from "express";
+import applications from "./applications";
 import createProfiles from "./createProfiles";
 import deleteProfiles from "./deleteProfiles";
-import getProfiles from "./getProfiles";
+import getMinimalProfileByEmail from "./getMinimalProfileByEmail";
+import getProfiles from "./getProfile";
 import listProfiles from "./listProfiles";
 import updateProfiles from "./updateProfiles";
-import applications from "./applications";
 
 export default (app: Express, endpoint: string) => {
   app.get(`${endpoint}/:profileId`, getProfiles);
@@ -13,4 +14,7 @@ export default (app: Express, endpoint: string) => {
   app.delete(`${endpoint}/:profileId`, deleteProfiles);
   app.get(`${endpoint}/`, listProfiles);
   applications(app, `${endpoint}/:profileId/applications`);
+
+  // For the login page
+  app.post(`${endpoint}-by-email`, getMinimalProfileByEmail);
 };
