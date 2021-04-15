@@ -1,4 +1,4 @@
-import { Category } from "@material-ui/icons";
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import CreateDetailEditPage from "../../pages/CreateDetailsEditPage";
@@ -18,7 +18,7 @@ const GroupsPages: React.FunctionComponent = () => {
           deleteText: "Delete Prize Group",
           detailedViewLink: `/pm/groups/group/${value.prizeGroupId}`,
           detailedViewText: "Prize Group Details",
-          icon: Category,
+          icon: EmojiEventsIcon,
           key: `${value.prizeGroupId}`,
           line2: value.prizeGroupDescription,
           multiline: true,

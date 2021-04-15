@@ -1,4 +1,4 @@
-import { List as ListIcon } from "@material-ui/icons";
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import ListPage from "../../pages/ListPage";
@@ -18,7 +18,7 @@ const TiersPages: React.FunctionComponent = () => {
           deleteText: "Delete Tier",
           detailedViewLink: `/stpm/tiers/tier/${value.sponsorTierId}`,
           detailedViewText: "Tier Details",
-          icon: ListIcon,
+          icon: LabelImportantIcon,
           key: `${value.sponsorTierId}`,
         };
       })
