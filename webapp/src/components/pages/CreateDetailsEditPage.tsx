@@ -85,6 +85,11 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
               attributeOptions={attribute.attributeOptions}
               handleUpdate={handleUpdateFactory(attribute.attributeName)}
               createOnly={!id}
+              editing = {}
+              setEditing ={ {editing: boolean} => {
+                edit = editing[index];
+                setEditing(edit);
+              };}
             />
           );
         })}
@@ -93,6 +98,8 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
             <Button
               variant="outlined"
               fullWidth
+              //disabled={setEditing(editing)}
+              id="setEditing"
               color="primary"
               onClick={() => {
                 routeHistory.push(listEndpoint);

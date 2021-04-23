@@ -22,6 +22,8 @@ declare interface DetailsEditFormProps<T> {
   attributeOptions?: { label: string; value: T }[];
   handleUpdate: (newValue: T) => void;
   createOnly?: boolean;
+  editing: boolean;
+  setEditing: (editing: boolean) => void;
 }
 
 const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ = <
@@ -34,6 +36,8 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   attributeOptions,
   handleUpdate,
   createOnly,
+  editing,
+  setEditing,
 }: DetailsEditFormProps<T> & { children?: ReactNode }) => {
   const classes = styles();
 
@@ -62,7 +66,6 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
     getIndexForOptionValue(attributeValue)
   );
   const [errorText, setErrorTest] = React.useState<string>("");
-  const [editing, setEditing] = React.useState(createOnly);
 
   // Reset form when input value changes
   React.useEffect(() => {
