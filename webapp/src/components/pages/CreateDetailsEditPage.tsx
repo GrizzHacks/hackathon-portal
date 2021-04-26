@@ -51,7 +51,10 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
             setObject(objectJson as ObjectType);
           });
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
     }
   }
 
