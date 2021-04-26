@@ -55,7 +55,6 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
           console.log(err);
           alert(err);
         });
-        // .catch(() => {});
     }
   }
 

@@ -37,7 +37,10 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
       .then((items) => {
         items.json().then(listMapFunction(setListItems));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        alert(err);
+      });
   }
 
   return (
