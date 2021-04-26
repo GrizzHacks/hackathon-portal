@@ -14,6 +14,12 @@ const QuestionPages: React.FunctionComponent = () => {
     }[]
   >([]);
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [questionUsage, setQuestionUsage] = React.useState<
+    {
+      label: string;
+      value: any;
+    }[]
+  >([]);
 
   if (!loaded) {
     setLoaded(true);
@@ -65,12 +71,18 @@ const QuestionPages: React.FunctionComponent = () => {
       attributes={[
         {
           attributeName: "applicationQuestionLabel",
-          attributeLabel: "Question Name",
+          attributeLabel: "Question",
         },
         {
-          attributeName: "questionsId",
-          attributeLabel: "Question",
-          attributeOptions: attributeOptions,
+          attributeName: "applicationQuestionUsage",
+          attributeLabel: "Question Usage",
+          attributeOptions: questionUsage.concat([
+            { label: "organizer", value: undefined },
+            { label: "hacker", value: undefined },
+            { label: "sponsor", value: undefined },
+            { label: "mentor", value: undefined },
+            { label: "volenteer", value: undefined },
+          ]),
         },
         {
           attributeName: "values",
@@ -82,16 +94,16 @@ const QuestionPages: React.FunctionComponent = () => {
 
   return (
     <Switch>
-      <Route exact path="/urm/rules">
+      <Route exact path="/urm/questions">
         <ListPage
-          pageTitle="Application Rules"
-          objectTypeName="Application Rule"
-          apiEndpoint="urm/rules"
-          createNewLink="/urm/rules/create"
+          pageTitle="Application questions"
+          objectTypeName="Application question"
+          apiEndpoint="urm/questions"
+          createNewLink="/urm/questions/createQuestion"
           listMapFunction={listMapFunction}
         />
       </Route>
-      <Route path="/urm/questions/create">
+      <Route path="/urm/questions/createQuestion">
         {QuestionCreateEditDetailsPageComponent}
       </Route>
       <Route path="/urm/questions/URMquestions/:questionsId">
