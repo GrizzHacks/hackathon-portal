@@ -32,7 +32,7 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
   const [object, setObject] = React.useState<ObjectType | undefined>();
   const [updateObject, setUpdateObject] = React.useState<Partial<ObjectType>>();
   const [loaded, setLoaded] = React.useState<boolean>(false);
-
+  const [edit, setediting] = React.useState<boolean[]>(attributes.map(setEditing(editing)));
   const handleUpdateFactory = (attributeName: keyof ObjectType) => (
     attributeValue: any
   ) => {
@@ -86,7 +86,7 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
               handleUpdate={handleUpdateFactory(attribute.attributeName)}
               createOnly={!id}
               editing = {}
-              setEditing ={ {editing: boolean} => {
+              setEditing ={ {edit: boolean} => {
                 edit = editing[index];
                 setEditing(edit);
               };}
