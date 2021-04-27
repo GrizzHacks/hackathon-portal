@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import { Clear, Done, Edit, Error } from "@material-ui/icons";
 import React, { Fragment, ReactNode } from "react";
-import { nanoid } from "nanoid";
 import { styles } from "../../styles";
 
 declare interface DetailsEditFormProps<T> {
@@ -22,6 +21,8 @@ declare interface DetailsEditFormProps<T> {
   attributeOptions?: { label: string; value: T }[];
   handleUpdate: (newValue: T) => void;
   createOnly?: boolean;
+  editing: boolean;
+  setEditing: (editing: boolean) => void;
 }
 
 const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ = <
@@ -34,6 +35,8 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   attributeOptions,
   handleUpdate,
   createOnly,
+  editing,
+  setEditing,
 }: DetailsEditFormProps<T> & { children?: ReactNode }) => {
   const classes = styles();
 
@@ -62,7 +65,6 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
     getIndexForOptionValue(attributeValue)
   );
   const [errorText, setErrorTest] = React.useState<string>("");
-  const [editing, setEditing] = React.useState(createOnly);
 
   // Reset form when input value changes
   React.useEffect(() => {
@@ -72,9 +74,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   }, [attributeValue]);
 
   const startEditing = () => {
-   setEditing(true);
-    
-  
+    setEditing(true);
   };
 
   const cancelEditing = () => {
@@ -82,8 +82,6 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
     // setErrorTest("");
     // setSelectIndex(getIndexForOptionValue(currentValue));
     // setTemp(currentValue);
-
-
 
     if (attributeOptions && attributeOptions.length > 0) {
       setEditing(false);
@@ -98,13 +96,12 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
         } else {
           //setErrorTest(`Sorry, ${attributeLabel} must be a number `);
           setSelectIndex(getIndexForOptionValue(currentValue));
-           setTemp(currentValue); 
+          setTemp(currentValue);
         }
       } else {
         setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
         setSelectIndex(getIndexForOptionValue(currentValue));
         setTemp(currentValue);
-        
       }
     }
   };
