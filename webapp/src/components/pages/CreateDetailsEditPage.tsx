@@ -37,6 +37,7 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
       return !id;
     })
   );
+
   const handleUpdateFactory = (attributeName: keyof ObjectType) => (
     attributeValue: any
   ) => {

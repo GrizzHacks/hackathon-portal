@@ -15,7 +15,7 @@ const execute: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("questions")
-    .doc(req.params.questionsId)
+    .doc(req.params.questionId)
     .delete()
     .then(() => {
       res.status(200).send();

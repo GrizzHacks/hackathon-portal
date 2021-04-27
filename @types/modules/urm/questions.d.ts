@@ -1,32 +1,33 @@
-declare interface URMQuestionsUpdateRequest {
-  questionsId?: string;
+declare interface URMQuestionUpdateRequest {
+  questionId?: string;
   applicationQuestionLabel?: string;
-  applicationQuestionUsage?: {
-    organizer?: boolean;
-    sponsor?: boolean;
-    mentor?: boolean;
-    volenteer?: boolean;
-    hacker?: boolean;
-  };
-  values?: string[];
+  inOrganizerApplication?: "required" | "optional" | "no";
+  inSponsorApplication?: "required" | "optional" | "no";
+  inMentorApplication?: "required" | "optional" | "no";
+  inVolunteerApplication?: "required" | "optional" | "no";
+  inHackerApplication?: "required" | "optional" | "no";
+  type?: "string" | "number" | "enum" | "reference";
+  enumLabels?: string;
+  enumValues?: string;
+  referenceEndpoint?: string;
+  referenceLabelAttribute?: string;
+  referenceValueAttribute?: string;
 }
 
-declare interface URMQuestionsCreateRequest extends URMQuestionsUpdateRequest {
-  questionsId: string;
+declare interface URMQuestionCreateRequest extends URMQuestionUpdateRequest {
+  questionId: string;
   applicationQuestionLabel: string;
+  type: "string" | "number" | "enum" | "reference";
 }
 
-declare interface URMQuestion extends URMQuestionsCreateRequest {
-  applicationQuestionUsage: {
-    organizer?: boolean;
-    sponsor?: boolean;
-    mentor?: boolean;
-    volenteer?: boolean;
-    hacker?: boolean;
-  };
-  values: string[];
+declare interface URMQuestion extends URMQuestionCreateRequest {
+  inOrganizerApplication: "required" | "optional" | "no";
+  inSponsorApplication: "required" | "optional" | "no";
+  inMentorApplication: "required" | "optional" | "no";
+  inVolunteerApplication: "required" | "optional" | "no";
+  inHackerApplication: "required" | "optional" | "no";
 }
 
 declare interface URMQuestionsList {
-  urmquestions: URMQuestion[];
+  questions: URMQuestion[];
 }

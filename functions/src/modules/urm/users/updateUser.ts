@@ -39,17 +39,17 @@ const execute: ExpressFunction = (req, res, next) => {
 
   const body = res.locals.parsedBody as URMUserUpdateRequest;
 
-  if (body.password !== body.confirmPassword) {
-    errorHandler(
-      "password and confirmPassword do not match.",
-      400,
-      "password and confirmPassword do not match."
-    );
-  } else if (body.password && body.password.length < 6) {
+  if (body.password && body.password.length < 6) {
     errorHandler(
       "The password must contain at least 6 characters.",
       400,
       "The password must contain at least 6 characters."
+    );
+  } else if (body.password !== body.confirmPassword) {
+    errorHandler(
+      "password and confirmPassword do not match.",
+      400,
+      "password and confirmPassword do not match."
     );
   } else {
     const databaseUserUpdateObject = { ...body };

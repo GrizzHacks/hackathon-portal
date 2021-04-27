@@ -77,7 +77,10 @@ const ListPage: React.FunctionComponent<ListPageProps> = ({
               {index > 0 && <Divider />}
               <ListItem>
                 <ListItemIcon>
-                  <BusinessIcon />
+                  {(() => {
+                    const Icon = listItem.icon;
+                    return <Icon />;
+                  })()}
                 </ListItemIcon>
                 <ListItemText
                   primary={listItem.line1}

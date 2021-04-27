@@ -98,6 +98,11 @@ const CompanyBenefits: React.FunctionComponent<CompanyBenefitsProps> = () => {
   >();
   const [updateObject, setUpdateObject] = React.useState<Partial<STPMTier>>();
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [editing, setEditing] = React.useState<boolean[]>(
+    attributes.map(() => {
+      return !id;
+    })
+  );
 
   const handleUpdateFactory = (attributeName: keyof STPMTier) => (
     attributeValue: any
@@ -158,6 +163,12 @@ const CompanyBenefits: React.FunctionComponent<CompanyBenefitsProps> = () => {
                 attributeOptions={attribute.attributeOptions}
                 handleUpdate={handleUpdateFactory(attribute.attributeName)}
                 createOnly={!id}
+                editing={editing[index]}
+                setEditing={(edit: boolean) => {
+                  const newEditing = editing.concat([]);
+                  newEditing[index] = edit;
+                  setEditing(newEditing);
+                }}
               />
             </div>
           );
@@ -180,6 +191,9 @@ const CompanyBenefits: React.FunctionComponent<CompanyBenefitsProps> = () => {
               variant="contained"
               fullWidth
               color="primary"
+              disabled={editing.reduce((reduced, value) => {
+                return reduced || value;
+              })}
               onClick={() => {
                 apiClient
                   .patch(`stpm/companies/${id}`, {

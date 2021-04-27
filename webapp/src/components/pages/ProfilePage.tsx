@@ -4,6 +4,7 @@ import { NotificationsEnabledProps } from "../../@types/notificationsEnabledProp
 import { firebaseApp } from "../../config/firebaseConfig";
 import { apiClient } from "../../helper";
 import DetailsEditForm from "../layouts/DetailsEditForm";
+import PasswordEditForm from "../misc/PasswordEditForm";
 
 const attributes: CreateDetailEditPageAttribute<URMUser, any>[] = [
   { attributeName: "firstName", attributeLabel: "First Name" },
@@ -25,9 +26,19 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
   setNotification,
 }) => {
   const [object, setObject] = React.useState<URMUser | undefined>();
-  const [updateObject, setUpdateObject] = React.useState<Partial<URMUser>>();
+  const [
+    updateObject,
+    setUpdateObject,
+  ] = React.useState<URMUserUpdateRequest>();
   const [userId, setUserId] = React.useState<string>("");
   const [loaded, setLoaded] = React.useState<boolean>(false);
+  const [editing, setEditing] = React.useState<boolean[]>(
+    attributes
+      .map(() => {
+        return false;
+      })
+      .concat([false])
+  );
 
   const handleUpdateFactory = (attributeName: keyof URMUser) => (
     attributeValue: any
@@ -35,6 +46,10 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
     const newUpdate: Partial<URMUser> = {};
     newUpdate[attributeName] = attributeValue;
     setUpdateObject({ ...updateObject, ...newUpdate });
+  };
+
+  const handleUpdatePassword = (password: string, confirmPassword: string) => {
+    setUpdateObject({ ...updateObject, password, confirmPassword });
   };
 
   const refreshProfileView = (id: string) => {
@@ -48,19 +63,14 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
       .catch(() => {});
   };
 
-  if (!loaded) {
-    setLoaded(true);
-    refreshProfileView("Olx0EXsq6EkbeRGe5qrkKjfIO8zu");
-  }
-
   // Get the userId of the current user
   const listener = firebaseApp.auth().onAuthStateChanged((user) => {
     if (user) {
       setUserId(user.uid);
-      /* if (!loaded) {
+      if (!loaded) {
         setLoaded(true);
-        refreshUserView(user.uid);
-      } */
+        refreshProfileView(user.uid);
+      }
     }
     // Only make one update at the beginning
     listener();
@@ -83,43 +93,63 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
               attributeOptions={attribute.attributeOptions}
               handleUpdate={handleUpdateFactory(attribute.attributeName)}
               createOnly={!userId}
+              editing={editing[index]}
+              setEditing={(edit: boolean) => {
+                const newEditing = editing.concat([]);
+                newEditing[index] = edit;
+                setEditing(newEditing);
+              }}
             />
           );
         })}
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Button
-              variant="outlined"
-              fullWidth
-              color="primary"
-              onClick={() => {
-                setUpdateObject({});
-              }}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              fullWidth
-              color="primary"
-              onClick={() => {
-                apiClient
-                  .patch(`urm/users/${userId}`, {
-                    body: JSON.stringify(updateObject),
-                  })
-                  .then(() => {
-                    setUpdateObject({});
-                    refreshProfileView(userId);
-                  });
-              }}
-            >
-              Update
-            </Button>
-          </Grid>
-        </Grid>
+        <PasswordEditForm
+          key={`form_field_password`}
+          handleUpdate={handleUpdatePassword}
+          createOnly={!userId}
+          editing={editing[attributes.length]}
+          setEditing={(edit: boolean) => {
+            const newEditing = editing.concat([]);
+            newEditing[attributes.length] = edit;
+            setEditing(newEditing);
+          }}
+        />
       </List>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <Button
+            variant="outlined"
+            fullWidth
+            color="primary"
+            onClick={() => {
+              setUpdateObject({});
+            }}
+          >
+            Cancel
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            disabled={editing.reduce((reduced, value) => {
+              return reduced || value;
+            })}
+            onClick={() => {
+              apiClient
+                .patch(`urm/users/${userId}`, {
+                  body: JSON.stringify(updateObject),
+                })
+                .then(() => {
+                  setUpdateObject({});
+                  refreshProfileView(userId);
+                });
+            }}
+          >
+            Update
+          </Button>
+        </Grid>
+      </Grid>
     </Fragment>
   );
 };

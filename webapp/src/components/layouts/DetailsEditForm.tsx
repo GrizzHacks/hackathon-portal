@@ -64,7 +64,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   const [selectIndex, setSelectIndex] = React.useState<number>(
     getIndexForOptionValue(attributeValue)
   );
-  const [errorText, setErrorTest] = React.useState<string>("");
+  const [errorText, setErrorText] = React.useState<string>("");
 
   // Reset form when input value changes
   React.useEffect(() => {
@@ -79,7 +79,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
 
   const cancelEditing = () => {
     // setEditing(false);
-    // setErrorTest("");
+    // setErrorText("");
     // setSelectIndex(getIndexForOptionValue(currentValue));
     // setTemp(currentValue);
 
@@ -99,7 +99,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
           setTemp(currentValue);
         }
       } else {
-        setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
+        setErrorText(`Sorry, ${attributeLabel} cannot be empty`);
         setSelectIndex(getIndexForOptionValue(currentValue));
         setTemp(currentValue);
       }
@@ -107,7 +107,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   };
 
   const saveAttribute = () => {
-    setErrorTest("");
+    setErrorText("");
     if (attributeOptions && attributeOptions.length > 0) {
       setEditing(false);
       setTemp(attributeOptions[selectIndex].value);
@@ -121,10 +121,10 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
           setCurrentValue(temp);
           handleUpdate((attributeTypeIsNumber ? tempNumber : temp) as any); // Loss of specifity due to text box
         } else {
-          setErrorTest(`Sorry, ${attributeLabel} must be a number`);
+          setErrorText(`Sorry, ${attributeLabel} must be a number`);
         }
       } else {
-        setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
+        setErrorText(`Sorry, ${attributeLabel} cannot be empty`);
       }
     }
   };
