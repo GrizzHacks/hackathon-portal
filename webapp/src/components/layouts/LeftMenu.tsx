@@ -81,6 +81,7 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
           groupName="Universal Registration Module"
           groupItems={[
             { label: "Application Rules", route: "/urm/rules" },
+            { label: "Questions", route: "/urm/questions" },
           ]}
           closeLeftMenu={closeLeftMenu}
         />

@@ -41,6 +41,7 @@ const EventsPages: React.FunctionComponent = () => {
       })
       .catch((err) => {
         console.log(err);
+        alert(err);
       });
     apiClient
       .get("stpm/companies")
@@ -60,6 +61,7 @@ const EventsPages: React.FunctionComponent = () => {
       })
       .catch((err) => {
         console.log(err);
+        alert(err);
       });
   }
 

@@ -91,6 +91,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
             setErrorText("Enter a valid email");
           } else {
             console.log(err);
+            alert(err);
             setErrorText("Something went wrong. Please try again later.");
           }
         });
@@ -114,6 +115,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({ firebaseApp }) => {
             );
           } else {
             console.log(err);
+            alert(err);
             setErrorText("Something went wrong. Please try again later.");
           }
         });

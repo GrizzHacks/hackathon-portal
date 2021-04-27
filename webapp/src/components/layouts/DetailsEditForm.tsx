@@ -75,14 +75,41 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   }, [attributeValue]);
 
   const startEditing = () => {
-    setEditing(true);
+   setEditing(true);
+    
+  
   };
 
   const cancelEditing = () => {
-    setEditing(false);
-    setErrorTest("");
-    setSelectIndex(getIndexForOptionValue(currentValue));
-    setTemp(currentValue);
+    // setEditing(false);
+    // setErrorTest("");
+    // setSelectIndex(getIndexForOptionValue(currentValue));
+    // setTemp(currentValue);
+
+
+
+    if (attributeOptions && attributeOptions.length > 0) {
+      setEditing(false);
+      setTemp(attributeOptions[selectIndex].value);
+      setCurrentValue(attributeOptions[selectIndex].value);
+      handleUpdate(attributeOptions[selectIndex].value);
+    } else {
+      if (allowEmptyString || !!temp) {
+        const tempNumber = Number(temp);
+        if (!attributeTypeIsNumber || !isNaN(tempNumber)) {
+          setEditing(false);
+        } else {
+          //setErrorTest(`Sorry, ${attributeLabel} must be a number `);
+          setSelectIndex(getIndexForOptionValue(currentValue));
+           setTemp(currentValue); 
+        }
+      } else {
+        setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
+        setSelectIndex(getIndexForOptionValue(currentValue));
+        setTemp(currentValue);
+        
+      }
+    }
   };
 
   const saveAttribute = () => {
