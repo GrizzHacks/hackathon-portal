@@ -36,6 +36,7 @@ const CategoriesPages: React.FunctionComponent = () => {
       })
       .catch((err) => {
         console.log(err);
+        alert(err);
       });
   }
 

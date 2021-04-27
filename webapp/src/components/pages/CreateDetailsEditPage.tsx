@@ -32,7 +32,11 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
   const [object, setObject] = React.useState<ObjectType | undefined>();
   const [updateObject, setUpdateObject] = React.useState<Partial<ObjectType>>();
   const [loaded, setLoaded] = React.useState<boolean>(false);
-
+  const [editing, setEditing] = React.useState<boolean[]>(
+    attributes.map(() => {
+      return !id;
+    })
+  );
   const handleUpdateFactory = (attributeName: keyof ObjectType) => (
     attributeValue: any
   ) => {
@@ -51,7 +55,10 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
             setObject(objectJson as ObjectType);
           });
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
     }
   }
 
@@ -85,6 +92,12 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
               attributeOptions={attribute.attributeOptions}
               handleUpdate={handleUpdateFactory(attribute.attributeName)}
               createOnly={!id}
+              editing={editing[index]}
+              setEditing={(edit: boolean) => {
+                const newEditing = editing.concat([]);
+                newEditing[index] = edit;
+                setEditing(newEditing);
+              }}
             />
           );
         })}
@@ -93,6 +106,8 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
             <Button
               variant="outlined"
               fullWidth
+              //disabled={setEditing(editing)}
+              id="setEditing"
               color="primary"
               onClick={() => {
                 routeHistory.push(listEndpoint);
@@ -106,6 +121,9 @@ const CreateDetailEditPage /*: React.FunctionComponent<CreateDetailEditPageProps
               variant="contained"
               fullWidth
               color="primary"
+              disabled={editing.reduce((reduced, value) => {
+                return reduced || value;
+              })}
               onClick={() => {
                 if (!id) {
                   const idObject: Partial<ObjectType> = {};

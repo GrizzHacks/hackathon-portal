@@ -94,6 +94,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
             setErrorText("Enter a valid email");
           } else {
             console.log(err);
+            alert(err);
             setErrorText("Something went wrong. Please try again later.");
           }
         });
@@ -117,6 +118,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
             );
           } else {
             console.log(err);
+            alert(err);
             setErrorText("Something went wrong. Please try again later.");
           }
         });
