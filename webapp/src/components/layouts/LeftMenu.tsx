@@ -89,6 +89,20 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
     </Fragment>
   );
 
+  const publicMenu = (
+    <MenuItemGroup
+      groupName="Apply Now"
+      groupItems={[
+        { label: "Organizer Application", route: "/urm/apply/organizer" },
+        { label: "Sponsor Application", route: "/urm/apply/sponsor" },
+        { label: "Mentor Application", route: "/urm/apply/mentor" },
+        { label: "Volunteer Application", route: "/urm/apply/volunteer" },
+        { label: "Hacker Application", route: "/urm/apply/hacker" },
+      ]}
+      closeLeftMenu={closeLeftMenu}
+    />
+  );
+
   return (
     <Drawer anchor="left" open={open} onClose={closeLeftMenu}>
       <List className={classes.root}>
@@ -111,7 +125,7 @@ const LeftMenu: React.FunctionComponent<LeftMenuProps> = ({
           mentor={<Fragment />}
           volunteer={<Fragment />}
           hacker={<Fragment />}
-          public={<Fragment />}
+          public={publicMenu}
           setNotification={setNotification}
         />
         {currentUserProfile ? (

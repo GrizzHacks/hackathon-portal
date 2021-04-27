@@ -42,6 +42,7 @@ const validate: ExpressFunction = (req, res, next) => {
       enumLabels: { rules: ["string"] },
       enumValues: { rules: ["string"] },
       referenceEndpoint: { rules: ["string"] },
+      referenceCollection: { rules: ["string"] },
       referenceLabelAttribute: { rules: ["string"] },
       referenceValueAttribute: { rules: ["string"] },
     },
@@ -73,6 +74,7 @@ const execute: ExpressFunction = (req, res, next) => {
   if (body.type === "enum") {
     // Clean unused fields
     body.referenceEndpoint = "";
+    body.referenceCollection = "";
     body.referenceLabelAttribute = "";
     body.referenceValueAttribute = "";
 
@@ -111,13 +113,14 @@ const execute: ExpressFunction = (req, res, next) => {
     // More advanced data validation
     if (
       body.referenceEndpoint === undefined ||
+      body.referenceCollection === undefined ||
       body.referenceLabelAttribute === undefined ||
       body.referenceValueAttribute === undefined
     ) {
       errorHandler(
-        "referenceEndpoint, referenceLabelAttribute, and referenceValueAttribute must all be defined for question type reference.",
+        "referenceEndpoint, referenceCollection, referenceLabelAttribute, and referenceValueAttribute must all be defined for question type reference.",
         400,
-        "referenceEndpoint, referenceLabelAttribute, and referenceValueAttribute must all be defined for question type reference."
+        "referenceEndpoint, referenceCollection, referenceLabelAttribute, and referenceValueAttribute must all be defined for question type reference."
       );
     } else {
       firebaseApp
@@ -136,6 +139,7 @@ const execute: ExpressFunction = (req, res, next) => {
     body.enumLabels = "";
     body.enumValues = "";
     body.referenceEndpoint = "";
+    body.referenceCollection = "";
     body.referenceLabelAttribute = "";
     body.referenceValueAttribute = "";
 

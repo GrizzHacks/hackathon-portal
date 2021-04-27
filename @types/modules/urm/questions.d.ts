@@ -10,6 +10,7 @@ declare interface URMQuestionUpdateRequest {
   enumLabels?: string;
   enumValues?: string;
   referenceEndpoint?: string;
+  referenceCollection?: string;
   referenceLabelAttribute?: string;
   referenceValueAttribute?: string;
 }

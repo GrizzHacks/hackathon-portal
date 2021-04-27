@@ -83,6 +83,11 @@ const referenceAttributes: CreateDetailEditPageAttribute<URMQuestion, any>[] = [
       "Reference Endpoint (the API list endpoint to get the object to reference)",
   },
   {
+    attributeName: "referenceCollection",
+    attributeLabel:
+      "Reference Collection (the name of the array returned by the endpoint)",
+  },
+  {
     attributeName: "referenceLabelAttribute",
     attributeLabel: "Reference Label Attribute",
   },
@@ -109,7 +114,7 @@ const QuestionCreateDetailEditPage: React.FunctionComponent = () => {
       .map(() => {
         return !id;
       })
-      .concat([!id, !id, !id]) // TODO: Can this be improved?
+      .concat([!id, !id, !id, !id]) // TODO: Can this be improved?
   );
 
   const getQuestionType = () => {

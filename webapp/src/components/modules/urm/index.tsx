@@ -5,6 +5,7 @@ import PermissionSwitchComponent from "../../misc/PermissionSwitchComponent";
 import Error404Page from "../../pages/Error404Page";
 import RulesPages from "./RulesPages";
 import QuestionPages from "./QuestionPages";
+import ApplicationPages from "./ApplicationPages";
 
 const URMPages: React.FunctionComponent<NotificationsEnabledProps> = ({
   setNotification,
@@ -17,9 +18,17 @@ const URMPages: React.FunctionComponent<NotificationsEnabledProps> = ({
     </Switch>
   );
 
+  const publicRoutes = (
+    <Switch>
+      <Route path="/urm/apply" component={ApplicationPages} />
+      <Route component={Error404Page} />
+    </Switch>
+  );
+
   return (
     <PermissionSwitchComponent
       organizer={{ accepted: organizerRoutes }}
+      public={publicRoutes}
       setNotification={setNotification}
     />
   );
