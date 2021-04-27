@@ -5,7 +5,7 @@ import { firebaseApp } from "../../config/firebaseConfig";
 import { apiClient } from "../../helper";
 import DetailsEditForm from "../layouts/DetailsEditForm";
 
-const attributes: CreateDetailEditPageAttribute<URMProfile, any>[] = [
+const attributes: CreateDetailEditPageAttribute<URMUser, any>[] = [
   { attributeName: "firstName", attributeLabel: "First Name" },
   { attributeName: "lastName", attributeLabel: "Last Name" },
   { attributeName: "email", attributeLabel: "Email" },
@@ -24,25 +24,25 @@ const attributes: CreateDetailEditPageAttribute<URMProfile, any>[] = [
 const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
   setNotification,
 }) => {
-  const [object, setObject] = React.useState<URMProfile | undefined>();
-  const [updateObject, setUpdateObject] = React.useState<Partial<URMProfile>>();
-  const [profileId, setProfileId] = React.useState<string>("");
+  const [object, setObject] = React.useState<URMUser | undefined>();
+  const [updateObject, setUpdateObject] = React.useState<Partial<URMUser>>();
+  const [userId, setUserId] = React.useState<string>("");
   const [loaded, setLoaded] = React.useState<boolean>(false);
 
-  const handleUpdateFactory = (attributeName: keyof URMProfile) => (
+  const handleUpdateFactory = (attributeName: keyof URMUser) => (
     attributeValue: any
   ) => {
-    const newUpdate: Partial<URMProfile> = {};
+    const newUpdate: Partial<URMUser> = {};
     newUpdate[attributeName] = attributeValue;
     setUpdateObject({ ...updateObject, ...newUpdate });
   };
 
   const refreshProfileView = (id: string) => {
     apiClient
-      .get(`urm/profiles/${id}`)
+      .get(`urm/users/${id}`)
       .then((object) => {
         object.json().then((objectJson) => {
-          setObject(objectJson as URMProfile);
+          setObject(objectJson as URMUser);
         });
       })
       .catch(() => {});
@@ -56,10 +56,10 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
   // Get the userId of the current user
   const listener = firebaseApp.auth().onAuthStateChanged((user) => {
     if (user) {
-      setProfileId(user.uid);
+      setUserId(user.uid);
       /* if (!loaded) {
         setLoaded(true);
-        refreshProfileView(user.uid);
+        refreshUserView(user.uid);
       } */
     }
     // Only make one update at the beginning
@@ -71,7 +71,7 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
       <Typography variant="h3">Profile</Typography>
       <List>
         {attributes.map((attribute, index) => {
-          const merged = { ...object, ...updateObject } as URMProfile;
+          const merged = { ...object, ...updateObject } as URMUser;
           const attributeValue = merged[attribute.attributeName];
           return (
             <DetailsEditForm
@@ -82,7 +82,7 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
               attributeTypeIsNumber={attribute.attributeTypeIsNumber}
               attributeOptions={attribute.attributeOptions}
               handleUpdate={handleUpdateFactory(attribute.attributeName)}
-              createOnly={!profileId}
+              createOnly={!userId}
             />
           );
         })}
@@ -106,12 +106,12 @@ const ProfilePage: React.FunctionComponent<NotificationsEnabledProps> = ({
               color="primary"
               onClick={() => {
                 apiClient
-                  .patch(`urm/profiles/${profileId}`, {
+                  .patch(`urm/users/${userId}`, {
                     body: JSON.stringify(updateObject),
                   })
                   .then(() => {
                     setUpdateObject({});
-                    refreshProfileView(profileId);
+                    refreshProfileView(userId);
                   });
               }}
             >

@@ -1,10 +1,10 @@
 import type { Express } from "express";
-import profiles from "./profiles";
+import users from "./users";
 import questions from "./questions";
 import rules from "./rules";
 
 export default (app: Express) => {
-  profiles(app, "/profiles");
+  users(app, "/users");
   questions(app, "/questions");
   rules(app, "/rules");
 };

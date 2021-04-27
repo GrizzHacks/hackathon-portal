@@ -5,7 +5,7 @@ import {
   requestBodyTypeValidator,
 } from "../../../helpers";
 
-const getMinimalProfileByEmail: ExpressFunction = (req, res, next) => {
+const getMinimalUserProfileByEmail: ExpressFunction = (req, res, next) => {
   validate(req, res, next);
 };
 
@@ -30,14 +30,14 @@ const execute: ExpressFunction = (req, res, next) => {
     .then((user) => {
       firebaseApp
         .firestore()
-        .collection("profiles")
+        .collection("users")
         .doc(user.uid)
         .get()
         .then((document) => {
-          const data = document.data() as URMProfile | undefined;
+          const data = document.data() as URMUser | undefined;
           if (data) {
-            const minimalData: URMMinimalProfile = {
-              profileId: data.profileId,
+            const minimalData: URMMinimalUser = {
+              userId: data.userId,
               firstName: data.firstName,
               email: data.email,
               photoUrl: data.photoUrl,
@@ -45,7 +45,7 @@ const execute: ExpressFunction = (req, res, next) => {
             res.status(200).send(JSON.stringify(minimalData));
             next();
           } else {
-            errorHandler(`profiles/${req.params.profileId} has no data.`);
+            errorHandler(`users/${req.params.userId} has no data.`);
           }
         })
         .catch(errorHandler);
@@ -53,4 +53,4 @@ const execute: ExpressFunction = (req, res, next) => {
     .catch(errorHandler);
 };
 
-export default getMinimalProfileByEmail;
+export default getMinimalUserProfileByEmail;

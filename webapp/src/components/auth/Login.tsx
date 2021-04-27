@@ -39,9 +39,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [errorText, setErrorText] = React.useState<string>("");
   const [passwordReset, setPasswordReset] = React.useState<boolean>(false);
-  const [profile, setProfile] = React.useState<URMMinimalProfile | undefined>(
-    undefined
-  );
+  const [user, setUser] = React.useState<URMMinimalUser | undefined>(undefined);
 
   const getRedirectUrl = () => {
     const redirect = qs.parse(routeLocation.search.substr(1)).redirect;
@@ -65,14 +63,14 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
         .then((methods) => {
           if (methods.length > 0) {
             apiClient
-              .post("urm/profiles-by-email", {
+              .post("urm/users-by-email", {
                 body: JSON.stringify({ email }),
               })
               .then((response) => {
                 response
                   .json()
                   .then((responseJson) => {
-                    setProfile(responseJson as URMMinimalProfile);
+                    setUser(responseJson as URMMinimalUser);
                     setEmail(email.toLowerCase());
                     setTemp("");
                   })
@@ -162,7 +160,7 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
           <Grid item xs={12}>
             <Container className={classes.pageTitle}>
               <Typography variant="h4">
-                {!email ? "Sign in" : `Hi ${profile?.firstName}`}
+                {!email ? "Sign in" : `Hi ${user?.firstName}`}
               </Typography>
               {!!email && (
                 <Chip
@@ -171,11 +169,9 @@ const LoginBox: React.FunctionComponent<LoginBoxProps> = ({
                     <div style={{ width: "24px", height: "24px" }}>
                       <SquareAvatar
                         alt={
-                          profile?.firstName
-                            ? profile.firstName.toUpperCase()
-                            : ""
+                          user?.firstName ? user.firstName.toUpperCase() : ""
                         }
-                        src={profile?.photoUrl ? profile.photoUrl : ""}
+                        src={user?.photoUrl ? user.photoUrl : ""}
                         centerInContainer={true}
                         maxHeightPercentageOfScreen={50}
                         maxWidthPercentageOfParent={100}

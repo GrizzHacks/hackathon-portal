@@ -32,7 +32,6 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
             type: "enum",
             rules: ["freshman", "sophomore", "junior", "senior"],
           },
-         
         ],
       },
     },
@@ -74,8 +73,8 @@ const execute: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("profiles")
-    .doc(req.params.profileId)
+    .collection("users")
+    .doc(req.params.userId)
     .collection("applications")
     .doc(req.params.applicationId)
     .update(body)
@@ -93,8 +92,8 @@ const executeIfHackerMatches: ExpressFunction = (req, res, next) => {
 
   firebaseApp
     .firestore()
-    .collection("profiles")
-    .doc(req.params.profileId)
+    .collection("users")
+    .doc(req.params.userId)
     .collection("applications")
     .doc(req.params.applicationId)
     .get()

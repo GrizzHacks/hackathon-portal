@@ -3,7 +3,7 @@ import { firebaseApp } from "../../../config/firebaseConfig";
 import { expressErrorHandlerFactory } from "../../../helpers";
 import { uasPermissionSwitch } from "../../../systems/uas";
 
-const deleteProfile: ExpressFunction = (req, res, next) => {
+const deleteUser: ExpressFunction = (req, res, next) => {
   uasPermissionSwitch({
     organizer: { accepted: execute },
   })(req, res, next);
@@ -13,15 +13,21 @@ const execute: ExpressFunction = (req, res, next) => {
   const errorHandler = expressErrorHandlerFactory(req, res, next);
 
   firebaseApp
-    .firestore()
-    .collection("profiles")
-    .doc(req.params.profileId)
-    .delete()
+    .auth()
+    .deleteUser(req.params.userId)
     .then(() => {
-      res.status(200).send();
-      next();
+      firebaseApp
+        .firestore()
+        .collection("users")
+        .doc(req.params.userId)
+        .delete()
+        .then(() => {
+          res.status(200).send();
+          next();
+        })
+        .catch(errorHandler);
     })
     .catch(errorHandler);
 };
 
-export default deleteProfile;
+export default deleteUser;
