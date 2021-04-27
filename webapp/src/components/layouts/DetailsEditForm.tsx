@@ -11,7 +11,6 @@ import {
 } from "@material-ui/core";
 import { Clear, Done, Edit, Error } from "@material-ui/icons";
 import React, { Fragment, ReactNode } from "react";
-import { nanoid } from "nanoid";
 import { styles } from "../../styles";
 
 declare interface DetailsEditFormProps<T> {
@@ -75,9 +74,7 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
   }, [attributeValue]);
 
   const startEditing = () => {
-   setEditing(true);
-    
-  
+    setEditing(true);
   };
 
   const cancelEditing = () => {
@@ -85,8 +82,6 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
     // setErrorTest("");
     // setSelectIndex(getIndexForOptionValue(currentValue));
     // setTemp(currentValue);
-
-
 
     if (attributeOptions && attributeOptions.length > 0) {
       setEditing(false);
@@ -101,13 +96,12 @@ const DetailsEditForm /* : React.FunctionComponent<DetailsEditFormProps<T>> */ =
         } else {
           //setErrorTest(`Sorry, ${attributeLabel} must be a number `);
           setSelectIndex(getIndexForOptionValue(currentValue));
-           setTemp(currentValue); 
+          setTemp(currentValue);
         }
       } else {
         setErrorTest(`Sorry, ${attributeLabel} cannot be empty`);
         setSelectIndex(getIndexForOptionValue(currentValue));
         setTemp(currentValue);
-        
       }
     }
   };
