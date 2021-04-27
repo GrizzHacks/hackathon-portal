@@ -8,7 +8,7 @@ const listQuestions: ExpressFunction = (req, res, next) => {
   firebaseApp
     .firestore()
     .collection("questions")
-    .orderBy("questionId", "asc")
+    .orderBy("applicationQuestionLabel", "asc")
     .get()
     .then((documents) => {
       send(documents.docs)(req, res, next);

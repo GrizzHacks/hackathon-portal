@@ -17,11 +17,21 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
     type: "object",
     rules: {
       ruleId: { rules: ["string"], required: true },
-      ruleOrder: { rules: ["number"], required: true },
       ruleName: { rules: ["string"], required: true },
+      ruleOrder: { rules: ["number"] },
+      role: {
+        rules: [
+          {
+            type: "enum",
+            rules: ["organizer", "sponsor", "mentor", "volunteer", "hacker"],
+          },
+        ],
+        required: true,
+      },
       applicationQuestionId: { rules: ["string"], required: true },
       acceptedValues: { rules: ["string"], required: true },
-      matchesRemaining: { rules: ["number"]},
+      matchesRemaining: { rules: ["number"] },
+      result: { rules: [{ type: "enum", rules: ["accepted", "rejected"] }] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);
@@ -32,10 +42,15 @@ const execute: ExpressFunction = (req, res, next) => {
 
   const body = res.locals.parsedBody as URMRulesCreateRequest;
 
-  if (body.matchesRemaining === undefined) {
-    body.matchesRemaining = 1
+  if (body.ruleOrder === undefined) {
+    body.ruleOrder = Date.now();
   }
-
+  if (body.matchesRemaining === undefined) {
+    body.matchesRemaining = 1;
+  }
+  if (body.result === undefined) {
+    body.result = "accepted";
+  }
 
   firebaseApp
     .firestore()

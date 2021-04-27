@@ -16,11 +16,20 @@ const validateOrganizer: ExpressFunction = (req, res, next) => {
   const validationRules: ValidatorObjectRules = {
     type: "object",
     rules: {
-      ruleOrder: { rules: ["number"] },
       ruleName: { rules: ["string"] },
+      ruleOrder: { rules: ["number"] },
+      role: {
+        rules: [
+          {
+            type: "enum",
+            rules: ["organizer", "sponsor", "mentor", "volunteer", "hacker"],
+          },
+        ],
+      },
       applicationQuestionId: { rules: ["string"] },
       acceptedValues: { rules: ["string"] },
       matchesRemaining: { rules: ["number"] },
+      result: { rules: [{ type: "enum", rules: ["accepted", "rejected"] }] },
     },
   };
   requestBodyTypeValidator(req, res, next)(validationRules, execute);

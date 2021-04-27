@@ -23,12 +23,19 @@ const RulesPages: React.FunctionComponent = () => {
         questionsRaw.json().then((questions) => {
           const questionsTyped = (questions as URMQuestionsList).questions;
           setAttributeOptions(
-            questionsTyped.map((question) => {
-              return {
-                label: question.applicationQuestionLabel,
-                value: question.questionId,
-              };
-            })
+            [
+              { label: "First Name", value: "firstName" },
+              { label: "Last Name", value: "lastName" },
+              { label: "Email", value: "email" },
+              { label: "Phone Number", value: "phoneNumber" },
+            ].concat(
+              questionsTyped.map((question) => {
+                return {
+                  label: question.applicationQuestionLabel,
+                  value: question.questionId,
+                };
+              })
+            )
           );
         });
       })
@@ -47,7 +54,7 @@ const RulesPages: React.FunctionComponent = () => {
           line1: value.ruleName,
           deleteEndpoint: `urm/rules/${value.ruleId}`,
           deleteText: "Delete Rule",
-          detailedViewLink: `/stpm/tiers/tier/${value.ruleId}`,
+          detailedViewLink: `/urm/rules/rule/${value.ruleId}`,
           detailedViewText: "Rule Details",
           icon: LabelImportantIcon,
           key: `${value.ruleId}`,
@@ -68,13 +75,38 @@ const RulesPages: React.FunctionComponent = () => {
           attributeLabel: "Application Rule Name",
         },
         {
+          attributeName: "role",
+          attributeLabel: "User Role",
+          attributeOptions: [
+            { label: "Organizer", value: "organizer" },
+            { label: "Sponsor", value: "sponsor" },
+            { label: "Mentor", value: "mentor" },
+            { label: "Volunteer", value: "volunteer" },
+            { label: "Hacker", value: "hacker" },
+          ],
+        },
+        {
           attributeName: "applicationQuestionId",
           attributeLabel: "Application Question",
           attributeOptions: attributeOptions,
         },
         {
           attributeName: "acceptedValues",
-          attributeLabel: "Accepted Values",
+          attributeLabel: "Accepted Values (Regular Expression)",
+        },
+        {
+          attributeName: "matchesRemaining",
+          attributeLabel:
+            "Matches Remaining (how many times can be the rule be applied)",
+          attributeTypeIsNumber: true,
+        },
+        {
+          attributeName: "result",
+          attributeLabel: "Accept or Reject",
+          attributeOptions: [
+            { label: "Accept", value: "accepted" },
+            { label: "Reject", value: "rejected" },
+          ],
         },
       ]}
     />
