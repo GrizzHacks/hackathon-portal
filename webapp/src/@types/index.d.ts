@@ -14,7 +14,5 @@ declare interface GenericListItemInfo {
   multiline?: boolean;
   icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   detailedViewLink: string;
-  detailedViewText: string;
   deleteEndpoint: string;
-  deleteText: string;
 }
